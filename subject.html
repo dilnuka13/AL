@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="pageTitle">Subject Papers</title>
+    <title id="pageTitle"> Subject Papers</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sinhala:wght@400;700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
-@media (max-width: 768px) {
+        @media (max-width: 768px) {
     /* Mobile specific styles */
     .your-custom-class {
         font-size: 14px;
@@ -17,7 +17,7 @@
     }
 }
         /* Base body and font styles */
-        body { 
+        body {
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
             color: #333;
@@ -52,7 +52,6 @@
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
-    <!-- Header Section -->
     <header class="gradient-header text-white shadow-lg">
         <div class="container mx-auto px-4 py-6">
             <div class="flex justify-between items-center">
@@ -60,7 +59,6 @@
                     <h1 class="text-3xl md:text-4xl font-bold" id="headerTitle">A/L Past Papers & Marking Schemes</h1>
                     <p class="mt-2 text-emerald-100" id="headerSubtitle">View papers and marking schemes</p>
                 </div>
-                <!-- Language Toggle Button -->
                 <button id="langToggle" class="bg-emerald-600 hover:bg-emerald-700 px-4 py-2 rounded-md text-sm font-medium transition-colors animate__animated animate__fadeInRight">
                     සිංහල
                 </button>
@@ -68,10 +66,8 @@
         </div>
     </header>
 
-    <!-- Main Content Area -->
     <main class="flex-grow container mx-auto px-4 py-8">
         <div class="animate__animated animate__fadeIn">
-            <!-- Back button and Subject Title -->
             <div class="flex items-center mb-6">
                 <a id="backToSubjectsLink" href="#" class="text-emerald-600 hover:text-emerald-800 font-medium flex items-center mr-4 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -81,10 +77,8 @@
                 </a>
                 <h2 id="subjectTitle" class="text-2xl md:text-3xl font-bold text-emerald-800 border-b-2 border-emerald-200 pb-2 flex-grow"></h2>
             </div>
-            
-            <!-- Papers and Marking Schemes Sections -->
+
             <div class="flex flex-col lg:flex-row gap-8">
-                <!-- Marking Schemes Section -->
                 <div class="w-full lg:w-1/2 bg-white p-6 rounded-xl card-hover">
                     <div class="flex items-center mb-4">
                         <div class="bg-emerald-100 p-2 rounded-full mr-3">
@@ -95,12 +89,10 @@
                         <h3 class="text-xl font-semibold text-emerald-800" id="markingTitle">Marking Schemes</h3>
                     </div>
                     <ul id="markingList" class="space-y-3">
-                        <!-- Marking schemes will be loaded here dynamically -->
                         <li class="text-gray-500 italic p-3" id="noMarkingText">No marking schemes available</li>
                     </ul>
                 </div>
-                
-                <!-- Past Papers Section -->
+
                 <div class="w-full lg:w-1/2 bg-white p-6 rounded-xl card-hover">
                     <div class="flex items-center mb-4">
                         <div class="bg-emerald-100 p-2 rounded-full mr-3">
@@ -111,7 +103,6 @@
                         <h3 class="text-xl font-semibold text-emerald-800" id="paperTitle">Past Papers</h3>
                     </div>
                     <ul id="paperList" class="space-y-3">
-                        <!-- Past papers will be loaded here dynamically -->
                         <li class="text-gray-500 italic p-3" id="noPaperText">No papers available</li>
                     </ul>
                 </div>
@@ -119,7 +110,6 @@
         </div>
     </main>
 
-    <!-- Footer Section -->
     <footer class="gradient-header text-white py-6">
         <div class="container mx-auto px-4">
             <div class="flex flex-col md:flex-row justify-between items-center">
@@ -196,18 +186,67 @@
                     { year: 2015, paper: "https://drive.google.com/file/d/1MGppNRAPZQPMtse-e3A6Vhs63wZLWjJA/view?usp=drive_link", marking: "https://drive.google.com/file/d/1-80Mh6QOsdosM25xKJdhaVcSXRvBTcSf/view?usp=drive_link" }
                 ]},
                 { name: "Bio-Systems Technology", si: "ජෛව පද්ධති තාක්ෂණය", id: "bio-systems-tech", papers: [] },
-                { name: "Science for Technology", si: "තාක්ෂනවේදය සඳහා විද්‍යාව", id: "science-for-tech", papers: [
-                    { year: 2023, paper: "https://drive.google.com/file/d/1Y4oJ5kMH_1mZEpwbwu2xi2EDFBAOviEl/view?usp=sharing", marking: "https://drive.google.com/file/d/14Cb5lhj6Z69gkdsoV7SXyt4MfbY0r3-M/view?usp=sharing" }
-                ]},
+               {
+  "name": "Science for Technology",
+  "si": "තාක්ෂනවේදය සඳහා විද්‍යාව",
+  "id": "science-for-tech",
+  "papers": [
+    {
+      "year": 2023,
+      "paper": "https://drive.google.com/file/d/1NBzqpQ3PaHoIfzT6RPX0Lr6-OpL_MEVQ/view?usp=sharing",
+      "marking": "https://drive.google.com/file/d/14qxm0-2NSauZO01CXz4H5Y1IN8g29sA0/view?usp=sharing" // Corrected marking for 2023
+    },
+    {
+      "year": 2022,
+      "paper": "https://drive.google.com/file/d/1NHmEsRasdwDn1QmPQhQ2Ax8QUq94YIvp/view?usp=sharing",
+      "marking": "https://drive.google.com/file/d/1mdXLoRJximX3a9l9GDB9ROIqqhe6oe-7/view?usp=sharing"
+    },
+    {
+      "year": 2021,
+      "paper": "https://drive.google.com/file/d/1quUUi2bLwdHZKWrDTLzQboSs265oKD7g/view?usp=sharing",
+      "marking": "https://drive.google.com/file/d/1-PZJqgXfJLHQDNRAkny11G_7i35LkX9f/view?usp=sharing"
+    },
+    {
+      "year": 2020,
+      "paper": "https://drive.google.com/file/d/1vsC9m18zn04GqKglUgJb2UqWhrYU9S-l/view?usp=sharing",
+      "marking": "https://drive.google.com/file/d/1VRkttdmuxyqbQAEVHONt9CuBypiRIq0C/view?usp=sharing"
+    },
+    {
+      "year": 2019,
+      "paper": "https://drive.google.com/file/d/1MPnRblHfkQHJq2pHhPetAF36Lfa6bNKp/view?usp=sharing",
+      "marking": "https://drive.google.com/file/d/1EqXgL2RRD9bzEA796wfHunKSSO8EI4DL/view?usp=4"
+    },
+    {
+      "year": 2018,
+      "paper": "https://drive.google.com/file/d/1FlmDxLjpaX_U782kRVZIQ1P39lCK1gYq/view?usp=sharing",
+      "marking": "https://drive.google.com/file/d/1zeE0oTnGY-wQ_wNMJCtRxkox_sfpzYPO/view?usp=sharing"
+    },
+    {
+      "year": 2017,
+      "paper": "https://drive.google.com/file/d/1gxdnYC1OMOyRUIc-PQRrhPYpxSg5v6gL/view?usp=sharing",
+      "marking": "https://drive.google.com/file/d/1GL2yA_WEWgCRXAar02jHgE5M9LS804ti/view?usp=sharing"
+    },
+    {
+      "year": 2016,
+      "paper": "https://drive.google.com/file/d/1xtypKipflogg6XY-mgIzjFFoteqTzDtm/view?usp=sharing",
+      "marking": "https://drive.google.com/file/d/1Q6fiJnsaNXqntQKqrs25r_Afdf9_f7BS/view?usp=sharing"
+    },
+    {
+      "year": 2015,
+      "paper": "https://drive.google.com/file/d/1fHijafioz51CfdDRUlRzdrAod8Ixgl7t/view?usp=sharing",
+      "marking": "https://drive.google.com/file/d/12Y2eR4C34xeo_e8CRcIgl7A-W1IDZsZX/view?usp=sharing" // Corrected marking for 2015
+    }
+  ]
+},
                 { name: "Geography", si: "භූගෝල විද්‍යාව", id: "geography", papers: [] },
                 { name: "Agriculture", si: "කෘෂි විද්‍යාව", id: "agriculture", papers: [] },
                 { name: "Information & Communication Technology", si: "සන්නිවේදන තාක්ෂණය", id: "ict", papers: [
-                    { year: 2023, paper: "https://drive.google.com/file/d/1LGBXNnLH1mQX83kJLHxyLpLzU-FWUNjF/view?usp=sharing", marking: "https://drive.google.com/file/d/1Q74VrZQ0BAublwAZu9r4hhyeTPf-xgKb/view?usp=sharing" }
+                    { year: 2023, paper: "https://drive.google.com/file/d/114FXfL-oLAmplxeRg---Hu072BKb0yTI/view?usp=sharing", marking: "https://drive.google.com/file/d/1MY9_rmupRItzyKRvOTcEiTBPDla4g4bc/view?usp=sharing" }
                 ]}
             ],
             commerce: [
                 { name: "Accounting", si: "ගිණුම්කරණය", id: "accounting", papers: [] },
-                { name: "Business Studies", si: "ව්‍යාපාර අධ්‍යයනය", id: "business-studies", papers: [] },
+                { name: "Business Studies", id: "business-studies", papers: [] },
                 { name: "Economics", si: "ආර්ථික විද්‍යාව", id: "economics", papers: [] },
                 { name: "Information & Communication Technology", si: "තොරතුරු හා සන්නිවේදන තාක්ෂණය", id: "ict", papers: [] }
             ],
@@ -244,7 +283,7 @@
             document.getElementById('backText').textContent = t.backText;
             document.getElementById('markingTitle').textContent = t.markingTitle;
             document.getElementById('paperTitle').textContent = t.paperTitle;
-            
+
             // Set initial "no items" messages based on current language
             document.getElementById('noMarkingText').textContent = t.noMarkingText;
             document.getElementById('noPaperText').textContent = t.noPaperText;
@@ -253,7 +292,7 @@
             document.getElementById('homeLink').textContent = t.homeLink;
             document.getElementById('streamLink').textContent = t.streamLink;
             document.getElementById('contactLink').textContent = t.contactLink;
-            
+
             loadPapers(); // Load papers for the selected subject
         }
 
@@ -266,22 +305,25 @@
             // Set the back button link dynamically to return to the correct stream page
             const backToSubjectsLink = document.getElementById('backToSubjectsLink');
             backToSubjectsLink.href = `stream.html?stream=${stream}`;
-            
+
             // Find the subject data
             const subject = subjectsData[stream]?.find(s => s.id === subjectId);
-            
+
             // Update subject title, defaulting if not found
             document.getElementById('subjectTitle').textContent = currentLang === 'en' ? subject?.name : subject?.si || "Subject Not Found";
-            
+
             const markingList = document.getElementById('markingList');
             const paperList = document.getElementById('paperList');
-            
+
             // Clear existing items before loading new ones
             markingList.innerHTML = '';
             paperList.innerHTML = '';
-            
+
             if (subject && subject.papers && subject.papers.length > 0) {
-                subject.papers.forEach(item => { // Renamed 'paper' to 'item' to avoid conflict
+                // Sort papers by year in descending order (latest year first)
+                subject.papers.sort((a, b) => b.year - a.year);
+
+                subject.papers.forEach(item => {
                     // Populate Marking Scheme section
                     if (item.marking) {
                         const markingItem = document.createElement('li');
@@ -297,7 +339,7 @@
                         `;
                         markingList.appendChild(markingItem);
                     }
-                    
+
                     // Populate Past Papers section
                     if (item.paper) {
                         const paperItem = document.createElement('li');
