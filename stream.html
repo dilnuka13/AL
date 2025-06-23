@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stream Subjects</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sinhala:wght@400;700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+        }
+        .sinhala { font-family: 'Noto Sinhala', sans-serif; }
+        .gradient-header {
+            background: linear-gradient(135deg, #047857 0%, #065f46 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+            transform: translateY(0);
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="gradient-header text-white shadow-lg">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <div class="animate__animated animate__fadeInLeft">
+                    <h1 class="text-3xl md:text-4xl font-bold" id="headerTitle">A/L Past Papers & Marking Schemes</h1>
+                    <p class="mt-2 text-emerald-100" id="headerSubtitle">Select a subject</p>
+                </div>
+                <button id="langToggle" class="bg-emerald-600 hover:bg-emerald-700 px-4 py-2 rounded-md text-sm font-medium transition-colors animate__animated animate__fadeInRight">
+                    සිංහල
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 py-8">
+        <div class="animate__animated animate__fadeIn">
+            <h2 id="streamTitle" class="text-2xl md:text-3xl font-bold text-emerald-800 mb-6 border-b-2 border-emerald-200 pb-2"></h2>
+            <section id="subjects" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="gradient-header text-white py-6">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <h3 class="text-xl font-bold">A/L Past Papers</h3>
+                    <p class="text-emerald-100 mt-1" id="footerText">© 2025 A/L Past Papers. All rights reserved.</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="index.html" class="text-emerald-100 hover:text-white transition-colors" id="homeLink">Home</a>
+                    <a href="subject.html" class="text-emerald-100 hover:text-white transition-colors">Subject</a>
+                    <a href="contact.html" class="text-emerald-100 hover:text-white transition-colors">Contact</a>
+                    <a href="login.html" class="text-emerald-100 hover:text-white transition-colors" id="adminLink">Admin Login</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const translations = {
+            en: {
+                title: "A/L Past Papers & Marking Schemes",
+                subtitle: "Select a subject",
+                science: "Science Stream Subjects",
+                technology: "Technology Stream Subjects",
+                commerce: "Commerce Stream Subjects",
+                arts: "Arts Stream Subjects",
+                footerText: "© 2025 A/L Past Papers. All rights reserved.",
+                homeLink: "Home",
+                adminLink: "Admin Login",
+                viewPapers: "View Papers"
+            },
+            si: {
+                title: "උසස් පෙළ පසුගිය ප්‍රශ්න පත්ර හා ලකුණු ලේඛන",
+                subtitle: "විෂයක් තෝරන්න",
+                science: "විද්‍යා විෂය ධාරාවේ විෂයන්",
+                technology: "තාක්ෂණික විෂය ධාරාවේ විෂයන්",
+                commerce: "වාණිජ විෂය ධාරාවේ විෂයන්",
+                arts: "කලා විෂය ධාරාවේ විෂයන්",
+                footerText: "© 2025 උසස් පෙළ පසුගිය ප්‍රශ්න පත්ර. සියලු හිමිකම් ඇවිරිණි.",
+                homeLink: "මුල් පිටුව",
+                adminLink: "පරිපාලක පිවිසුම",
+                viewPapers: "ප්‍රශ්න පත්‍ර බලන්න"
+            }
+        };
+
+        const subjects = {
+            science: [
+                { name: "Combined Mathematics", si: "සංයුක්ත ගණිතය", id: "combined-maths", icon: "🧮" },
+                { name: "Chemistry", si: "රසායන විද්‍යාව", id: "chemistry", icon: "⚗️" },
+                { name: "Physics", si: "භෞතික විද්‍යාව", id: "physics", icon: "⚛️" },
+                { name: "Biology", si: "ජීව විද්‍යාව", id: "biology", icon: "🧬" }
+            ],
+            technology: [
+                { name: "Engineering Technology", si: "ඉංජිනේරු තාක්ෂණය", id: "engineering-tech", icon: "⚙️", papers: [
+                    { year: 2023, paper: "https://drive.google.com/file/d/1LGBXNnLH1mQX83kJLHxyLpLzU-FWUNjF/view?usp=sharing", marking: "https://drive.google.com/file/d/1Q74VrZQ0BAublwAZu9r4hhyeTPf-xgKb/view?usp=sharing" }
+                ]},
+                { name: "Bio-Systems Technology", si: "ජෛව පද්ධති තාක්ෂණය", id: "bio-systems-tech", icon: "🌱" },
+                { name: "Science for Technology", si: "තාක්ෂනවේදය සඳහා විද්‍යාව", id: "science-for-tech", icon: "🔬" },
+                { name: "Geography", si: "භූගෝල විද්‍යාව", id: "geography", icon: "🌍" },
+                { name: "Agriculture", si: "කෘෂි විද්‍යාව", id: "agriculture", icon: "🚜" },
+                { name: "Information & Communication Technology", si: "සන්නිවේදන තාක්ෂණය", id: "ict", icon: "💻" }
+            ],
+            commerce: [
+                { name: "Accounting", si: "ගිණුම්කරණය", id: "accounting", icon: "📊" },
+                { name: "Business Studies", si: "ව්‍යාපාර අධ්‍යයනය", id: "business-studies", icon: "🏢" },
+                { name: "Economics", si: "ආර්ථික විද්‍යාව", id: "economics", icon: "💹" },
+                { name: "Information & Communication Technology", si: "තොරතුරු හා සන්නිවේදන තාක්ෂණය", id: "ict", icon: "💻" }
+            ],
+            arts: [
+                { name: "Sinhala", si: "සිංහල", id: "sinhala", icon: "📜" },
+                { name: "Political Science", si: "දේශපාලන විද්‍යාව", id: "political-science", icon: "🏛️" },
+                { name: "History", si: "ඉතිහාසය", id: "history", icon: "🕰️" },
+                { name: "Geography", si: "භූගෝල විද්‍යාව", id: "geography", icon: "🌍" },
+                { name: "Communication & Media Studies", si: "සන්නිවේදනය හා මාධ්‍ය අධ්‍යයනය", id: "media-studies", icon: "📡" },
+                { name: "Religion", si: "ආගම", id: "religion", icon: "🕉️" },
+                { name: "Dance", si: "නර්තනය", id: "dance", icon: "💃" },
+                { name: "Drama & Theatre", si: "නාට්‍ය හා රංගකලා", id: "drama", icon: "🎭" },
+                { name: "Music", si: "සංගීතය", id: "music", icon: "🎵" },
+                { name: "English Literature", si: "ඉංග්‍රීසි සාහිත්‍යය", id: "english-literature", icon: "📖" }
+            ]
+        };
+
+        let currentLang = 'en';
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'si' : 'en';
+            document.getElementById('langToggle').textContent = currentLang === 'en' ? 'සිංහල' : 'English';
+            document.querySelector('html').classList.toggle('sinhala', currentLang === 'si');
+            updateContent();
+        }
+
+        function updateContent() {
+            const t = translations[currentLang];
+            document.getElementById('headerTitle').textContent = t.title;
+            document.getElementById('headerSubtitle').textContent = t.subtitle;
+            document.getElementById('footerText').textContent = t.footerText;
+            document.getElementById('homeLink').textContent = t.homeLink;
+            document.getElementById('adminLink').textContent = t.adminLink;
+            
+            const stream = new URLSearchParams(window.location.search).get('stream');
+            document.getElementById('streamTitle').textContent = t[stream] || stream.charAt(0).toUpperCase() + stream.slice(1);
+            loadSubjects(stream);
+        }
+
+        function loadSubjects(stream) {
+            const subjectList = subjects[stream] || [];
+            const subjectsSection = document.getElementById('subjects');
+            subjectsSection.innerHTML = '';
+            
+            subjectList.forEach((subject, index) => {
+                const card = document.createElement('div');
+                card.className = `bg-white p-6 rounded-xl shadow-md card-hover animate__animated animate__fadeInUp animate__delay-${index+1}s`;
+                card.innerHTML = `
+                    <div class="flex items-start">
+                        <span class="text-3xl mr-4">${subject.icon}</span>
+                        <div>
+                            <h3 class="text-lg font-semibold text-emerald-800">${currentLang === 'en' ? subject.name : subject.si}</h3>
+                            <a href="subject.html?stream=${stream}&subject=${subject.id}" class="mt-4 inline-flex items-center bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                                ${currentLang === 'en' ? 'View Papers' : 'ප්‍රශ්න පත්‍ර බලන්න'}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                `;
+                subjectsSection.appendChild(card);
+            });
+        }
+
+        document.getElementById('langToggle').addEventListener('click', toggleLanguage);
+        updateContent();
+    </script>
+</body>
+</html>

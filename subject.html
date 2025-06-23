@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subject Papers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sinhala:wght@400;700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+        }
+        .sinhala { font-family: 'Noto Sinhala', sans-serif; }
+        .gradient-header {
+            background: linear-gradient(135deg, #047857 0%, #065f46 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .paper-item {
+            transition: all 0.2s ease;
+        }
+        .paper-item:hover {
+            background-color: #f0fdf4;
+            transform: translateX(5px);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <header class="gradient-header text-white shadow-lg">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <div class="animate__animated animate__fadeInLeft">
+                    <h1 class="text-3xl md:text-4xl font-bold" id="headerTitle">A/L Past Papers & Marking Schemes</h1>
+                    <p class="mt-2 text-emerald-100" id="headerSubtitle">View papers and marking schemes</p>
+                </div>
+                <button id="langToggle" class="bg-emerald-600 hover:bg-emerald-700 px-4 py-2 rounded-md text-sm font-medium transition-colors animate__animated animate__fadeInRight">
+                    සිංහල
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto px-4 py-8">
+        <div class="animate__animated animate__fadeIn">
+            <div class="flex items-center mb-6">
+                <a href="stream.html?stream=${new URLSearchParams(window.location.search).get('stream')}" class="text-emerald-600 hover:text-emerald-800 font-medium flex items-center mr-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    <span id="backText">Back to Subjects</span>
+                </a>
+                <h2 id="subjectTitle" class="text-2xl md:text-3xl font-bold text-emerald-800 border-b-2 border-emerald-200 pb-2"></h2>
+            </div>
+            
+            <div class="flex flex-col lg:flex-row gap-8">
+                <div class="w-full lg:w-1/2 bg-white p-6 rounded-xl card-hover">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-emerald-100 p-2 rounded-full mr-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-emerald-800" id="markingTitle">Marking Schemes</h3>
+                    </div>
+                    <ul id="markingList" class="space-y-3">
+                        <li class="text-gray-500 italic" id="noMarkingText">No marking schemes available</li>
+                    </ul>
+                </div>
+                
+                <div class="w-full lg:w-1/2 bg-white p-6 rounded-xl card-hover">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-emerald-100 p-2 rounded-full mr-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-emerald-800" id="paperTitle">Past Papers</h3>
+                    </div>
+                    <ul id="paperList" class="space-y-3">
+                        <li class="text-gray-500 italic" id="noPaperText">No papers available</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="gradient-header text-white py-6">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <h3 class="text-xl font-bold">A/L Past Papers</h3>
+                    <p class="text-emerald-100 mt-1" id="footerText">© 2025 A/L Past Papers. All rights reserved.</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="index.html" class="text-emerald-100 hover:text-white transition-colors" id="homeLink">Home</a>
+                    <a href="stream.html" class="text-emerald-100 hover:text-white transition-colors">Stream</a>
+                    <a href="subject.html" class="text-emerald-100 hover:text-white transition-colors">Subject</a>
+                    <a href="contact.html" class="text-emerald-100 hover:text-white transition-colors">Contact</a>
+                   
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const translations = {
+            en: {
+                title: "A/L Past Papers & Marking Schemes",
+                subtitle: "View papers and marking schemes",
+                backText: "Back to Subjects",
+                markingTitle: "Marking Schemes",
+                paperTitle: "Past Papers",
+                noMarkingText: "No marking schemes available",
+                noPaperText: "No papers available",
+                download: "Download",
+                footerText: "© 2025 A/L Past Papers. All rights reserved.",
+                homeLink: "Home",
+                adminLink: "Admin Login"
+            },
+            si: {
+                title: "උසස් පෙළ පසුගිය ප්‍රශ්න පත්ර හා ලකුණු ලේඛන",
+                subtitle: "ප්‍රශ්න පත්‍ර හා ලකුණු ලේඛන බලන්න",
+                backText: "විෂයන් වෙත ආපසු",
+                markingTitle: "ලකුණු ලේඛන",
+                paperTitle: "පසුගිය ප්‍රශ්න පත්‍ර",
+                noMarkingText: "ලකුණු ලේඛන නොමැත",
+                noPaperText: "ප්‍රශ්න පත්‍ර නොමැත",
+                download: "බාගන්න",
+                footerText: "© 2025 උසස් පෙළ පසුගිය ප්‍රශ්න පත්ර. සියලු හිමිකම් ඇවිරිණි.",
+                homeLink: "මුල් පිටුව",
+                adminLink: "පරිපාලක පිවිසුම"
+            }
+        };
+
+        const subjects = {
+            science: [
+                { name: "Combined Mathematics", si: "සංයුක්ත ගණිතය", id: "combined-maths" },
+                { name: "Chemistry", si: "රසායන විද්‍යාව", id: "chemistry" },
+                { name: "Physics", si: "භෞතික විද්‍යාව", id: "physics" },
+                { name: "Biology", si: "ජීව විද්‍යාව", id: "biology" }
+            ],
+            technology: [
+                { name: "Engineering Technology", si: "ඉංජිනේරු තාක්ෂණය", id: "engineering-tech", papers: [
+                    { year: 2023, paper: "https://drive.google.com/file/d/1LGBXNnLH1mQX83kJLHxyLpLzU-FWUNjF/view?usp=sharing", marking: "https://drive.google.com/file/d/1Q74VrZQ0BAublwAZu9r4hhyeTPf-xgKb/view?usp=sharing" },
+                    { year: 2022, paper: "https://drive.google.com/file/d/1B7F9esQIcMmQ7BNs8tB1UO-40C5KmJYw/view?usp=drive_link", marking: "https://drive.google.com/file/d/1pwAn0cDJEkrhrkfLP_Ue1lQNIJJ6dsTR/view?usp=drive_link" },
+                    { year: 2021, paper: "https://drive.google.com/file/d/1niEWutcNEd-aBOTCvNMwXcfqgBVmO9r9/view?usp=drive_link", marking: "https://drive.google.com/file/d/1NzJQW6YVnO0J60oGmXi39G31WgjMrysq/view?usp=drive_link" },
+                    { year: 2020, paper: "https://drive.google.com/file/d/1xizBDUl3-ijwmBCpt_8pkp44Ux6_b0C2/view?usp=drive_link", marking: "https://drive.google.com/file/d/11plNH7GsK4uQNiYV6e7tmWK2UpNdr1or/view?usp=drive_link" },
+                    { year: 2019, paper: "https://drive.google.com/file/d/1pS9IMp9xN1uWonUHd8r1vRfkAGKe3WiO/view?usp=drive_link", marking: "https://drive.google.com/file/d/1kx76Pe47rztWHEAOZrw-kw7CvhNtAEG9/view?usp=drive_link" },
+                    { year: 2018, paper: "https://drive.google.com/file/d/13j5JO7CLBRw3_0MBq1du-oCg3teVIZU4/view?usp=drive_link", marking: "https://drive.google.com/file/d/167Nmyh99p1-w_M5I9Wc9pusnvSkl5bEc/view?usp=drive_link" },
+                    { year: 2017, paper: "https://drive.google.com/file/d/1tz_GBsuPgodZUYTwsfT1-2CxIJEUtThz/view?usp=drive_link", marking: "https://drive.google.com/file/d/1Ed8uR6eQ2FRc5yJ137OmEcztb2mSKvIH/view?usp=drive_link" },
+                    { year: 2016, paper: "https://drive.google.com/file/d/1JF0sVCiQYAUI95kZ2h-4VJOLG4ELVM_-/view?usp=drive_link", marking: "https://drive.google.com/file/d/1Ve1SeGAfEWFsSj3Clh1zBCKVD7zh1L6f/view?usp=drive_link" },
+                    { year: 2015, paper: "https://drive.google.com/file/d/1MGppNRAPZQPMtse-e3A6Vhs63wZLWjJA/view?usp=drive_link", marking: "https://drive.google.com/file/d/1-80Mh6QOsdosM25xKJdhaVcSXRvBTcSf/view?usp=drive_link" }
+                ]},
+                { name: "Bio-Systems Technology", si: "ජෛව පද්ධති තාක්ෂණය", id: "bio-systems-tech" },
+                { name: "Science for Technology", si: "තාක්ෂනවේදය සඳහා විද්‍යාව", id: "science-for-tech", papers: [
+                    { year: 2023, paper: "https://drive.google.com/file/d/1Y4oJ5kMH_1mZEpwbwu2xi2EDFBAOviEl/view?usp=sharing", marking: "https://drive.google.com/file/d/14Cb5lhj6Z69gkdsoV7SXyt4MfbY0r3-M/view?usp=sharing" }
+                ]},
+                { name: "Geography", si: "භූගෝල විද්‍යාව", id: "geography" },
+                { name: "Agriculture", si: "කෘෂි විද්‍යාව", id: "agriculture" },
+                { name: "Information & Communication Technology", si: "සන්නිවේදන තාක්ෂණය", id: "ict", papers: [
+                    { year: 2023, paper: "https://drive.google.com/file/d/1LGBXNnLH1mQX83kJLHxyLpLzU-FWUNjF/view?usp=sharing", marking: "https://drive.google.com/file/d/1Q74VrZQ0BAublwAZu9r4hhyeTPf-xgKb/view?usp=sharing" }
+                ]}
+            ],
+            commerce: [
+                { name: "Accounting", si: "ගිණුම්කරණය", id: "accounting" },
+                { name: "Business Studies", si: "ව්‍යාපාර අධ්‍යයනය", id: "business-studies" },
+                { name: "Economics", si: "ආර්ථික විද්‍යාව", id: "economics" },
+                { name: "Information & Communication Technology", si: "තොරතුරු හා සන්නිවේදන තාක්ෂණය", id: "ict" }
+            ],
+            arts: [
+                { name: "Sinhala", si: "සිංහල", id: "sinhala" },
+                { name: "Political Science", si: "දේශපාලන විද්‍යාව", id: "political-science" },
+                { name: "History", si: "ඉතිහාසය", id: "history" },
+                { name: "Geography", si: "භූගෝල විද්‍යාව", id: "geography" },
+                { name: "Communication & Media Studies", si: "සන්නිවේදනය හා මාධ්‍ය අධ්‍යයනය", id: "media-studies" },
+                { name: "Religion", si: "ආගම", id: "religion" },
+                { name: "Dance", si: "නර්තනය", id: "dance" },
+                { name: "Drama & Theatre", si: "නාට්‍ය හා රංගකලා", id: "drama" },
+                { name: "Music", si: "සංගීතය", id: "music" },
+                { name: "English Literature", si: "ඉංග්‍රීසි සාහිත්‍යය", id: "english-literature" }
+            ]
+        };
+
+        let currentLang = 'en';
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'si' : 'en';
+            document.getElementById('langToggle').textContent = currentLang === 'en' ? 'සිංහල' : 'English';
+            document.querySelector('html').classList.toggle('sinhala', currentLang === 'si');
+            updateContent();
+        }
+
+        function updateContent() {
+            const t = translations[currentLang];
+            document.getElementById('headerTitle').textContent = t.title;
+            document.getElementById('headerSubtitle').textContent = t.subtitle;
+            document.getElementById('backText').textContent = t.backText;
+            document.getElementById('markingTitle').textContent = t.markingTitle;
+            document.getElementById('paperTitle').textContent = t.paperTitle;
+            document.getElementById('noMarkingText').textContent = t.noMarkingText;
+            document.getElementById('noPaperText').textContent = t.noPaperText;
+            document.getElementById('footerText').textContent = t.footerText;
+            document.getElementById('homeLink').textContent = t.homeLink;
+            // document.getElementById('adminLink').textContent = t.adminLink; // Commented out as adminLink is not in HTML
+            
+            loadPapers();
+        }
+
+        function loadPapers() {
+            const params = new URLSearchParams(window.location.search);
+            const stream = params.get('stream');
+            const subjectId = params.get('subject');
+            const subject = subjects[stream]?.find(s => s.id === subjectId);
+            
+            document.getElementById('subjectTitle').textContent = currentLang === 'en' ? subject?.name : subject?.si;
+            
+            const markingList = document.getElementById('markingList');
+            const paperList = document.getElementById('paperList');
+            
+            // Clear existing items except the "no items" message
+            markingList.innerHTML = '';
+            paperList.innerHTML = '';
+            
+            if (subject?.papers && subject.papers.length > 0) {
+                // Ensure "no items" messages are removed if they exist from previous loads
+                const existingNoMarkingText = document.getElementById('noMarkingText');
+                if (existingNoMarkingText) existingNoMarkingText.remove();
+                
+                const existingNoPaperText = document.getElementById('noPaperText');
+                if (existingNoPaperText) existingNoPaperText.remove();
+
+                subject.papers.forEach(paper => {
+                    // Marking Scheme Item
+                    if (paper.marking) {
+                        const markingItem = document.createElement('li');
+                        markingItem.className = 'paper-item bg-gray-50 p-3 rounded-lg';
+                        markingItem.innerHTML = `
+                            <div class="flex justify-between items-center">
+                                <span class="font-medium">${paper.year} ${currentLang === 'en' ? 'Marking Scheme' : 'ලකුණු ලේඛනය'}</span>
+                                <a href="${paper.marking}" target="_blank" class="flex items-center text-emerald-600 hover:text-emerald-800 font-medium">
+                                    ${currentLang === 'en' ? 'Download' : 'බාගන්න'}
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                    </svg>
+                                </a>
+                            </div>
+                        `;
+                        markingList.appendChild(markingItem);
+                    }
+                    
+                    // Paper Item
+                    if (paper.paper) {
+                        const paperItem = document.createElement('li');
+                        paperItem.className = 'paper-item bg-gray-50 p-3 rounded-lg';
+                        paperItem.innerHTML = `
+                            <div class="flex justify-between items-center">
+                                <span class="font-medium">${paper.year} ${currentLang === 'en' ? 'Question Paper' : 'ප්‍රශ්න පත්‍රය'}</span>
+                                <a href="${paper.paper}" target="_blank" class="flex items-center text-emerald-600 hover:text-emerald-800 font-medium">
+                                    ${currentLang === 'en' ? 'Download' : 'බාගන්න'}
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                    </svg>
+                                </a>
+                            </div>
+                        `;
+                        paperList.appendChild(paperItem);
+                    }
+                });
+            } else {
+                markingList.innerHTML = `<li class="text-gray-500 italic" id="noMarkingText">${translations[currentLang].noMarkingText}</li>`;
+                paperList.innerHTML = `<li class="text-gray-500 italic" id="noPaperText">${translations[currentLang].noPaperText}</li>`;
+            }
+        }
+
+        document.getElementById('langToggle').addEventListener('click', toggleLanguage);
+        updateContent();
+    </script>
+</body>
+</html>
