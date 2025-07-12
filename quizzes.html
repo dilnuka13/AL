@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">Subject Quizzes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sinhala:wght@400;700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        /* Responsive styles for mobile */
+        @media (max-width: 768px) {
+            .quiz-card h4, .subject-card h4 {
+                font-size: 1rem;
+            }
+            .quiz-card button, .subject-card {
+                padding: 0.75rem;
+            }
+            #questionText {
+                font-size: 1.1rem;
+            }
+        }
+        /* Base body and font styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+            color: #333;
+        }
+        .sinhala { font-family: 'Noto Sinhala', sans-serif; }
+
+        /* Gradient for header and footer */
+        .gradient-header {
+            background: linear-gradient(135deg, #047857 0%, #065f46 100%);
+        }
+
+        /* Card hover effects */
+        .card-hover {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Quiz and Subject card styles */
+        .quiz-card:hover, .subject-card:hover {
+            background-color: #e6fffa;
+            transform: scale(1.02);
+        }
+        .subject-card {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        /* Progress bar styles */
+        .progress-container {
+            width: 100%;
+            background-color: #e5e7eb;
+            border-radius: 0.5rem;
+            height: 0.5rem;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            border-radius: 0.5rem;
+            background-color: #047857;
+            transition: width 0.3s ease;
+        }
+
+        /* Option selection styles */
+        .option-item {
+             cursor: pointer;
+        }
+        .option-item.correct {
+            background-color: #d1fae5;
+            border-color: #34d399;
+        }
+        .option-item.incorrect {
+            background-color: #fee2e2;
+            border-color: #fca5a5;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <header class="gradient-header text-white shadow-lg">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <div class="animate__animated animate__fadeInLeft">
+                    <h1 class="text-3xl md:text-4xl font-bold" id="headerTitle">A/L Past Papers & Marking Schemes</h1>
+                    <p class="mt-2 text-emerald-100" id="headerSubtitle">Test your knowledge with quizzes</p>
+                </div>
+                <button id="langToggle" class="bg-emerald-600 hover:bg-emerald-700 px-4 py-2 rounded-md text-sm font-medium transition-colors animate__animated animate__fadeInRight">
+                    සිංහල
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto px-4 py-8">
+        <div class="animate__animated animate__fadeIn">
+            
+            <!-- Breadcrumb Navigation -->
+            <div id="breadcrumb" class="flex items-center mb-6 text-emerald-600 font-medium">
+                <!-- Breadcrumb items will be populated here -->
+            </div>
+
+            <!-- Subject Selection Container -->
+            <div id="subjectSelectionContainer" class="bg-white p-6 rounded-xl card-hover mb-8">
+                <h3 class="text-xl font-semibold text-emerald-800 mb-4" id="availableSubjectsTitle">Select a Subject</h3>
+                <p class="text-gray-600 mb-6" id="subjectSelectionDescription">Choose a subject below to see the available quizzes.</p>
+                <div id="subjectList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Subjects will be dynamically loaded here -->
+                </div>
+            </div>
+
+            <!-- Quiz List Container (hidden by default) -->
+            <div id="quizListContainer" class="hidden bg-white p-6 rounded-xl card-hover mb-8">
+                <h3 class="text-xl font-semibold text-emerald-800 mb-4" id="availableQuizzesTitle">Available Quizzes</h3>
+                <p class="text-gray-600 mb-4" id="quizDescription">Select a quiz to test your knowledge. Each quiz contains 10 multiple-choice questions based on past papers.</p>
+                <div id="quizList" class="space-y-4">
+                    <!-- Quizzes will be dynamically loaded here -->
+                </div>
+            </div>
+
+            <!-- Quiz Taking Container (hidden by default) -->
+            <div id="quizContainer" class="hidden bg-white p-6 rounded-xl card-hover">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 id="currentQuizTitle" class="text-xl font-semibold text-emerald-800"></h3>
+                    <div class="flex items-center space-x-4">
+                        <div class="text-gray-600 font-medium" id="quizProgress">Question 1 of 10</div>
+                        <div id="timer" class="text-red-500 font-bold text-lg bg-red-100 px-3 py-1 rounded-full">2:00</div>
+                    </div>
+                </div>
+                
+                <div class="progress-container mb-6">
+                    <div id="progressBar" class="progress-bar" style="width: 10%"></div>
+                </div>
+                
+                <div id="questionContainer" class="mb-6">
+                    <p id="questionText" class="text-lg font-medium mb-4"></p>
+                    <div id="optionsContainer" class="space-y-3"></div>
+                </div>
+                
+                <div id="feedbackContainer" class="hidden mt-4 p-3 rounded-lg">
+                    <p id="feedbackText" class="font-medium"></p>
+                </div>
+
+                <div class="flex justify-end mt-6">
+                    <button id="nextQuestionBtn" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+                        <span id="nextBtnText">Next</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results Container (hidden by default) -->
+            <div id="resultsContainer" class="hidden bg-white p-6 rounded-xl card-hover text-center">
+                <h3 class="text-2xl font-bold text-emerald-800 mb-4" id="resultsTitle">Quiz Results</h3>
+                <div class="text-4xl font-bold mb-4" id="scoreDisplay">0/10</div>
+                <div class="text-lg mb-6" id="resultMessage"></div>
+                <button id="retakeQuizBtn" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg font-medium transition-colors mr-4">
+                    <span id="retakeBtnText">Retake Quiz</span>
+                </button>
+                <button id="backToQuizzesBtn" class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                    <span id="backToQuizzesText">Back to Quizzes</span>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="gradient-header text-white py-6 mt-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <h3 class="text-xl font-bold">EduPapers.lk</h3>
+                    <p class="text-emerald-100 mt-1" id="footerText">© 2025 A/L Past Papers. All rights reserved.</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="index.html" class="text-emerald-100 hover:text-white transition-colors" id="homeLink">Home</a>
+                    <a href="stream.html" class="text-emerald-100 hover:text-white transition-colors" id="streamLink">Stream</a>
+                    <a href="subject.html" class="text-emerald-100 hover:text-white transition-colors" id="subjectLink">Subject</a>
+                    <a href="contact.html" class="text-emerald-100 hover:text-white transition-colors" id="contactLink">Contact</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Translations object for multilingual support
+        const translations = {
+            en: {
+                pageTitle: "Subject Quizzes",
+                headerTitle: "A/L Past Papers & Marking Schemes",
+                headerSubtitle: "Test your knowledge with quizzes",
+                availableSubjectsTitle: "Select a Subject",
+                subjectSelectionDescription: "Choose a subject below to see the available quizzes.",
+                availableQuizzesTitle: "Available Quizzes",
+                quizDescription: "Select a quiz to test your knowledge. Each quiz contains 10 multiple-choice questions based on past papers.",
+                nextBtnText: "Next",
+                submitBtnText: "Show Results",
+                resultsTitle: "Quiz Results",
+                retakeBtnText: "Retake Quiz",
+                backToQuizzesText: "Back to Quizzes",
+                footerText: "© 2025 A/L Past Papers. All rights reserved.",
+                homeLink: "Home",
+                streamLink: "Stream",
+                subjectLink: "Subject",
+                contactLink: "Contact",
+                startQuizText: "Start Quiz",
+                questionProgress: (current, total) => `Question ${current} of ${total}`,
+                correctFeedback: "Correct!",
+                incorrectFeedback: (correctAnswer) => `Incorrect. The correct answer is: ${correctAnswer}`,
+                timeUpText: "Time's Up!",
+                resultMessages: [
+                    "Keep practicing! Review the past papers and try again.",
+                    "Good effort! You're on the right track.",
+                    "Well done! You have a solid understanding.",
+                    "Excellent work! You're ready for the exam!",
+                    "Perfect score! You're an expert in this subject!"
+                ],
+                breadcrumbHome: "All Subjects",
+            },
+            si: {
+                pageTitle: "විෂය ප්‍රශ්නෝත්තර",
+                headerTitle: "උසස් පෙළ පසුගිය ප්‍රශ්න පත්ර හා ලකුණු ලේඛන",
+                headerSubtitle: "ප්‍රශ්නෝත්තර සමඟ ඔබේ දැනුම පරීක්ෂා කරන්න",
+                availableSubjectsTitle: "විෂයයක් තෝරන්න",
+                subjectSelectionDescription: "පවතින ප්‍රශ්නාවලි බැලීමට පහතින් විෂයයක් තෝරන්න.",
+                availableQuizzesTitle: "ලබා ගත හැකි ප්‍රශ්නෝත්තර",
+                quizDescription: "ඔබේ දැනුම පරීක්ෂා කිරීමට ප්‍රශ්නෝත්තරයක් තෝරන්න. සෑම ප්‍රශ්නෝත්තරයකම පසුගිය ප්‍රශ්න පත්ර මත පදනම් වූ බහුවරණ ප්‍රශ්න 10 ක් අඩංගු වේ.",
+                nextBtnText: "ඊළඟ",
+                submitBtnText: "ප්‍රතිඵල බලන්න",
+                resultsTitle: "ප්‍රශ්නෝත්තර ප්‍රතිඵල",
+                retakeBtnText: "නැවත අරඹන්න",
+                backToQuizzesText: "ප්‍රශ්නෝත්තර වෙත",
+                footerText: "© 2025 උසස් පෙළ පසුගිය ප්‍රශ්න පත්ර. සියලු හිමිකම් ඇවිරිණි.",
+                homeLink: "මුල් පිටුව",
+                streamLink: "විෂය ධාරා",
+                subjectLink: "විෂයන්",
+                contactLink: "අප අමතන්න",
+                startQuizText: "අරඹන්න",
+                questionProgress: (current, total) => `ප්‍රශ්නය ${current} / ${total}`,
+                correctFeedback: "නිවැරදියි!",
+                incorrectFeedback: (correctAnswer) => `වැරදියි. නිවැරදි පිළිතුර: ${correctAnswer}`,
+                timeUpText: "කාලය අවසන්!",
+                resultMessages: [
+                    "පුහුණුව දිගටම කරගෙන යන්න! පසුගිය ප්‍රශ්න පත්ර සමාලෝචනය කර නැවත උත්සාහ කරන්න.",
+                    "හොඳ උත්සාහයක්! ඔබ නිවැරදි මාවතේ ගමන් කරයි.",
+                    "ඉතා හොඳයි! ඔබට හොඳ අවබෝධයක් ඇත.",
+                    "විශිෂ්ටයි! ඔබ විභාගයට සූදානම්.",
+                    "පරිපූර්ණ ලකුණු! ඔබ මෙම විෂයයේ විශේෂඥයෙක්."
+                ],
+                breadcrumbHome: "සියලුම විෂයයන්",
+            }
+        };
+
+        // Quiz data structure
+        const quizzesData = {
+            "technology": {
+                "science-for-tech": {
+                    "title": "Science for Technology", "si_title": "තාක්ෂණවේදය සඳහා විද්‍යාව",
+                    "quizzes": {
+                        "quiz-1": { "title": "Quiz 1: Questions 1-10", "si_title": "ප්‍රශ්නාවලිය 1: ප්‍රශ්න 1-10", "questions": [
+                            { "question": "All living cells have...", "si_question": "සියලුම ජීවී සෛලවල...", "options": ["membrane-bound organelles.", "a cell wall.", "a cell membrane.", "vacuoles.", "mitochondria."], "si_options": ["පටලයකින් වට වූ ඉන්ද්‍රියිකා ඇත.", "සෛල බිත්තියක් ඇත.", "සෛල පටලයක් ඇත.", "රික්තක ඇත.", "මයිටකොන්ඩ්‍රියා ඇත."], "correct": 2 },
+                            { "question": "Which microorganism produces the antibiotic Tetracycline?", "si_question": "ටෙට්‍රාසයික්ලින් ප්‍රතිජීවකය නිපදවනු ලබන්නේ කුමන ක්ෂුද්‍ර ජීවියා ද?", "options": ["Escherichia coli", "Saccharomyces cerevisiae", "Corynobacterium glutamicum", "Streptomyces griseus", "Streptomyces aureofaciens"], "si_options": ["Escherichia coli", "Saccharomyces cerevisiae", "Corynobacterium glutamicum", "Streptomyces griseus", "Streptomyces aureofaciens"], "correct": 4 },
+                            { "question": "Consider the following statements about biogas production. A - Biogas is produced by the decomposition of organic matter under anaerobic conditions. B - Biogas mainly contains methane, carbon dioxide, and nitrogen. C - The first step of biogas production is the generation of acetic acid from organic matter. Which statements are correct?", "si_question": "ජීව වායු නිෂ්පාදන ක්‍රියාවලිය පිළිබඳ පහත වගන්ති සලකන්න. A - ජීව වායු නිෂ්පාදනය වනුයේ කාබනික ද්‍රව්‍ය නිර්වායු තත්ත්ව යටතේ වියෝජනයෙනි. B - ජීව වායුවේ ප්‍රධාන වශයෙන් මීතේන්, කාබන්ඩයොක්සයිඩ් සහ නයිට්‍රජන් අඩංගු වේ. C - ජීව වායු නිෂ්පාදනයේ පළමු පියවර වනුයේ කාබනික ද්‍රව්‍ය වලින් ඇසිටික් අම්ලය උත්පාදනයයි. ඉහත වගන්ති අතුරින් නිවැරදි වනුයේ", "options": ["A only", "A and B only", "A and C only", "B and C only", "All A, B, and C"], "si_options": ["A පමණි.", "A සහ B පමණි.", "A සහ C පමණි.", "B සහ C පමණි.", "A, B සහ C යන සියල්ලම ය."], "correct": 1 },
+                            { "question": "What tissue is responsible for secondary growth in dicotyledonous plants?", "si_question": "ද්වි බීජ පත්‍රී ශාකවල ද්විතීයික වර්ධනයට හේතු වන පටකය කුමක්ද?", "options": ["Epidermis", "Cambium", "Xylem", "Cortex", "Phloem"], "si_options": ["අපිචර්මය", "කැම්බියම", "ශෛලමය", "බාහිකය", "ප්ලෝයමය"], "correct": 1 },
+                            { "question": "The graph shows the variation of enzyme activity with respect to one factor. What is this factor?", "si_question": "එන්සයිමයක ක්‍රියාකාරිත්වය විවිධ සාධක මත පදනම් වේ. ප්‍රස්තාරය මගින් පෙන්වා ඇත්තේ ඉන් එක් සාධකයකට සාපේක්ෂව එන්සයිම ක්‍රියාකාරිත්වයේ විචලනයයි. මෙම සාධකය කුමක්ද?", "options": ["pH", "Temperature", "Salt concentration", "Product concentration", "Substrate concentration"], "si_options": ["pH", "උෂ්ණත්වය", "ලවණ සාන්ද්‍රණය", "ඵල සාන්ද්‍රණය", "උපස්ථර සාන්ද්‍රණය"], "correct": 4 },
+                            { "question": "What is the correct statement regarding endothermic reactions?", "si_question": "තාප අවශෝෂක ප්‍රතික්‍රියා සම්බන්ධයෙන් නිවැරදි ප්‍රකාශය කුමක්ද?", "options": ["All single-step reactions are endothermic.", "All multi-step reactions are endothermic.", "The energy of reactants is equal to the energy of products.", "The energy of reactants is less than the energy of products.", "The energy of reactants is greater than the energy of products."], "si_options": ["සියලු ම තනි පියවර ප්‍රතික්‍රියා තාප අවශෝෂක වේ.", "සියලු ම බහු පියවර ප්‍රතික්‍රියා තාප අවශෝෂක වේ.", "ප්‍රතික්‍රියකවල ශක්තිය ඵලවල ශක්තියට සමාන වේ.", "ප්‍රතික්‍රියකවල ශක්තිය ඵලවල ශක්තියට වඩා අඩුය.", "ප්‍රතික්‍රියකවල ශක්තිය ඵලවල ශක්තියට වඩා වැඩිය."], "correct": 3 },
+                            { "question": "Consider the reaction: 2H₂O₂(l) → O₂(g) + 2H₂O(l). What is the correct statement?", "si_question": "පහත ප්‍රතික්‍රියාව සලකන්න. 2H₂O₂(l) → O₂(g) + 2H₂O(l). ඉහත ප්‍රතික්‍රියාව හා සම්බන්ධ නිවැරදි ප්‍රකාශය කුමක්ද?", "options": ["The rate of O₂ production is half the rate of H₂O₂ consumption.", "The rate of H₂O₂ consumption is equal to the rate of O₂ production.", "The rate of O₂ production is greater than the rate of H₂O₂ consumption.", "The rate of O₂ production is equal to the rate of H₂O production.", "The rate of O₂ production is half the rate of H₂O production."], "si_options": ["O₂ නිෂ්පාදන ශීඝ්‍රතාව H₂O₂ වැයවීමේ ශීඝ්‍රතාවෙන් අඩකි.", "H₂O₂ වැයවීමේ ශීඝ්‍රතාව O₂ නිෂ්පාදන ශීඝ්‍රතාවට සමාන වේ.", "O₂ නිෂ්පාදන ශීඝ්‍රතාව H₂O₂ වැයවීමේ ශීඝ්‍රතාවට වඩා වැඩි ය.", "O₂ නිෂ්පාදන ශීඝ්‍රතාව H₂O නිෂ්පාදන ශීඝ්‍රතාවට සමාන වේ.", "O₂ නිෂ්පාදන ශීඝ්‍රතාව H₂O නිෂ්පාදන ශීඝ්‍රතාවෙන් අඩකි."], "correct": 0 },
+                            { "question": "All carbohydrates...", "si_question": "සියලු ම කාබෝහයිඩ්‍රේට...", "options": ["are polymers.", "have the general formula (CH₂O)n.", "can be identified by the iodine test.", "can be hydrolyzed into monomers.", "have at least one carboxylic group."], "si_options": ["බහු අවයවික වේ.", "සඳහා පොදු සූත්‍රය (CH₂O)n වේ.", "අයඩින් පරීක්ෂාව මගින් හඳුනාගත හැකි ය.", "ඒකාවයවික බවට ජල විච්ඡේදනය කළ හැකි ය.", "සතුව අවම වශයෙන් එක් කාබොක්සිලික් කාණ්ඩයක් ඇත."], "correct": 3 },
+                            { "question": "Consider the following statements about amino acids and proteins. A - Amino acids are linked by peptide bonds to produce proteins. B - Two different proteins can have the same amino acid sequence. C - Some proteins are linked to a carbohydrate molecule to produce glycoproteins. Which are correct?", "si_question": "ඇමයිනෝ අම්ල සහ ප්‍රෝටීන සම්බන්ධ පහත ප්‍රකාශ සලකන්න. A - ඇමයිනෝ අම්ල පෙප්ටයිඩ බන්ධන මගින් සම්බන්ධ වී ප්‍රෝටීන නිපදවයි. B - වෙනස් ප්‍රෝටීන දෙකක එකම ඇමයිනෝ අම්ල අනුපිළිවෙළක් තිබිය හැකි ය. C - සමහර ප්‍රෝටීන, කාබෝහයිඩ්‍රේට අණුවක් හා සම්බන්ධ වී ග්ලයිකොප්‍රෝටීන නිපදවයි. ඉහත ප්‍රකාශ අතුරින් නිවැරදි වනුයේ", "options": ["A only", "A and B only", "A and C only", "B and C only", "All A, B, and C"], "si_options": ["A පමණි.", "A සහ B පමණි.", "A සහ C පමණි.", "B සහ C පමණි.", "A, B සහ C යන සියල්ලමය."], "correct": 2 },
+                            { "question": "What is the purpose of adding a filler material when producing some polymeric products?", "si_question": "සමහර බහු අවයවික නිෂ්පාදන නිපද වීමේ දී පිරවුම් ද්‍රව්‍යයක් එකතු කිරීමේ අරමුණ කුමක්ද?", "options": ["To get a better finish", "To make the product softer", "To reduce the production cost", "To slow down the burning of the product", "To facilitate the production process"], "si_options": ["වඩා හොඳ නිමාවක් ලබා ගැනීම", "නිෂ්පාදනය මෘදු බවට පත් කිරීම", "නිෂ්පාදන පිරිවැය අඩු කිරීම", "නිෂ්පාදනය ගිනි ගැනීම මන්දනය කිරීම", "නිෂ්පාදන ක්‍රියාවලිය පහසු කිරීම"], "correct": 2 }
+                        ]},
+                        "quiz-2": { "title": "Quiz 2: Questions 11-20", "si_title": "ප්‍රශ්නාවලිය 2: ප්‍රශ්න 11-20", "questions": [
+                            { "question": "When using a highly exothermic reaction in a production process...", "si_question": "නිෂ්පාදන ක්‍රියාවලියක දී අධික තාපදායක ප්‍රතික්‍රියාවක් භාවිත කරන විට...", "options": ["reactants must be mixed very quickly.", "all reactants must be added at once.", "heat must be supplied to speed up the process.", "the reactant mixture must always be cooled.", "reactants should be added slowly and mixed well."], "si_options": ["ප්‍රතික්‍රියක ඉතා ඉක්මනින් මිශ්‍ර කළ යුතු ය.", "සියලු ම ප්‍රතික්‍රියක එකවර එකතු කළ යුතු ය.", "ක්‍රියාවලිය වේගවත් කිරීම සඳහා තාපය සැපයිය යුතු ය.", "ප්‍රතික්‍රියක මිශ්‍රණය සෑමවිටම සිසිල් කළ යුතු ය.", "ප්‍රතික්‍රියක සෙමින් එකතු කරමින් හොඳින් මිශ්‍ර කළ යුතු ය."], "correct": 4 },
+                            { "question": "How is the glycerol formed during soap production removed?", "si_question": "සබන් නිෂ්පාදනයේ දී සෑදෙන ග්ලිසරෝල් ඉවත් කෙරෙනුයේ...", "options": ["By evaporation.", "By centrifugation.", "By applying a stream of hot dry air.", "By applying external pressure.", "By mixing with a NaCl solution."], "si_options": ["වාෂ්පීකරණය මගිනි.", "කේන්ද්‍රාපසරණය මගිනි.", "උණුසුම් වියළි වාත ධාරාවක් යෙදීමෙනි.", "බාහිර පීඩනයක් යෙදීමෙනි.", "NaCl ද්‍රාවණයක් සමග මිශ්‍ර කිරීමෙනි."], "correct": 4 },
+                            { "question": "Essential oils are...", "si_question": "සගන්ධ තෙල් යනු...", "options": ["immiscible in water, volatile organic compounds.", "water-soluble, volatile, synthetic organic compounds.", "non-volatile organic compounds extracted from plants.", "water-insoluble, volatile organic compounds extracted from plants.", "water-insoluble, non-volatile organic compounds extracted from plants."], "si_options": ["ජලයේ අමිශ්‍ර, වාෂ්පශීලී කාබනික සංයෝග වේ.", "ජලයේ ද්‍රාව්‍ය, වාෂ්පශීලී, සංශ්ලේශිත කාබනික සංයෝග වේ.", "ශාකවලින් නිස්සාරණය කරනු ලබන, අවාෂ්පශීලී කාබනික සංයෝග වේ.", "ශාකවලින් නිස්සාරණය කරනු ලබන, ජලයේ අද්‍රාව්‍ය, වාෂ්පශීලී කාබනික සංයෝග වේ.", "ශාකවලින් නිස්සාරණය කරනු ලබන, ජලයේ අද්‍රාව්‍ය, අවාෂ්පශීලී කාබනික සංයෝග වේ."], "correct": 3 },
+                            { "question": "The molecular structures of polymeric materials A, B, and C are shown. Which statement is correct?", "si_question": "බහු අවයවක ද්‍රව්‍ය වන A, B සහ C හි අණුක සැකැස්ම පහත දක්වා ඇත. බහු අවයවික ද්‍රව්‍ය A, B සහ C සම්බන්ධයෙන් නිවැරදි ප්‍රකාශය කුමක්ද?", "options": ["A is crystalline and translucent.", "B is semi-crystalline and opaque.", "C is amorphous and opaque.", "The transparency of A, B, and C varies in the order A<B<C.", "The crystalline nature of A, B, and C varies in the order A>B>C."], "si_options": ["A ස්ඵටිකමය හා විනිවිද පෙනෙන සුළු වේ.", "B අර්ධ ස්ඵටිකමය සහ පාරාන්ධ වේ.", "C අස්ඵටිකමය සහ පාරාන්ධ වේ.", "A, B සහ C හි විනිවිද භාවය A<B<C අනුපිළිවෙළින් වෙනස් වේ.", "A, B සහ C හි ස්ඵටිකමය ස්වභාවය A>B>C අනුපිළිවෙළින් වෙනස් වේ."], "correct": 4 },
+                            { "question": "By which convention/agreement did countries agree to reduce the emission of gases harmful to the ozone layer?", "si_question": "ඕසෝන් වියනට හානිකර වායු විමෝචනය අඩු කිරීමට රටවල් එකඟ වූයේ කුමන සම්මුතිය / එකඟතාව මගින්ද?", "options": ["Paris Agreement", "Kyoto Protocol", "Cartagena Protocol", "Geneva Convention", "Montreal Protocol"], "si_options": ["පැරිස් එකඟතාව", "කියෝතෝ සම්මුතිය", "කාටජිනා එකඟතාව", "ජිනීවා එකඟතාව", "මොන්ට්‍රියල් සම්මුතිය"], "correct": 4 },
+                            { "question": "In the optimization of chemical processes, what does 'yield' mean?", "si_question": "රසායනික ක්‍රියාවලි ප්‍රශස්ත කරණයේ දී 'ඵලදාව' යන්නෙන් අදහස් කරන්නේ කුමක්ද?", "options": ["The amount of raw materials used", "The efficiency of the catalyst used", "The time taken to complete the process", "The percentage of product obtained from raw materials", "The percentage of by-products and waste recycled and reused"], "si_options": ["භාවිත කරන අමුද්‍රව්‍ය ප්‍රමාණය", "භාවිත කරන උත්ප්‍රේරකයේ කාර්යක්ෂමතාව", "ක්‍රියාවලිය සම්පූර්ණ කිරීමට ගතවන කාලය", "අමුද්‍රව්‍ය වලින් ලබාගන්නා නිෂ්පාදන ප්‍රතිශතය", "අතුරු ඵල හා අපද්‍රව්‍ය ප්‍රතිචක්‍රීකරණය සහ නැවත භාවිත කිරීමේ ප්‍රතිශතය"], "correct": 3 },
+                            { "question": "Which of the following substances can be used to raise the pH of farmland soil?", "si_question": "වගා බිමක පසෙහි pH අගය ඉහළ නැංවීමට පහත කුමන ද්‍රව්‍යය භාවිත කළ හැකි ද?", "options": ["Sand", "Clay", "Common salt", "Slaked lime", "Water"], "si_options": ["වැලි", "මැටි", "සාමාන්‍ය ලුණු", "අළු හුණු", "ජලය"], "correct": 3 },
+                            { "question": "The lengths of the sides of a right-angled triangle are shown in the figure (3x, 4x, 20). What is the value of x?", "si_question": "ඍජුකෝණී ත්‍රිකෝණයක පාදවල දිග රූපයේ දැක්වේ (3x, 4x, 20). x හි අගය කුමක්ද?", "options": ["1", "2", "3", "4", "5"], "si_options": ["1", "2", "3", "4", "5"], "correct": 3 },
+                            { "question": "The straight paths of two airplanes are represented by y=3x+a and y=2x+b. They intersect at (1, 4). What are the values of a and b?", "si_question": "ගුවන් යානා දෙකක ඍජු පථ, y=3x+a හා y=2x+b යන සමීකරණ වලින් දැක් වේ. එම පථ (1, 4) ලක්ෂ්‍යයෙහි දී ඡේදනය වේ. පිළිවෙළින් a හා b හි අගයන් මොනවාද?", "options": ["1, 2", "1, 4", "3, 2", "(-1), (-2)", "(-11), (-7)"], "si_options": ["1, 2", "1, 4", "3, 2", "(-1), (-2)", "(-11), (-7)"], "correct": 0 },
+                            { "question": "A circle has center O and radius 4 cm. SR is an arc of a larger circle with center O. Angle PÔQ is 0.47 radians. P and Q are midpoints of OS and OR. What is the area of the shaded region PQRS?", "si_question": "කේන්ද්‍රය O, අරය 4 cm වූ වෘත්තයකි. SR යනු විශාල වෘත්තයක චාපයකි. PÔQ කෝණය රේඩියන 0.47 වේ. P, Q යනු OS, OR හි මධ්‍ය ලක්ෂ්‍ය වේ. අඳුරු කල PQRS පෙදෙසේ වර්ගඵලය කොපමණ ද?", "options": ["3.2π cm²", "9.6 cm²", "12.8π cm²", "19.2 cm²", "22.4π cm²"], "si_options": ["3.2π cm²", "9.6 cm²", "12.8π cm²", "19.2 cm²", "22.4π cm²"], "correct": 1 }
+                        ]},
+                        "quiz-3": { "title": "Quiz 3: Questions 21-30", "si_title": "ප්‍රශ්නාවලිය 3: ප්‍රශ්න 21-30", "questions": [
+                            { "question": "In terms of the angle θ, what is the distance from the Sun to the celestial object in astronomical units? (Sun-Earth distance = 1 AU)", "si_question": "θ කෝණය ඇසුරින් සූර්යයාගේ සිට ආකාශ වස්තුවට ඇති දුර නක්ෂත්‍ර ඒකක වලින් කොපමණ ද? (සූර්ය-පෘථිවි දුර = 1 AU)", "options": ["tan(θ)", "1/sin(θ)", "sin(θ)", "1/tan(θ)", "1/cos(θ)"], "si_options": ["tan(θ)", "1/sin(θ)", "sin(θ)", "1/tan(θ)", "1/cos(θ)"], "correct": 3 },
+                            { "question": "A cattle farm's area is a 12m x 8m rectangle and a triangle with a 12m base and 3m height. If a cow needs 4 m², what's the max number of cows?", "si_question": "ගව ගොවිපලක භූමිය 12m x 8m සෘජුකෝණාස්‍රයකින් සහ පාදය 12m, උස 3m වූ ත්‍රිකෝණයකින් සමන්විතය. ගවයෙකුට 4 m² අවශ්‍ය නම්, ගාල් කළ හැකි උපරිම ගවයින් ගණන කීයද?", "options": ["19", "25", "28.5", "35", "28"], "si_options": ["19", "25", "28.5", "35", "28"], "correct": 4 },
+                            { "question": "From a 90 m high tower, the angles of depression to the top and bottom of a building are 30° and 60°. What is the building's height?", "si_question": "90 m උස කුළුණක සිට ගොඩනැගිල්ලක මුදුනට හා පතුලට ඇති අවරෝහණ කෝණ පිළිවෙළින් 30° හා 60° වේ. ගොඩනැගිල්ලේ උස කොපමණ ද?", "options": ["20√3 m", "30 m", "40 m", "90/√3 m", "60 m"], "si_options": ["20√3 m", "30 m", "40 m", "90/√3 m", "60 m"], "correct": 4 },
+                            { "question": "A tree trunk is a cone with height 43 m and base diameter 3 m. What is its volume? (Use π = 3)", "si_question": "ගසක කඳ උස 43 m, පාදමේ විෂ්කම්භය 3 m වූ කේතුවකි. එහි පරිමාව කොපමණ ද? (π = 3 ලෙස ගන්න)", "options": ["96.75 m³", "193.5 m³", "387 m³", "580.5 m³", "1161 m³"], "si_options": ["96.75 m³", "193.5 m³", "387 m³", "580.5 m³", "1161 m³"], "correct": 0 },
+                            { "question": "A parabolic antenna is given by y = 0.2x². What are its width and depth if the endpoints are at x=-2 and x=2?", "si_question": "පරාවලයික ඇන්ටනාවක් y = 0.2x² මගින් දෙනු ලැබේ. x=-2 සහ x=2 හිදී එහි පළල සහ ගැඹුර කොපමණද?", "options": ["2 m, 0.8 m", "2 m, 8 m", "4 m, 0.8 m", "4 m, 3.2 m", "4 m, 8 m"], "si_options": ["2 m, 0.8 m", "2 m, 8 m", "4 m, 0.8 m", "4 m, 3.2 m", "4 m, 8 m"], "correct": 2 },
+                            { "question": "What is the class boundary of the first class interval [(-5)-(-1)]?", "si_question": "පළමු පන්ති ප්‍රාන්තරයේ [(-5)-(-1)] පන්ති මායිම කුමක්ද?", "options": ["(-5.5)-(-1.5)", "(-5.5)-(-0.5)", "(-4.5)-(-1.5)", "(-4.5)-(-0.5)", "(-5.5)-0.5"], "si_options": ["(-5.5)-(-1.5)", "(-5.5)-(-0.5)", "(-4.5)-(-1.5)", "(-4.5)-(-0.5)", "(-5.5)-0.5"], "correct": 1 },
+                            { "question": "Which class interval does the median temperature belong to, given frequencies 10, 6, 5, 5, 4 for 30 days?", "si_question": "දින 30ක උෂ්ණත්ව සංඛ්‍යාත 10, 6, 5, 5, 4 නම් මධ්‍යස්ථය අයත් වන පන්ති ප්‍රාන්තරය කුමක්ද?", "options": ["(-5)-(-1)", "0-4", "5-9", "10-14", "15-19"], "si_options": ["(-5)-(-1)", "0-4", "5-9", "10-14", "15-19"], "correct": 1 },
+                            { "question": "A computer screen is black. Possible causes: A - Hard drive failure, B - Graphics card failure, C - Motherboard failure. Which could be the cause?", "si_question": "පරිගණක තිරය කළු ය. විය හැකි හේතු: A - දෘඪ තැටි දෝෂය, B - ග්‍රැෆික් කාඩ්පත් දෝෂය, C - මවු පුවරු දෝෂය. හේතුව කුමක් විය හැකිද?", "options": ["A only", "A and B only", "A and C only", "B and C only", "All A, B, and C"], "si_options": ["A පමණි", "A සහ B පමණි", "A සහ C පමණි", "B සහ C පමණි", "A, B සහ C යන සියල්ලම ය"], "correct": 3 },
+                            { "question": "A computer can be restored to a previous state using a system restore point...", "si_question": "පද්ධති ප්‍රතිස්ථාපන ලක්ෂ්‍යයක් භාවිතයෙන් පරිගණකයක් පෙර තත්වයට පත් කළ හැක්කේ...", "options": ["after a hardware failure.", "after formatting the hard drive.", "after installing an incompatible driver.", "after losing personal files due to a virus.", "after any change made after the restore point."], "si_options": ["දෘඪාංග හානි වීමකට පසුව ය.", "දෘඪ තැටිය හැඩතල ගැන්වීමෙන් පසුව ය.", "නොගැළපෙන ධාවකයක් ස්ථාපනය කිරීමෙන් පසුවය.", "වෛරසයකින් පුද්ගලික ලිපිගොනු නැතිවීමෙන් පසුව ය.", "ප්‍රතිස්ථාපන ලක්ෂ්‍යය සෑදීමෙන් පසු කරන ඕනෑම වෙනසකට පසුව ය."], "correct": 2 },
+                            { "question": "What is 'Nautilus' in the context of computers?", "si_question": "පරිගණක සම්බන්ධයෙන් 'Nautilus' යනු කුමක්ද?", "options": ["A web browser.", "A hardware device.", "An operating system.", "An open-source file manager.", "A simulation software for marine life."], "si_options": ["වෙබ් බ්‍රව්සරයකි.", "දෘඪාංග උපාංගයකි.", "මෙහෙයුම් පද්ධතියකි.", "විවෘත මූලාශ්‍ර ගොනු කළමනාකරුවෙකි.", "සාගර ජීවීන් අධ්‍යයනය සඳහා සමාකරණ මෘදුකාංගයකි."], "correct": 3 }
+                        ]},
+                        "quiz-4": { "title": "Quiz 4: Questions 31-40", "si_title": "ප්‍රශ්නාවලිය 4: ප්‍රශ්න 31-40", "questions": [
+                            { "question": "Which word processor feature formats all main topics of a textbook uniformly?", "si_question": "පෙළපොතක ප්‍රධාන මාතෘකා සියල්ල එකම ආකාරයකට හැඩතල ගැන්වීමට වදන් සැකසුම් මෘදුකාංගයක ඇති කුමන අංගයද භාවිතා කරන්නේ?", "options": ["Styles", "Filters", "Transitions", "Animation effects", "Tabs and Bullets"], "si_options": ["මෝස්තර (Styles)", "පෙරහන් (Filters)", "සංක්‍රාන්ති (Transitions)", "සජීවීකරණ ආචරණ (Animation effects)", "ටැබ් සහ බුලට්"], "correct": 0 },
+                            { "question": "Which tool in a word processor organizes, lists, and structures topics and subtopics?", "si_question": "ලේඛනයක මාතෘකා සහ උපමාතෘකා සංවිධානය කිරීමට, ලැයිස්තුගත කිරීමට සහ ව්‍යුහගත කිරීමට භාවිතා කරන වදන් සැකසුම් මෙවලම කුමක්ද?", "options": ["Thesaurus", "Synonyms", "Font Style", "Word Count", "Table of Contents"], "si_options": ["ශබ්ද නිධිය", "සමාන පද", "අකුරු විලාසය", "වචන ගණන", "පටුන"], "correct": 4 },
+                            { "question": "To expand a 4x4 multiplication table to 12x12, what formula should be in cell B2 to auto-fill correctly?", "si_question": "4x4 ගුණන වගුවක් 12x12 දක්වා පුළුල් කිරීමට, B2 කොටුවේ යෙදිය යුතු සූත්‍රය කුමක්ද?", "options": ["=$A2*B1", "=$A2*$B1", "=$A2*B$1", "=A$2*B$1", "=A$2*$B1"], "si_options": ["=$A2*B1", "=$A2*$B1", "=$A2*B$1", "=A$2*B$1", "=A$2*$B1"], "correct": 2 },
+                            { "question": "Which spreadsheet function counts cells in a range that meet a specific criterion?", "si_question": "පැතුරුම්පතක නිශ්චිත නිර්ණායකයක් සපුරාලන කෝෂ ගණන ගණනය කරන ශ්‍රිතය කුමක්ද?", "options": ["IF()", "SUMIF()", "COUNT()", "COUNTA()", "COUNTIF()"], "si_options": ["IF()", "SUMIF()", "COUNT()", "COUNTA()", "COUNTIF()"], "correct": 4 },
+                            { "question": "What is the purpose of 'Slide Transition' in presentation software?", "si_question": "සමර්පණ මෘදුකාංගයක 'Slide Transition' හි අරමුණ කුමක්ද?", "options": ["Moving slides to another presentation", "Creating animations within a slide", "Changing the presentation's theme", "Changing the slide order", "Customizing movement between slides"], "si_options": ["වෙනත් සමර්පණයකට විනිවිදක ගෙනයාම", "එක් විනිවිදකයක් තුළ සජීවීකරණ නිර්මාණය කිරීම", "සමර්පණයේ තේමාව වෙනස් කිරීම", "විනිවිදක අනුපිළිවෙල වෙනස් කිරීම", "විනිවිදක අතර චලනය රිසිකරණය කිරීම"], "correct": 4 },
+                            { "question": "What was the primary networking protocol for ARPANET's development?", "si_question": "ARPANET සංවර්ධනය සඳහා මූලික ජාලකරණ නියමාවලිය කුමක්ද?", "options": ["DNS", "DHCP", "SMTP", "HTTP", "TCP/IP"], "si_options": ["DNS", "DHCP", "SMTP", "HTTP", "TCP/IP"], "correct": 4 },
+                            { "question": "What is the general format of an email address?", "si_question": "විද්‍යුත් තැපැල් ලිපිනයක සාමාන්‍ය ආකෘතිය කුමක්ද?", "options": ["domain/username", "username@.domain", "@usernamedomain", "username@domain", "domain@username"], "si_options": ["domain/username", "username@.domain", "@usernamedomain", "username@domain", "domain@username"], "correct": 3 },
+                            { "question": "What is the SI unit of work?", "si_question": "කාර්යයේ SI ඒකකය කුමක්ද?", "options": ["kg m s⁻¹", "kg m s⁻²", "kg m² s²", "kg m² s⁻²", "kg m⁻¹ s⁻¹"], "si_options": ["kg m s⁻¹", "kg m s⁻²", "kg m² s²", "kg m² s⁻²", "kg m⁻¹ s⁻¹"], "correct": 3 },
+                            { "question": "To produce 1000 tea packs of 2g (±0.01g), which system is most suitable?", "si_question": "බර 2g (±0.01g) වන තේ ඇසුරුම් 1000ක් නිෂ්පාදනය කිරීමට වඩාත් සුදුසු පද්ධතිය කුමක්ද?", "options": ["A (0.005g, 1.0s)", "B (0.001g, 0.5s)", "C (0.010g, 1.0s)", "D (0.100g, 0.5s)", "E (0.500g, 0.1s)"], "si_options": ["A (0.005g, 1.0s)", "B (0.001g, 0.5s)", "C (0.010g, 1.0s)", "D (0.100g, 0.5s)", "E (0.500g, 0.1s)"], "correct": 1 },
+                            { "question": "A car at 20 m/s decelerates constantly over 100 m to 10 m/s. What is its deceleration?", "si_question": "20 m/s වේගයෙන් ගමන් කරන මෝටර් රථයක් 100 m දුරක් නියත මන්දනයකින් ගොස් 10 m/s දක්වා වේගය අඩුකර ගනී. මන්දනය කොපමණද?", "options": ["1.0 m/s²", "1.5 m/s²", "2.0 m/s²", "2.5 m/s²", "4.0 m/s²"], "si_options": ["1.0 m/s²", "1.5 m/s²", "2.0 m/s²", "2.5 m/s²", "4.0 m/s²"], "correct": 1 }
+                        ]},
+                        "quiz-5": { "title": "Quiz 5: Questions 41-50", "si_title": "ප්‍රශ්නාවලිය 5: ප්‍රශ්න 41-50", "questions": [
+                            { "question": "When can a deflection be expected in the galvanometer? A-Moving magnet towards coil. B-Magnet stationary in coil. C-Removing magnet from coil.", "si_question": "ගැල්වනෝමීටරයේ උත්ක්‍රමණයක් අපේක්ෂා කළ හැක්කේ කවදාද? A-චුම්බකය දඟරය දෙසට ගෙනයාම. B-චුම්බකය දඟරය තුල නිශ්චලව තැබීම. C-චුම්බකය දඟරයෙන් ඉවත් කිරීම.", "options": ["A only", "A and B only", "A and C only", "B and C only", "All A, B, and C"], "si_options": ["A පමණි", "A සහ B පමණි", "A සහ C පමණි", "B සහ C පමණි", "A, B සහ C සියල්ල"], "correct": 2 },
+                            { "question": "A 5cm wide, 20cm long soap bar needs 10N to cut along its width. What force is needed to cut along its length?", "si_question": "5cm පළල, 20cm දිග සබන් කැබැල්ලක් පළල ඔස්සේ කැපීමට 10N බලයක් අවශ්‍ය වේ. දිග ඔස්සේ කැපීමට අවශ්‍ය බලය කොපමණද?", "options": ["20 N", "25 N", "40 N", "50 N", "80 N"], "si_options": ["20 N", "25 N", "40 N", "50 N", "80 N"], "correct": 2 },
+                            { "question": "Petrol density is 0.72 kg/L at 10°C. Volume expansion coeff is 9.6x10⁻⁴/°C. How much mass is lost when buying 40L at 30°C vs 10°C?", "si_question": "10°C දී පෙට්‍රල් ඝනත්වය 0.72 kg/L, පරිමා ප්‍රසාරණ සංගුණකය 9.6x10⁻⁴/°C වේ. 30°C දී 40L මිලදී ගැනීමේදී 10°C ට සාපේක්ෂව කොපමණ ස්කන්ධයක් අහිමි වේද?", "options": ["0.2 kg", "0.4 kg", "0.55 kg", "0.69 kg", "0.9 kg"], "si_options": ["0.2 kg", "0.4 kg", "0.55 kg", "0.69 kg", "0.9 kg"], "correct": 3 },
+                            { "question": "A water pipe's diameter is reduced from 5.0 cm to 1.25 cm. By what factor does the water speed increase?", "si_question": "ජල නලයක විෂ්කම්භය 5.0 cm සිට 1.25 cm දක්වා අඩු කෙරේ. ජලයේ වේගය කොපමණ ගුණයකින් වැඩි වේද?", "options": ["2", "4", "8", "16", "32"], "si_options": ["2", "4", "8", "16", "32"], "correct": 3 },
+                            { "question": "Chandrayaan-3 (3900 kg) needs what minimum energy to reach 100 km altitude? (g ≈ 10 m/s²)", "si_question": "චන්ද්‍රයාන්-3 (3900 kg) යානයට 100 km උසකට යාමට අවශ්‍ය අවම ශක්තිය කොපමණද? (g ≈ 10 m/s²)", "options": ["3.9x10⁵ J", "3.9x10⁶ J", "3.9x10⁷ J", "3.9x10⁸ J", "3.9x10⁹ J"], "si_options": ["3.9x10⁵ J", "3.9x10⁶ J", "3.9x10⁷ J", "3.9x10⁸ J", "3.9x10⁹ J"], "correct": 4 },
+                            { "question": "What is the tension in the rope when a 100 kg load is lifted by the pulley system shown? (g ≈ 10 m/s²)", "si_question": "රූපයේ පද්ධතිය මගින් 100 kg භාරයක් ඔසවන විට තන්තුවේ ආතතිය කොපමණද? (g ≈ 10 m/s²)", "options": ["100 N", "250 N", "500 N", "1000 N", "2000 N"], "si_options": ["100 N", "250 N", "500 N", "1000 N", "2000 N"], "correct": 2 },
+                            { "question": "Four identical 1.5V, 100mW bulbs are in a circuit. A-P is brighter than Q. B-R and S are equally bright. C-Q is twice as bright as R. Which is correct?", "si_question": "සර්වසම 1.5V, 100mW බල්බ 4ක් පරිපථයේ ඇත. A-P, Q ට වඩා දීප්තිමත්ය. B-R සහ S සමාන දීප්තියෙන් යුක්තය. C-Q, R මෙන් දෙගුණයක් දීප්තිමත්ය. නිවැරදි කුමක්ද?", "options": ["A only", "A and B only", "A and C only", "B and C only", "All are correct"], "si_options": ["A පමණි", "A සහ B පමණි", "A සහ C පමණි", "B සහ C පමණි", "සියල්ල නිවැරදියි"], "correct": 1 },
+                            { "question": "An 8g bullet hits and sticks to a 1992g sphere on a 2m rod. What minimum bullet speed is needed for the system to reach horizontal?", "si_question": "8g උණ්ඩයක් 2m දණ්ඩක එල්ලූ 1992g ගෝලයක ගැටී රැඳේ. පද්ධතිය තිරස් වීමට අවශ්‍ය අවම උණ්ඩ වේගය කුමක්ද?", "options": ["100 m/s", "200 m/s", "300 m/s", "400 m/s", "800 m/s"], "si_options": ["100 m/s", "200 m/s", "300 m/s", "400 m/s", "800 m/s"], "correct": 0 },
+                            { "question": "A 50kg mechanic can turn a bolt with a 70cm wrench. At what distance must a 70kg mechanic stand to do the same?", "si_question": "50kg කාර්මිකයෙකු 70cm යතුරකින් බෝල්ට් එකක් කරකවයි. 70kg කාර්මිකයෙකුට එම කාර්යය කිරීමට යතුර මත සිටිය යුතු දුර කොපමණද?", "options": ["50 cm", "70 cm", "98 cm", "122 cm", "134 cm"], "si_options": ["50 cm", "70 cm", "98 cm", "122 cm", "134 cm"], "correct": 0 },
+                            { "question": "A merry-go-round rotates 6 times/min. A child's moment of inertia is 20 kg m². What is their rotational kinetic energy?", "si_question": "මෙරිගෝ රවුමක් මිනිත්තුවකට 6 වතාවක් භ්‍රමණය වේ. දරුවෙකුගේ අවස්ථිති ඝූර්ණය 20 kg m² වේ. භ්‍රමණ චාලක ශක්තිය කොපමණද?", "options": ["0.1 J", "3.9 J", "6.0 J", "7.2 J", "12.0 J"], "si_options": ["0.1 J", "3.9 J", "6.0 J", "7.2 J", "12.0 J"], "correct": 1 }
+                        ]}
+                    }
+                }
+            }
+        };
+
+        let currentLang = 'en';
+        let currentQuiz = null;
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+        let score = 0;
+        let currentSubject = null; // To keep track of the selected subject
+        let questionTimer = null; // To hold the interval ID for the timer
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'si' : 'en';
+            document.getElementById('langToggle').textContent = currentLang === 'en' ? 'සිංහල' : 'English';
+            document.querySelector('html').classList.toggle('sinhala', currentLang === 'si');
+            updateContent();
+        }
+
+        function updateContent() {
+            const t = translations[currentLang];
+            document.getElementById('pageTitle').textContent = t.pageTitle;
+            document.getElementById('headerTitle').textContent = t.headerTitle;
+            document.getElementById('headerSubtitle').textContent = t.headerSubtitle;
+            document.getElementById('availableSubjectsTitle').textContent = t.availableSubjectsTitle;
+            document.getElementById('subjectSelectionDescription').textContent = t.subjectSelectionDescription;
+            document.getElementById('availableQuizzesTitle').textContent = t.availableQuizzesTitle;
+            document.getElementById('quizDescription').textContent = t.quizDescription;
+            document.getElementById('nextBtnText').textContent = t.nextBtnText;
+            document.getElementById('resultsTitle').textContent = t.resultsTitle;
+            document.getElementById('retakeBtnText').textContent = t.retakeBtnText;
+            document.getElementById('backToQuizzesText').textContent = t.backToQuizzesText;
+            document.getElementById('footerText').textContent = t.footerText;
+            document.getElementById('homeLink').textContent = t.homeLink;
+            document.getElementById('streamLink').textContent = t.streamLink;
+            document.getElementById('subjectLink').textContent = t.subjectLink;
+            document.getElementById('contactLink').textContent = t.contactLink;
+
+            // Refresh the current view with the new language
+            if (currentQuiz) {
+                loadQuestion();
+            } else if (currentSubject) {
+                loadQuizzesForSubject(currentSubject.stream, currentSubject.id);
+            } else {
+                loadSubjects();
+            }
+            updateBreadcrumb();
+        }
+
+        function showScreen(screenId) {
+            ['subjectSelectionContainer', 'quizListContainer', 'quizContainer', 'resultsContainer'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById(screenId).classList.remove('hidden');
+        }
+
+        function updateBreadcrumb() {
+            const breadcrumb = document.getElementById('breadcrumb');
+            const t = translations[currentLang];
+            breadcrumb.innerHTML = ''; // Clear existing
+
+            const homeLink = document.createElement('a');
+            homeLink.href = "#";
+            homeLink.textContent = t.breadcrumbHome;
+            homeLink.className = "hover:underline";
+            homeLink.onclick = (e) => {
+                e.preventDefault();
+                currentSubject = null;
+                currentQuiz = null;
+                showScreen('subjectSelectionContainer');
+                updateBreadcrumb();
+            };
+            breadcrumb.appendChild(homeLink);
+
+            if (currentSubject) {
+                breadcrumb.innerHTML += ` <span class="mx-2">/</span> `;
+                const subjectLink = document.createElement('a');
+                subjectLink.href = "#";
+                subjectLink.textContent = currentLang === 'en' ? currentSubject.title : currentSubject.si_title;
+                subjectLink.className = "hover:underline";
+                subjectLink.onclick = (e) => {
+                    e.preventDefault();
+                    currentQuiz = null;
+                    showScreen('quizListContainer');
+                    updateBreadcrumb();
+                };
+                breadcrumb.appendChild(subjectLink);
+            }
+
+            if (currentQuiz) {
+                 breadcrumb.innerHTML += ` <span class="mx-2">/</span> `;
+                 const quizText = document.createElement('span');
+                 quizText.textContent = currentLang === 'en' ? currentQuiz.title : currentQuiz.si_title;
+                 quizText.className = "text-gray-500";
+                 breadcrumb.appendChild(quizText);
+            }
+        }
+
+        function loadSubjects() {
+            const subjectList = document.getElementById('subjectList');
+            subjectList.innerHTML = '';
+            
+            Object.entries(quizzesData).forEach(([streamId, streamData]) => {
+                Object.entries(streamData).forEach(([subjectId, subjectData]) => {
+                    const subjectCard = document.createElement('div');
+                    subjectCard.className = 'subject-card bg-gray-50 p-4 rounded-lg flex justify-between items-center';
+                    subjectCard.innerHTML = `<h4 class="font-medium text-lg">${currentLang === 'en' ? subjectData.title : subjectData.si_title}</h4>`;
+                    subjectCard.onclick = () => {
+                        currentSubject = { ...subjectData, id: subjectId, stream: streamId };
+                        loadQuizzesForSubject(streamId, subjectId);
+                    };
+                    subjectList.appendChild(subjectCard);
+                });
+            });
+            updateBreadcrumb();
+        }
+
+        function loadQuizzesForSubject(streamId, subjectId) {
+            const subjectData = quizzesData[streamId]?.[subjectId];
+            if (!subjectData) return;
+
+            const quizList = document.getElementById('quizList');
+            quizList.innerHTML = '';
+            const t = translations[currentLang];
+
+            Object.entries(subjectData.quizzes).forEach(([quizId, quizData]) => {
+                const quizCard = document.createElement('div');
+                quizCard.className = 'quiz-card bg-gray-50 p-4 rounded-lg flex justify-between items-center';
+                quizCard.innerHTML = `
+                    <h4 class="font-medium">${currentLang === 'en' ? quizData.title : quizData.si_title}</h4>
+                    <button class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-medium transition-colors start-quiz" data-quiz-id="${quizId}">
+                        ${t.startQuizText}
+                    </button>
+                `;
+                quizList.appendChild(quizCard);
+            });
+
+            document.querySelectorAll('.start-quiz').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const quizId = this.getAttribute('data-quiz-id');
+                    startQuiz(streamId, subjectId, quizId);
+                });
+            });
+
+            showScreen('quizListContainer');
+            updateBreadcrumb();
+        }
+        
+        function startQuiz(streamId, subjectId, quizId) {
+            currentQuiz = quizzesData[streamId]?.[subjectId]?.quizzes[quizId];
+            if (!currentQuiz) return;
+
+            currentQuestionIndex = 0;
+            userAnswers = Array(currentQuiz.questions.length).fill(null);
+            score = 0;
+            
+            document.getElementById('currentQuizTitle').textContent = currentLang === 'en' ? currentQuiz.title : currentQuiz.si_title;
+            
+            showScreen('quizContainer');
+            loadQuestion();
+            updateBreadcrumb();
+        }
+
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+        }
+
+        function handleTimeUp() {
+            userAnswers[currentQuestionIndex] = -1; // Mark as unanswered
+            checkAnswer(-1); // Pass -1 to indicate time is up
+        }
+
+        function loadQuestion() {
+            clearInterval(questionTimer); // Clear previous timer
+            const question = currentQuiz.questions[currentQuestionIndex];
+            const optionsContainer = document.getElementById('optionsContainer');
+            const t = translations[currentLang];
+            
+            document.getElementById('questionText').textContent = currentLang === 'en' ? question.question : question.si_question;
+            document.getElementById('quizProgress').textContent = t.questionProgress(currentQuestionIndex + 1, currentQuiz.questions.length);
+            document.getElementById('progressBar').style.width = `${((currentQuestionIndex) / currentQuiz.questions.length) * 100}%`;
+            
+            optionsContainer.innerHTML = '';
+            document.getElementById('feedbackContainer').classList.add('hidden');
+
+            const options = currentLang === 'en' ? question.options : question.si_options;
+            
+            options.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option-item flex items-center p-3 rounded-lg border bg-gray-50 border-gray-200 transition-colors';
+                optionDiv.innerHTML = `
+                    <input type="radio" name="quizOption" id="option-${index}" value="${index}" class="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 pointer-events-none">
+                    <label for="option-${index}" class="ml-3 block text-gray-700 w-full cursor-pointer">${option}</label>
+                `;
+                optionDiv.addEventListener('click', () => {
+                    if (userAnswers[currentQuestionIndex] === null) {
+                         userAnswers[currentQuestionIndex] = index;
+                         checkAnswer(index);
+                    }
+                });
+                optionsContainer.appendChild(optionDiv);
+            });
+            
+            const nextBtnTextSpan = document.getElementById('nextBtnText');
+            nextBtnTextSpan.textContent = (currentQuestionIndex === currentQuiz.questions.length - 1) ? t.submitBtnText : t.nextBtnText;
+
+            // Start new timer
+            let timeLeft = 120; // 2 minutes
+            const timerDisplay = document.getElementById('timer');
+            timerDisplay.textContent = formatTime(timeLeft);
+            questionTimer = setInterval(() => {
+                timeLeft--;
+                timerDisplay.textContent = formatTime(timeLeft);
+                if (timeLeft <= 0) {
+                    clearInterval(questionTimer);
+                    handleTimeUp();
+                }
+            }, 1000);
+        }
+
+        function checkAnswer(selectedIndex) {
+            clearInterval(questionTimer); // Stop the timer once an answer is given or time is up
+            const question = currentQuiz.questions[currentQuestionIndex];
+            const options = document.querySelectorAll('.option-item');
+            const feedbackContainer = document.getElementById('feedbackContainer');
+            const feedbackText = document.getElementById('feedbackText');
+            const t = translations[currentLang];
+            
+            document.getElementById('progressBar').style.width = `${((currentQuestionIndex + 1) / currentQuiz.questions.length) * 100}%`;
+
+            options.forEach(opt => opt.style.pointerEvents = 'none');
+
+            if (selectedIndex === -1) { // Time is up
+                feedbackText.textContent = t.timeUpText;
+                feedbackContainer.className = 'mt-4 p-3 rounded-lg bg-yellow-100 text-yellow-800';
+                options[question.correct].classList.add('correct'); // Show correct answer
+            } else if (selectedIndex === question.correct) {
+                score++;
+                options[selectedIndex].classList.add('correct');
+                feedbackText.textContent = t.correctFeedback;
+                feedbackContainer.className = 'mt-4 p-3 rounded-lg bg-green-100 text-green-800';
+            } else {
+                options[selectedIndex].classList.add('incorrect');
+                options[question.correct].classList.add('correct');
+                const correctAnswerText = (currentLang === 'en' ? question.options : question.si_options)[question.correct];
+                feedbackText.textContent = t.incorrectFeedback(correctAnswerText);
+                feedbackContainer.className = 'mt-4 p-3 rounded-lg bg-red-100 text-red-800';
+            }
+            feedbackContainer.classList.remove('hidden');
+        }
+        
+        function showResults() {
+            clearInterval(questionTimer);
+            showScreen('resultsContainer');
+            
+            document.getElementById('scoreDisplay').textContent = `${score}/${currentQuiz.questions.length}`;
+            
+            const percentage = (score / currentQuiz.questions.length) * 100;
+            const t = translations[currentLang];
+            let messageIndex = 0;
+            if (percentage === 100) messageIndex = 4;
+            else if (percentage >= 80) messageIndex = 3;
+            else if (percentage >= 60) messageIndex = 2;
+            else if (percentage >= 40) messageIndex = 1;
+            
+            document.getElementById('resultMessage').textContent = t.resultMessages[messageIndex];
+            updateBreadcrumb();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            showScreen('subjectSelectionContainer');
+            updateContent();
+            
+            document.getElementById('nextQuestionBtn').addEventListener('click', () => {
+                if (userAnswers[currentQuestionIndex] === null) return;
+
+                if (currentQuestionIndex < currentQuiz.questions.length - 1) {
+                    currentQuestionIndex++;
+                    loadQuestion();
+                } else {
+                    showResults();
+                }
+            });
+            
+            document.getElementById('retakeQuizBtn').addEventListener('click', () => {
+                // Find the quizId to restart
+                const quizId = Object.keys(currentSubject.quizzes).find(key => currentSubject.quizzes[key] === currentQuiz);
+                startQuiz(currentSubject.stream, currentSubject.id, quizId);
+            });
+            
+            document.getElementById('backToQuizzesBtn').addEventListener('click', () => {
+                currentQuiz = null;
+                loadQuizzesForSubject(currentSubject.stream, currentSubject.id);
+            });
+        });
+        
+        document.getElementById('langToggle').addEventListener('click', toggleLanguage);
+    </script>
+</body>
+</html>
