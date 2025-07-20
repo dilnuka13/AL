@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">DE Edu | HOME </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sinhala:wght@400;700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        @media (max-width: 768px) {
+    /* Mobile specific styles */
+    .your-custom-class {
+        font-size: 14px;
+        padding: 10px;
+        /* Add more mobile-specific styles here */
+    }
+}
+        /* Base styles for body and fonts */
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecf5f0 100%);
+            color: #333;
+        }
+        .sinhala { font-family: 'Noto Sinhala', sans-serif; }
+
+        /* Card hover effects */
+        .card-hover {
+            transition: all 0.3s ease;
+            transform: translateY(0);
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Gradient for header and footer */
+        .gradient-header {
+            background: linear-gradient(135deg, #047857 0%, #065f46 100%);
+        }
+
+        /* Pulse animation for explore buttons */
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+
+        /* Marquee for urgent messages */
+        .marquee-container {
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            box-sizing: border-box;
+            margin-top: 1.5rem;
+            background-color: #fefcbf;
+            padding: 0.5rem 0;
+            border-radius: 0.5rem;
+            border: 1px solid #fcd34d;
+        }
+        .marquee-text {
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee 30s linear infinite; /* Increased time to slow down */
+            color: #b45309;
+            font-weight: 500;
+        }
+        @keyframes marquee {
+            0%   { transform: translate(0, 0); }
+            100% { transform: translate(-100%, 0); }
+        }
+
+        /* Countdown Timer Styles */
+        .countdown-container {
+            margin-top: 1.5rem;
+            background-color: #d1fae5;
+            padding: 1.5rem; /* Increased padding */
+            border-radius: 0.75rem; /* More rounded corners */
+            border: 1px solid #34d399;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            animation: subtle-pulse 3s infinite ease-in-out;
+        }
+        @keyframes subtle-pulse {
+            0% { transform: scale(1); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
+            50% { transform: scale(1.01); box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15); }
+            100% { transform: scale(1); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
+        }
+        .countdown-title {
+            font-weight: bold;
+            color: #065f46;
+            margin-bottom: 1rem; /* Increased margin */
+            font-size: 1.5rem; /* Larger font size */
+        }
+        .countdown-timer {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem; /* Increased gap */
+            font-size: 2.2rem; /* Larger font size for numbers */
+            color: #047857;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+        }
+        .countdown-item {
+            background-color: #ecfdf5;
+            padding: 0.75rem 1rem; /* Increased padding */
+            border-radius: 0.5rem; /* More rounded corners */
+            min-width: 70px; /* Increased min-width */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Subtle shadow for each item */
+        }
+        .countdown-item span:first-child {
+            display: block;
+            line-height: 1.2; /* Adjusted line height */
+        }
+        .countdown-item span:last-child {
+            display: block;
+            font-size: 0.85rem; /* Slightly larger font size */
+            color: #065f46;
+            font-weight: normal;
+            margin-top: 0.35rem; /* Adjusted margin */
+            text-transform: uppercase;
+        }
+
+        /* Back to top button */
+        #backToTopBtn {
+            display: none; /* Hidden by default */
+            position: fixed; /* Fixed position */
+            bottom: 20px; /* Place at the bottom */
+            right: 30px; /* Place at the right */
+            z-index: 99; /* Make sure it does not overlap */
+            border: none; /* Remove borders */
+            outline: none; /* Remove outline */
+            background-color: #047857; /* Set a background color */
+            color: white; /* Text color */
+            cursor: pointer; /* Add a mouse pointer on hover */
+            padding: 15px; /* Some padding */
+            border-radius: 10px; /* Rounded corners */
+            font-size: 18px; /* Increase font size */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        #backToTopBtn:hover {
+            background-color: #065f46;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <!-- Header Section -->
+    <header class="gradient-header text-white shadow-lg">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <div class="animate__animated animate__fadeInLeft">
+                    <h1 class="text-3xl md:text-4xl font-bold" id="headerTitle">A/L Past Papers & Marking Schemes</h1>
+                    <p class="mt-2 text-emerald-100" id="headerSubtitle">A/L Past Papers & Marking Schemes - Access all past papers and marking schemes in one place</p>
+                </div>
+                <!-- Language Toggle Button -->
+                <button id="langToggle" class="bg-emerald-600 hover:bg-emerald-700 px-4 py-2 rounded-md text-sm font-medium transition-colors animate__animated animate__fadeInRight">
+                    සිංහල
+                </button>
+            </div>
+            
+            <!-- Search Bar Section -->
+            <div class="mt-6 animate__animated animate__fadeInUp">
+                <div class="flex justify-center max-w-2xl mx-auto rounded-lg overflow-hidden shadow-lg">
+                    <input type="text" id="searchBar" placeholder="Search by stream, subject, or year..." 
+                           class="w-full p-3 md:p-4 border-none focus:outline-none focus:ring-2 focus:ring-emerald-300 text-gray-800 text-base md:text-lg">
+                    <button onclick="searchContent()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 md:py-4 font-medium transition-colors flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-6 md:w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                        <span id="searchText">Search</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Urgent Message Marquee -->
+            <div class="marquee-container animate__animated animate__fadeInUp animate__delay-1s">
+                <p class="marquee-text" id="urgentMessage"></p>
+            </div>
+
+            <!-- Countdown Timer Section -->
+            <div class="countdown-container animate__animated animate__fadeInUp animate__delay-2s">
+                <h3 class="countdown-title" id="countdownTitle">2025 A/L Start Countdown</h3>
+                <div class="countdown-timer">
+                    <div class="countdown-item">
+                        <span id="days">00</span><span id="daysText">Days</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span id="hours">00</span><span id="hoursText">Hours</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span id="minutes">00</span><span id="minutesText">Minutes</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span id="seconds">00</span><span id="secondsText">Seconds</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow container mx-auto px-4 py-8">
+        <!-- Streams Section -->
+        <section id="streams" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-16">
+            <!-- Science Stream Card -->
+            <div class="bg-white rounded-xl shadow-md overflow-hidden card-hover stream-card animate__animated animate__fadeInUp animate__delay-1s">
+                <div class="p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-red-100 p-3 rounded-full mr-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                            </svg>
+                        </div>
+                        <h2 class="text-xl font-bold text-red-800" id="scienceTitle">Science Stream</h2>
+                    </div>
+                    <p class="text-gray-600 mb-6" id="scienceDesc">Combined Mathematics, Chemistry, Physics, Biology</p>
+                    <a href="stream.html?stream=science" class="inline-flex items-center justify-center w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-lg font-medium transition-colors pulse-animation">
+                        <span id="exploreScience">Explore</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Technology Stream Card -->
+            <div class="bg-white rounded-xl shadow-md overflow-hidden card-hover stream-card animate__animated animate__fadeInUp animate__delay-2s">
+                <div class="p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 p-3 rounded-full mr-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+                            </svg>
+                        </div>
+                        <h2 class="text-xl font-bold text-green-800" id="techTitle">Technology Stream</h2>
+                    </div>
+                    <p class="text-gray-600 mb-6" id="techDesc">Engineering Tech, Bio-Systems Tech, Science for Tech, Geography, Agriculture, ICT</p>
+                    <a href="stream.html?stream=technology" class="inline-flex items-center justify-center w-full bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg font-medium transition-colors pulse-animation">
+                        <span id="exploreTech">Explore</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Commerce Stream Card -->
+            <div class="bg-white rounded-xl shadow-md overflow-hidden card-hover stream-card animate__animated animate__fadeInUp animate__delay-3s">
+                <div class="p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-blue-100 p-3 rounded-full mr-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0-2.08-.402-2.599-1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <h2 class="text-xl font-bold text-blue-800" id="commerceTitle">Commerce Stream</h2>
+                    </div>
+                    <p class="text-gray-600 mb-6" id="commerceDesc">Accounting, Business Studies, Economics, ICT</p>
+                    <a href="stream.html?stream=commerce" class="inline-flex items-center justify-center w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg font-medium transition-colors pulse-animation">
+                        <span id="exploreCommerce">Explore</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Arts Stream Card -->
+            <div class="bg-white rounded-xl shadow-md overflow-hidden card-hover stream-card animate__animated animate__fadeInUp animate__delay-4s">
+                <div class="p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-yellow-100 p-3 rounded-full mr-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <h2 class="text-xl font-bold text-yellow-800" id="artsTitle">Arts Stream</h2>
+                    </div>
+                    <p class="text-gray-600 mb-6" id="artsDesc">Sinhala, Political Science, History, Geography, Media Studies, Religion, Dance, Drama, Music, English Literature</p>
+                    <a href="stream.html?stream=arts" class="inline-flex items-center justify-center w-full bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-3 rounded-lg font-medium transition-colors pulse-animation">
+                        <span id="exploreArts">Explore</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="gradient-header text-white py-6">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <h3 class="text-xl font-bold">EduPapers.lk</h3>
+                    <p class="text-emerald-100 mt-1" id="footerText">© 2025 A/L Past Papers. All rights reserved.</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="login.html" class="text-emerald-100 hover:text-white transition-colors" id="loginLink">Login</a>
+                    <a href="stream.html" class="text-emerald-100 hover:text-white transition-colors" id="streamLink">Stream</a>
+                    <a href="subject.html" class="text-emerald-100 hover:text-white transition-colors" id="subjectLink">Subject</a>
+                    <a href="contact.html" class="text-emerald-100 hover:text-white transition-colors" id="contactLink">Contact</a>
+                    <a href="quizzes.html" class="text-emerald-100 hover:text-white transition-colors" id="contactLink">Quizzes</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button onclick="topFunction()" id="backToTopBtn" title="Go to top">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+        </svg>
+    </button>
+
+    <script>
+        // Translations object for multilingual support
+        const translations = {
+            en: {
+                pageTitle: "A/L Past Papers",
+                headerTitle: "A/L Past Papers & Marking Schemes",
+                headerSubtitle: "Access all past papers and marking schemes in one place",
+                searchPlaceholder: "Search by stream, subject, or year...",
+                searchText: "Search",
+                urgentMessage: "All subjects are not yet added. Please try again after the update. The next update will be released on 2025.07.28.",
+                countdownTitle: "2025 A/L Start Countdown",
+                daysText: "Days",
+                hoursText: "Hours",
+                minutesText: "Minutes",
+                secondsText: "Seconds",
+                studyTipTitle: "✨ Get a Study Tip! ✨",
+                studyTipDefault: "Click the button below to get a smart study tip for your A/L exams.",
+                generateTipText: "Generate Tip",
+                generatingTip: "Generating...",
+                tipError: "Failed to load tip. Please try again.",
+                scienceTitle: "Science Stream",
+                techTitle: "Technology Stream",
+                commerceTitle: "Commerce Stream",
+                artsTitle: "Arts Stream",
+                scienceDesc: "Combined Mathematics, Chemistry, Physics, Biology",
+                techDesc: "Engineering Tech, Bio-Systems Tech, Science for Tech, Geography, Agriculture, ICT",
+                commerceDesc: "Accounting, Business Studies, Economics, ICT",
+                artsDesc: "Sinhala, Political Science, History, Geography, Media Studies, Religion, Dance, Drama, Music, English Literature",
+                exploreScience: "Explore",
+                exploreTech: "Explore",
+                exploreCommerce: "Explore",
+                exploreArts: "Explore",
+                featuredTitle: "Featured Papers",
+                featuredPaperStream1: "Engineering Tech",
+                featuredPaperTitle1: "Engineering Technology Paper",
+                viewPaper1: "View Paper",
+                viewMarking1: "Marking Scheme",
+                featuredPaperStream2: "Chemistry",
+                featuredPaperTitle2: "Chemistry Paper II",
+                viewPaper2: "View Paper",
+                viewMarking2: "Marking Scheme",
+                featuredPaperStream3: "Accounting",
+                featuredPaperTitle3: "Accounting Paper I",
+                viewPaper3: "View Paper",
+                viewMarking3: "Marking Scheme",
+                footerText: "© 2025 A/L Past Papers. All rights reserved.",
+                streamLink: "Stream",
+                subjectLink: "Subject",
+                contactLink: "Contact"
+            },
+            si: {
+                pageTitle: "උසස් පෙළ පසුගිය ප්‍රශ්න පත්ර",
+                headerTitle: "උසස් පෙළ පසුගිය ප්‍රශ්න පත්ර හා ලකුණු ලේඛන",
+                headerSubtitle: "සියලුම පසුගිය ප්‍රශ්න පත්ර හා ලකුණු ලේඛන එකම තැනකින්",
+                searchPlaceholder: "විෂය ධාරාව, විෂය හෝ වර්ෂය අනුව සොයන්න...",
+                searchText: "සොයන්න",
+                urgentMessage: "තවමත් සියලුම විශයන් එක් කර නොමත. කරුණාකර යාවත් කාලීන කල පසු නැවත උත්සාහ කරන්න. මීලඟ යාවත්කාලීන කිරීම 2025.07.28 දින නිකුත් වේ.",
+                countdownTitle: "2025 උසස් පෙළ ආරම්භයට තව",
+                daysText: "දින",
+                hoursText: "පැය",
+                minutesText: "විනාඩි",
+                secondsText: "තත්පර",
+                studyTipTitle: "✨ අධ්‍යයන උපදෙසක් ලබා ගන්න! ✨",
+                studyTipDefault: "ඔබගේ උසස් පෙළ විභාගය සඳහා ස්මාර්ට් අධ්‍යයන උපදෙසක් ලබා ගැනීමට පහත බොත්තම ක්ලික් කරන්න.",
+                generateTipText: "උපදෙස් ලබා ගන්න",
+                generatingTip: "උත්පාදනය වෙමින් පවතී...",
+                tipError: "උපදෙස් පූරණය කිරීමට අසමත් විය. කරුණාකර නැවත උත්සාහ කරන්න.",
+                scienceTitle: "විද්‍යා විෂය ධාරාව",
+                techTitle: "තාක්ෂණික විෂය ධාරාව",
+                commerceTitle: "වාණිජ විෂය ධාරාව",
+                artsTitle: "කලා විෂය ධාරාව",
+                scienceDesc: "සංයුක්ත ගණිතය, රසායන විද්‍යාව, භෞතික විද්‍යාව, ජීව විද්‍යාව",
+                techDesc: "ඉංජිනේරු තාක්ෂණය, ජෛව පද්ධති තාක්ෂණය, තාක්ෂණය සඳහා විද්‍යාව, භූගෝල විද්‍යාව, කෘෂිකර්මය, තොරතුරු තාක්ෂණය",
+                commerceDesc: "ගිණුම්කරණය, ව්‍යාපාර අධ්‍යයන, ආර්ථික විද්‍යාව, තොරතුරු තාක්ෂණය",
+                artsDesc: "සිංහල, දේශපාලන විද්‍යාව, ඉතිහාසය, භූගෝල විද්‍යාව, මාධ්‍ය අධ්‍යයන, ආගම, නර්තනය, නාට්‍ය කලාව, සංගීතය, ඉංග්‍රීසි සාහිත්‍යය",
+                exploreScience: "ගවේෂණය",
+                exploreTech: "ගවේෂණය",
+                exploreCommerce: "ගවේෂණය",
+                exploreArts: "ගවේෂණය",
+                featuredTitle: "විශේෂ ප්‍රශ්න පත්ර",
+                featuredPaperStream1: "ඉංජිනේරු තාක්ෂණය",
+                featuredPaperTitle1: "ඉංජිනේරු තාක්ෂණවේදය",
+                viewPaper1: "ප්‍රශ්න පත්‍රය",
+                viewMarking1: "ලකුණු ලේඛනය",
+                featuredPaperStream2: "රසායන විද්‍යාව",
+                featuredPaperTitle2: "රසායන විද්‍යාව",
+                viewPaper2: "ප්‍රශ්න පත්‍රය",
+                viewMarking2: "ලකුණු ලේඛනය",
+                featuredPaperStream3: "ගිණුම්කරණය",
+                featuredPaperTitle3: "ගිණුම්කරණය",
+                viewPaper3: "ප්‍රශ්න පත්‍රය",
+                viewMarking3: "ලකුණු ලේඛනය",
+                footerText: "© 2025 උසස් පෙළ පසුගිය ප්‍රශ්න පත්ර. සියලු හිමිකම් ඇවිරිණි.",
+                streamLink: "විෂය ධාරා",
+                subjectLink: "විෂයන්",
+                contactLink: "අප අමතන්න"
+            }
+        };
+
+        let currentLang = 'en'; // Default language
+
+        // Function to toggle language between English and Sinhala
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'si' : 'en';
+            document.getElementById('langToggle').textContent = currentLang === 'en' ? 'සිංහල' : 'English';
+            document.querySelector('html').classList.toggle('sinhala', currentLang === 'si');
+            updateContent(); // Update all dynamic content
+        }
+
+        // Function to update all text content based on the current language
+        function updateContent() {
+            const t = translations[currentLang];
+            document.getElementById('pageTitle').textContent = t.pageTitle;
+            document.getElementById('headerTitle').textContent = t.headerTitle;
+            document.getElementById('headerSubtitle').textContent = t.headerSubtitle;
+            document.getElementById('searchBar').placeholder = t.searchPlaceholder;
+            document.getElementById('searchText').textContent = t.searchText;
+            document.getElementById('urgentMessage').textContent = t.urgentMessage;
+            document.getElementById('countdownTitle').textContent = t.countdownTitle;
+            document.getElementById('daysText').textContent = t.daysText;
+            document.getElementById('hoursText').textContent = t.hoursText;
+            document.getElementById('minutesText').textContent = t.minutesText;
+            document.getElementById('secondsText').textContent = t.secondsText;
+            
+            // Stream cards text updates
+            document.getElementById('scienceTitle').textContent = t.scienceTitle;
+            document.getElementById('techTitle').textContent = t.techTitle;
+            document.getElementById('commerceTitle').textContent = t.commerceTitle;
+            document.getElementById('artsTitle').textContent = t.artsTitle;
+            document.getElementById('scienceDesc').textContent = t.scienceDesc;
+            document.getElementById('techDesc').textContent = t.techDesc;
+            document.getElementById('commerceDesc').textContent = t.commerceDesc;
+            document.getElementById('artsDesc').textContent = t.artsDesc;
+            document.getElementById('exploreScience').textContent = t.exploreScience;
+            document.getElementById('exploreTech').textContent = t.exploreTech;
+            document.getElementById('exploreCommerce').textContent = t.exploreCommerce;
+            document.getElementById('exploreArts').textContent = t.exploreArts;
+            
+            // Featured papers text updates
+            document.getElementById('featuredTitle').textContent = t.featuredTitle;
+            document.getElementById('featuredPaperStream1').textContent = t.featuredPaperStream1;
+            document.getElementById('featuredPaperTitle1').textContent = t.featuredPaperTitle1;
+            document.getElementById('viewPaper1').textContent = t.viewPaper1;
+            document.getElementById('viewMarking1').textContent = t.viewMarking1;
+            document.getElementById('featuredPaperStream2').textContent = t.featuredPaperStream2;
+            document.getElementById('featuredPaperTitle2').textContent = t.featuredPaperTitle2;
+            document.getElementById('viewPaper2').textContent = t.viewPaper2;
+            document.getElementById('viewMarking2').textContent = t.viewMarking2;
+            document.getElementById('featuredPaperStream3').textContent = t.featuredPaperStream3;
+            document.getElementById('featuredPaperTitle3').textContent = t.featuredPaperTitle3;
+            document.getElementById('viewPaper3').textContent = t.viewPaper3;
+            document.getElementById('viewMarking3').textContent = t.viewMarking3;
+            
+            // Footer links text updates
+            document.getElementById('footerText').textContent = t.footerText;
+            document.getElementById('streamLink').textContent = t.streamLink;
+            document.getElementById('subjectLink').textContent = t.subjectLink;
+            document.getElementById('contactLink').textContent = t.contactLink;
+        }
+
+        // Function to handle search functionality
+        function searchContent() {
+            const query = document.getElementById('searchBar').value.toLowerCase();
+            
+            // Filter Stream Cards based on search query
+            const streamCards = document.querySelectorAll('.stream-card');
+            streamCards.forEach(card => {
+                const title = card.querySelector('h2').textContent.toLowerCase();
+                const desc = card.querySelector('p').textContent.toLowerCase();
+                card.style.display = (title.includes(query) || desc.includes(query)) ? 'block' : 'none';
+            });
+
+            // Filter Featured Paper Cards based on search query
+            const featuredPaperCards = document.querySelectorAll('.featured-paper-card');
+            featuredPaperCards.forEach(card => {
+                const year = card.querySelector('.paper-year').textContent.toLowerCase();
+                const stream = card.querySelector('.paper-stream').textContent.toLowerCase();
+                const title = card.querySelector('.paper-title').textContent.toLowerCase();
+                
+                card.style.display = (year.includes(query) || stream.includes(query) || title.includes(query)) ? 'block' : 'none';
+            });
+        }
+
+        // Countdown Timer Logic
+        // Target date set to November 10, 2025, 8:30 AM
+        const targetDate = new Date("November 10, 2025 08:30:00").getTime();
+
+        const countdownInterval = setInterval(function() {
+            const now = new Date().getTime(); // Current date and time
+            const distance = targetDate - now; // Distance between now and the target date
+
+            // Calculate time units
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Update DOM elements, ensuring two digits with padStart
+            document.getElementById("days").textContent = String(days).padStart(2, '0');
+            document.getElementById("hours").textContent = String(hours).padStart(2, '0');
+            document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
+            document.getElementById("seconds").textContent = String(seconds).padStart(2, '0');
+
+            // When countdown finishes (distance is less than 0)
+            if (distance < 0) {
+                clearInterval(countdownInterval); // Stop the interval
+                document.getElementById("countdownTitle").textContent = "2025 A/L Has Started!"; // Update title
+                // Set all timer values to zero
+                document.getElementById("days").textContent = "00";
+                document.getElementById("hours").textContent = "00";
+                document.getElementById("minutes").textContent = "00";
+                document.getElementById("seconds").textContent = "00";
+                // Optionally hide the timer elements or change their appearance
+                document.querySelector('.countdown-timer').style.display = 'none';
+                document.querySelector('.countdown-container').style.animation = 'none';
+                document.querySelector('.countdown-container').style.boxShadow = 'none';
+            }
+        }, 1000); // Update every 1 second
+
+        // Back to top button logic
+        const backToTopBtn = document.getElementById("backToTopBtn");
+
+        // Show/hide the button based on scroll position
+        window.onscroll = function() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                backToTopBtn.style.display = "block";
+            } else {
+                backToTopBtn.style.display = "none";
+            }
+        };
+
+        // Scroll to the top when the button is clicked
+        function topFunction() {
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+        }
+
+        // Event listeners for initial page load and language toggle
+        document.addEventListener('DOMContentLoaded', () => {
+            updateContent(); // Initial content update
+        });
+        document.getElementById('langToggle').addEventListener('click', toggleLanguage);
+    </script>
+</body>
+</html>

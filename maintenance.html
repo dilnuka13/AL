@@ -1,0 +1,307 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">DE Edu | Under Maintenance</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sinhala:wght@400;700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        /* Base styles for body and fonts */
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%); /* Matches DE Edu theme */
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+        .sinhala { font-family: 'Noto Sinhala', sans-serif; }
+
+        /* Container styles */
+        .maintenance-container {
+            background-color: #ffffff;
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            animation: subtle-pulse 3s infinite ease-in-out;
+        }
+        @keyframes subtle-pulse {
+            0% { transform: scale(1); box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1); }
+            50% { transform: scale(1.015); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); }
+            100% { transform: scale(1); box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1); }
+        }
+
+        /* Spinner animation */
+        .spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #00796b; /* Matches DE Edu header color */
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 2s linear infinite;
+            margin: 1.5rem auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Countdown timer styles */
+        .countdown-timer {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            font-size: 2rem;
+            color: #00796b;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            margin-top: 1.5rem;
+        }
+        .countdown-item {
+            background-color: #f5f5f5;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            min-width: 70px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.07);
+        }
+        .countdown-item span:first-child {
+            display: block;
+            line-height: 1.2;
+        }
+        .countdown-item span:last-child {
+            display:block;
+            font-size: 0.9rem;
+            color: #004d40;
+            font-weight: normal;
+            margin-top: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        /* Contact and social media links */
+        .contact-info {
+            margin-top: 2rem;
+            font-size: 1rem;
+            color: #555;
+        }
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        .social-links a {
+            color: #00796b;
+            transition: color 0.3s ease;
+        }
+        .social-links a:hover {
+            color: #004d40;
+        }
+
+        /* Language toggle button */
+        .lang-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #00796b;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: medium;
+            transition: background-color 0.3s ease;
+        }
+        .lang-toggle:hover {
+            background-color: #004d40;
+        }
+    </style>
+</head>
+<body>
+    <!-- Language Toggle Button -->
+    <button id="langToggle" class="lang-toggle animate__animated animate__fadeInRight">සිංහල</button>
+
+    <!-- Maintenance Mode Content -->
+    <div class="maintenance-container animate__animated animate__fadeInUp">
+        <h1 class="text-3xl font-bold text-teal-700 mb-4 sinhala" id="maintenanceTitle">පද්ධති යාවත්කාලීනයකින් පවතී</h1>
+        <p class="text-gray-700 mb-6 sinhala" id="maintenanceMessage">අපගේ වෙබ් අඩවිය යාවත්කාලීන කිරීමකින් පවතින අතර, ඉක්මනින් ඔබ වෙත ආපසු පැමිණිමු! කරුණාකර පසුව නැවත උත්සාහ කරන්න.</p>
+        <div class="spinner"></div>
+        <h3 class="text-xl font-bold text-teal-700 mb-4 sinhala" id="countdownTitle">ආපසු එන්නේ</h3>
+        <div class="countdown-timer">
+            <div class="countdown-item">
+                <span id="days">00</span><span id="daysText">දින</span>
+            </div>
+            <div class="countdown-item">
+                <span id="hours">00</span><span id="hoursText">පැය</span>
+            </div>
+            <div class="countdown-item">
+                <span id="minutes">00</span><span id="minutesText">විනාඩි</span>
+            </div>
+            <div class="countdown-item">
+                <span id="seconds">00</span><span id="secondsText">තත්පර</span>
+            </div>
+        </div>
+        <div class="contact-info sinhala">
+            <p id="contactMessage">ගැටලුවක්? අප හා සම්බන්ධ වන්න:</p>
+            <p class="mt-2"><strong id="emailLabel">ඊමේල්:</strong> <a href="mailto:isaradilnuka@gmail.com" class="text-teal-600 hover:text-teal-800">isaradilnuka@gmail.com</a></p>
+            <p><strong id="phoneLabel">දුරකථන:</strong> <a href="tel:+94764164804" class="text-teal-600 hover:text-teal-800">+94 76 416 4804</a></p>
+            <p><strong id="addressLabel">ලිපිනය:</strong> Horana, Sri Lanka 12400</p>
+            <div class="social-links">
+                <a href="https://dilnuka13.github.io/my/" target="_blank">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
+                    </svg>
+                </a>
+                <a href="https://x.com/Dilnuka_13" target="_blank">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z" />
+                    </svg>
+                </a>
+                <a href="https://www.facebook.com/Dilnuka.13x" target="_blank">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Translations object for multilingual support
+        const translations = {
+            en: {
+                pageTitle: "DE Edu | Under Maintenance",
+                maintenanceTitle: "System Under Maintenance",
+                maintenanceMessage: "Our website is currently undergoing maintenance. We'll be back soon! Please try again later.",
+                countdownTitle: "We'll Be Back In",
+                daysText: "Days",
+                hoursText: "Hours",
+                minutesText: "Minutes",
+                secondsText: "Seconds",
+                contactMessage: "Have an issue? Contact us:",
+                emailLabel: "Email:",
+                phoneLabel: "Phone:",
+                addressLabel: "Address:"
+            },
+            si: {
+                pageTitle: "DE Edu | යාවත්කාලීනය",
+                maintenanceTitle: "පද්ධති යාවත්කාලීනයකින් පවතී",
+                maintenanceMessage: "අපගේ වෙබ් අඩවිය යාවත්කාලීන කිරීමකින් පවතින අතර, ඉක්මනින් ඔබ වෙත ආපසු පැමිණිමු! කරුණාකර පසුව නැවත උත්සාහ කරන්න.",
+                countdownTitle: "ආපසු එන්නේ",
+                daysText: "දින",
+                hoursText: "පැය",
+                minutesText: "විනාඩි",
+                secondsText: "තත්පර",
+                contactMessage: "ගැටලුවක්? අප හා සම්බන්ධ වන්න:",
+                emailLabel: "ඊමේල්:",
+                phoneLabel: "දුරකථන:",
+                addressLabel: "ලිපිනය:"
+            }
+        };
+
+        let currentLang = 'en'; // Default language
+
+        // Function to toggle language between English and Sinhala
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'si' : 'en';
+            document.getElementById('langToggle').textContent = currentLang === 'en' ? 'සිංහල' : 'English';
+            document.querySelector('html').classList.toggle('sinhala', currentLang === 'si');
+            updateContent();
+        }
+
+        // Function to update content based on language
+        function updateContent() {
+            const t = translations[currentLang];
+            document.getElementById('pageTitle').textContent = t.pageTitle;
+            document.getElementById('maintenanceTitle').textContent = t.maintenanceTitle;
+            document.getElementById('maintenanceMessage').textContent = t.maintenanceMessage;
+            document.getElementById('countdownTitle').textContent = t.countdownTitle;
+            document.getElementById('daysText').textContent = t.daysText;
+            document.getElementById('hoursText').textContent = t.hoursText
+
+System: ;document.getElementById('minutesText').textContent = t.minutesText;
+            document.getElementById('secondsText').textContent = t.secondsText;
+            document.getElementById('contactMessage').innerHTML = `${t.contactMessage}`;
+            document.getElementById('emailLabel').textContent = t.emailLabel;
+            document.getElementById('phoneLabel').textContent = t.phoneLabel;
+            document.getElementById('addressLabel').textContent = t.addressLabel;
+        }
+
+        // Countdown Timer Logic
+        // Maintenance end set to July 08, 2025, 21:00 (9:00 PM)
+        const maintenanceEnd = new Date("2025-07-08T21:00:00").getTime();
+
+        const countdownInterval = setInterval(function() {
+            const now = new Date().getTime();
+            const distance = maintenanceEnd - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").textContent = String(days).padStart(2, '0');
+            document.getElementById("hours").textContent = String(hours).padStart(2, '0');
+            document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
+            document.getElementById("seconds").textContent = String(seconds).padStart(2, '0');
+
+            if (distance < 0) {
+                clearInterval(countdownInterval);
+                document.getElementById("countdownTitle").textContent = currentLang === 'en' ? "Maintenance Complete!" : "යාවත්කාලීනය සම්පූර්ණයි!";
+                document.querySelector('.countdown-timer').style.display = 'none';
+                document.querySelector('.maintenance-container').style.animation = 'none';
+                document.querySelector('.maintenance-container').style.boxShadow = 'none';
+                document.getElementById("maintenanceMessage").textContent = currentLang === 'en' ? "Maintenance is complete! Please refresh the page." : "යාවත්කාලීනය සම්පූර්ණයි! කරුණාකර පිටුව Refresh කරන්න.";
+            }
+        }, 1000);
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', updateContent);
+        document.getElementById('langToggle').addEventListener('click', toggleLanguage);
+    </script>
+</body>
+</html>
