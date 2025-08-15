@@ -10,6 +10,8 @@
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <!-- hCaptcha -->
+    <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -61,6 +63,9 @@
         <div class="login-container rounded-xl overflow-hidden card-hover w-full max-w-md animate__animated animate__fadeInUp">
             <div class="p-8">
                 <h2 class="text-2xl font-bold mb-6 text-center text-gray-800 bg-gray-50 py-3 px-4 rounded-lg">Login to Continue</h2>
+                
+                <!-- hCaptcha Widget -->
+                <div class="h-captcha mb-4" data-sitekey="2b2071d4-7eba-4f22-a38a-f36e34ca9ba6"></div>
                 
                 <!-- Enhanced Google Login Button -->
                 <button onclick="googleLogin()" 
@@ -114,7 +119,7 @@
             apiKey: "AIzaSyD6yXDHsOaqVplfhsXZV8nWvMuioDulwYg",
             authDomain: "edu-login-4d05f.firebaseapp.com",
             projectId: "edu-login-4d05f",
-            storageBucket: "edu-login-4d05f.firebasestorage.app",
+            storageBucket: "edu-login-4d05f.appspot.com",
             messagingSenderId: "197092856272",
             appId: "1:197092856272:web:a00b0169e46e7d5acca9d5",
             measurementId: "G-TM21CT4GJ9"
@@ -130,14 +135,16 @@
                 languageToggleText: "Switch to Sinhala",
                 loginTitle: "Login to Continue",
                 statusSuccess: "Login successful! Redirecting...",
-                footerNote: "By logging in, you agree to our Terms of Service and Privacy Policy"
+                footerNote: "By logging in, you agree to our Terms of Service and Privacy Policy",
+                captchaError: "Please complete the captcha verification"
             },
             si: {
                 googleLoginText: "ගූගල් ගිණුම සමඟ පිවිසෙන්න",
                 languageToggleText: "Switch to English",
                 loginTitle: "ඉදිරියට යාමට පිවිසෙන්න",
                 statusSuccess: "පිවිසීම සාර්ථකයි! යළි යොමු කෙරේ...",
-                footerNote: "පිවිසීමෙන් ඔබ අපගේ සේවා නියමයන් සහ රහස්යතා ප්‍රතිපත්තියට එකඟ වේ"
+                footerNote: "පිවිසීමෙන් ඔබ අපගේ සේවා නියමයන් සහ රහස්යතා ප්‍රතිපත්තියට එකඟ වේ",
+                captchaError: "කරුණාකර captcha සත්‍යාපනය සම්පූර්ණ කරන්න"
             }
         };
 
@@ -145,6 +152,12 @@
 
         // Enhanced Google login function
         function googleLogin() {
+            const hcaptchaResponse = hcaptcha.getResponse();
+            if (!hcaptchaResponse) {
+                document.getElementById("status").textContent = translations[currentLang].captchaError;
+                return;
+            }
+
             const provider = new firebase.auth.GoogleAuthProvider();
             provider.addScope('email');
             provider.addScope('profile');
@@ -164,6 +177,7 @@
                     const errorMessage = currentLang === 'en' ? 
                         `Error: ${error.message}` : `දෝෂය: ${error.message}`;
                     document.getElementById("status").textContent = errorMessage;
+                    hcaptcha.reset(); // Reset captcha on error
                 });
         }
 
