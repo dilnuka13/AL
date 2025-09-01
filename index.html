@@ -905,7 +905,7 @@
             ]
         };
         
-        // Engineering Technology papers data
+        // Papers data
         const engineeringTechPapers = [
             { year: 2023, paper: 'https://drive.google.com/file/d/1LGBXNnLH1mQX83kJLHxyLpLzU-FWUNjF/view?usp=sharing', marking: 'https://drive.google.com/file/d/1Q74VrZQ0BAublwAZu9r4hhyeTPf-xgKb/view?usp=sharing' },
             { year: 2022, paper: 'https://drive.google.com/file/d/1B7F9esQIcMmQ7BNs8tB1UO-40C5KmJYw/view?usp=drive_link', marking: 'https://drive.google.com/file/d/1pwAn0cDJEkrhrkfLP_Ue1lQNIJJ6dsTR/view?usp=drive_link' },
@@ -916,6 +916,22 @@
             { year: 2017, paper: 'https://drive.google.com/file/d/1tz_GBsuPgodZUYTwsfT1-2CxIJEUtThz/view?usp=drive_link', marking: 'https://drive.google.com/file/d/1Ed8uR6eQ2FRc5yJ137OmEcztb2mSKvIH/view?usp=drive_link' },
             { year: 2016, paper: 'https://drive.google.com/file/d/1JF0sVCiQYAUI95kZ2h-4VJOLG4ELVM_-/view?usp=drive_link', marking: 'https://drive.google.com/file/d/1Ve1SeGAfEWFsSj3Clh1zBCKVD7zh1L6f/view?usp=drive_link' },
             { year: 2015, paper: 'https://drive.google.com/file/d/1MGppNRAPZQPMtse-e3A6Vhs63wZLWjJA/view?usp=drive_link', marking: 'https://drive.google.com/file/d/1-80Mh6QOsdosM25xKJdhaVcSXRvBTcSf/view?usp=drive_link' }
+        ];
+
+        const scienceTechPapers = [
+            { year: 2023, paper: 'https://drive.google.com/file/d/1NBzqpQ3PaHoIfzT6RPX0Lr6-OpL_MEVQ/view?usp=sharing', marking: 'https://drive.google.com/file/d/14qxm0-2NSauZO01CXz4H5Y1IN8g29sA0/view?usp=sharing' },
+            { year: 2022, paper: 'https://drive.google.com/file/d/1NHmEsRasdwDn1QmPQhQ2Ax8QUq94YIvp/view?usp=sharing', marking: 'https://drive.google.com/file/d/1mdXLoRJximX3a9l9GDB9ROIqqhe6oe-7/view?usp=sharing' },
+            { year: 2021, paper: 'https://drive.google.com/file/d/1quUUi2bLwdHZKWrDTLzQboSs265oKD7g/view?usp=sharing', marking: 'https://drive.google.com/file/d/1-PZJqgXfJLHQDNRAkny11G_7i35LkX9f/view?usp=sharing' },
+            { year: 2020, paper: 'https://drive.google.com/file/d/1vsC9m18zn04GqKglUgJb2UqWhrYU9S-l/view?usp=sharing', marking: 'https://drive.google.com/file/d/1VRkttdmuxyqbQAEVHONt9CuBypiRIq0C/view?usp=sharing' },
+            { year: 2019, paper: 'https://drive.google.com/file/d/1MPnRblHfkQHJq2pHhPetAF36Lfa6bNKp/view?usp=sharing', marking: 'https://drive.google.com/file/d/1EqXgL2RRD9bzEA796wfHunKSSO8EI4DL/view?usp=4' },
+            { year: 2018, paper: 'https://drive.google.com/file/d/1FlmDxLjpaX_U782kRVZIQ1P39lCK1gYq/view?usp=sharing', marking: 'https://drive.google.com/file/d/1zeE0oTnGY-wQ_wNMJCtRxkox_sfpzYPO/view?usp=sharing' },
+            { year: 2017, paper: 'https://drive.google.com/file/d/1gxdnYC1OMOyRUIc-PQRrhPYpxSg5v6gL/view?usp=sharing', marking: 'https://drive.google.com/file/d/1GL2yA_WEWgCRXAar02jHgE5M9LS804ti/view?usp=sharing' },
+            { year: 2016, paper: 'https://drive.google.com/file/d/1xtypKipflogg6XY-mgIzjFFoteqTzDtm/view?usp=sharing', marking: 'https://drive.google.com/file/d/1Q6fiJnsaNXqntQKqrs25r_Afdf9_f7BS/view?usp=sharing' },
+            { year: 2015, paper: 'https://drive.google.com/file/d/1fHijafioz51CfdDRUlRzdrAod8Ixgl7t/view?usp=sharing', marking: 'https://drive.google.com/file/d/12Y2eR4C34xeo_e8CRcIgl7A-W1IDZsZX/view?usp=sharing' }
+        ];
+
+        const ictTechPapers = [
+            { year: 2023, paper: 'https://drive.google.com/file/d/114FXfL-oLAmplxeRg—Hu072BKb0yTI/view?usp=sharing', marking: 'https://drive.google.com/file/d/1MY9_rmupRItzyKRvOTcEiTBPDla4g4bc/view?usp=sharing' }
         ];
         
         // Event Listeners
@@ -1091,24 +1107,38 @@
                 
                 // Add click event to show papers
                 subjectCard.addEventListener('click', function() {
-                    showPapers(stream, subject.name);
+                    showPapers(subject.name);
                 });
                 
                 subjectList.appendChild(subjectCard);
             });
         }
         
-        function showPapers(stream, subject) {
+        function showPapers(subject) {
             // Set subject title
             subjectTitle.textContent = `${subject} Papers`;
             
             // Clear previous papers
             papersList.innerHTML = '';
+
+            let papersData = [];
+
+            switch (subject) {
+                case 'Engineering Technology':
+                    papersData = engineeringTechPapers;
+                    break;
+                case 'Science for Technology':
+                    papersData = scienceTechPapers;
+                    break;
+                case 'ICT':
+                    papersData = ictTechPapers;
+                    break;
+                default:
+                    papersData = null;
+            }
             
-            // For now, we'll only show Engineering Technology papers
-            // In a full implementation, we would show papers based on the selected subject
-            if (subject === 'Engineering Technology') {
-                engineeringTechPapers.forEach(paper => {
+            if (papersData && papersData.length > 0) {
+                papersData.forEach(paper => {
                     const paperRow = document.createElement('tr');
                     paperRow.className = 'paper-item';
                     paperRow.innerHTML = `
