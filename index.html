@@ -1,321 +1,1159 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="pageTitle">DE Edu | Under Maintenance</title>
+    <title>DE Education</title>
+    <link rel="icon" href="https://www.freeiconspng.com/uploads/green-circle-icon-14.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sinhala:wght@400;700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
     <style>
-        /* Base styles for body and fonts */
+        /* Previous styles remain unchanged */
+        @media (max-width: 768px) {
+            .mobile-menu {
+                display: none;
+            }
+            .mobile-menu.active {
+                display: block;
+            }
+        }
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%); /* Matches DE Edu theme */
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
             color: #333;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            justify-content: center;
-            align-items: center;
-            margin: 0;
         }
         .sinhala { font-family: 'Noto Sinhala', sans-serif; }
-
-        /* Container styles */
-        .maintenance-container {
-            background-color: #ffffff;
-            padding: 2.5rem;
+        .gradient-header {
+            background: linear-gradient(135deg, #047857 0%, #065f46 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+            transform: translateY(0);
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .marquee-container {
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            box-sizing: border-box;
+            background-color: #fefcbf;
+            padding: 0.5rem 0;
+            border-radius: 0.5rem;
+            border: 1px solid #fcd34d;
+        }
+        .marquee-text {
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee 30s linear infinite;
+            color: #b45309;
+            font-weight: 500;
+        }
+        @keyframes marquee {
+            0%   { transform: translate(0, 0); }
+            100% { transform: translate(-100%, 0); }
+        }
+        .countdown-container {
+            margin-top: 1.5rem;
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            padding: 2rem;
             border-radius: 1rem;
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
-            width: 90%;
+            border: 2px solid #34d399;
             text-align: center;
-            animation: subtle-pulse 3s infinite ease-in-out;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
-        @keyframes subtle-pulse {
-            0% { transform: scale(1); box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1); }
-            50% { transform: scale(1.015); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); }
-            100% { transform: scale(1); box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1); }
+        .countdown-title {
+            font-weight: bold;
+            color: #065f46;
+            margin-bottom: 1.5rem;
+            font-size: 1.75rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
-
-        /* Spinner animation */
-        .spinner {
-            border: 8px solid #f3f3f3;
-            border-top: 8px solid #00796b; /* Matches DE Edu header color */
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spin 2s linear infinite;
-            margin: 1.5rem auto;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Countdown timer styles */
         .countdown-timer {
             display: flex;
             justify-content: center;
             gap: 1.5rem;
-            font-size: 2rem;
-            color: #00796b;
+            font-size: 2.5rem;
+            color: #047857;
             font-family: 'Inter', sans-serif;
-            font-weight: 700;
-            margin-top: 1.5rem;
+            font-weight: 800;
         }
         .countdown-item {
-            background-color: #f5f5f5;
-            padding: 1rem;
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            padding: 1rem 1.25rem;
             border-radius: 0.75rem;
-            min-width: 70px;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.07);
-        }
-        .countdown-item span:first-child {
-            display: block;
-            line-height: 1.2;
+            min-width: 90px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border: 1px solid #a7f3d0;
         }
         .countdown-item span:last-child {
-            display:block;
+            display: block;
             font-size: 0.9rem;
-            color: #004d40;
-            font-weight: normal;
+            color: #065f46;
             margin-top: 0.5rem;
             text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
-
-        /* Contact and social media links */
-        .contact-info {
-            margin-top: 2rem;
-            font-size: 1rem;
-            color: #555;
+        .tab-content {
+            display: none;
         }
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            margin-top: 1rem;
+        .tab-content.active {
+            display: block;
         }
-        .social-links a {
-            color: #00796b;
-            transition: color 0.3s ease;
-        }
-        .social-links a:hover {
-            color: #004d40;
-        }
-
-        /* Language toggle button */
-        .lang-toggle {
+        #backToTopBtn {
+            display: none;
             position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: #00796b;
+            bottom: 20px;
+            right: 30px;
+            z-index: 99;
+            border: none;
+            outline: none;
+            background-color: #047857;
             color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            font-weight: medium;
-            transition: background-color 0.3s ease;
+            cursor: pointer;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 18px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, transform 0.3s;
         }
-        .lang-toggle:hover {
-            background-color: #004d40;
+        #backToTopBtn:hover {
+            background-color: #065f46;
+            transform: translateY(-2px);
+        }
+        .login-container {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .google-btn {
+            background: white;
+            color: #4285F4;
+            border: 1px solid #e2e8f0;
+        }
+        .google-btn:hover {
+            background: #f8fafc;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .contact-icon-wrapper {
+            background-color: #d1fae5;
+            color: #047857;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+        .contact-icon-wrapper:hover {
+            transform: scale(1.1);
+            background-color: #a7f3d0;
+        }
+        .paper-item {
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .paper-item:hover {
+            background-color: #e6fffa;
+            transform: translateX(5px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+        }
+        /* New styles for stream selection */
+        .stream-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .stream-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .stream-card.active {
+            border: 2px solid #047857;
+            background-color: #f0fdf4;
+        }
+        .subject-list {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+        .subject-list.open {
+            max-height: 500px;
         }
     </style>
 </head>
-<body>
-    <!-- Language Toggle Button -->
-    <button id="langToggle" class="lang-toggle animate__animated animate__fadeInRight">සිංහල</button>
+<body class="min-h-screen flex flex-col">
+    <!-- Login Modal (Shown First) -->
+    <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="login-container rounded-xl overflow-hidden card-hover w-full max-w-md animate__animated animate__fadeInUp">
+            <div class="p-8">
+                <h2 class="text-2xl font-bold mb-6 text-center text-gray-800 bg-gray-50 py-3 px-4 rounded-lg">Login to Continue</h2>
+                
+                <!-- Centered hCaptcha -->
+                <div style="display: flex; justify-content: center; margin-bottom: 16px;">
+                    <div class="h-captcha" data-sitekey="2b2071d4-7eba-4f22-a38a-f36e34ca9ba6"></div>
+                </div>
 
-    <!-- Maintenance Mode Content -->
-    <div class="maintenance-container animate__animated animate__fadeInUp">
-        <h1 class="text-3xl font-bold text-teal-700 mb-4 sinhala" id="maintenanceTitle">පද්ධති යාවත්කාලීනයකින් පවතී</h1>
-        <p class="text-gray-700 mb-6 sinhala" id="maintenanceMessage">අපගේ වෙබ් අඩවිය යාවත්කාලීන කිරීමකින් පවතින අතර, ඉක්මනින් ඔබ වෙත ආපසු පැමිණිමු! කරුණාකර පසුව නැවත උත්සාහ කරන්න.</p>
-        <div class="spinner"></div>
-        <h3 class="text-xl font-bold text-teal-700 mb-4 sinhala" id="countdownTitle">ආපසු එන්නේ</h3>
-        <div class="countdown-timer">
-            <div class="countdown-item">
-                <span id="days">00</span><span id="daysText">දින</span>
-            </div>
-            <div class="countdown-item">
-                <span id="hours">00</span><span id="hoursText">පැය</span>
-            </div>
-            <div class="countdown-item">
-                <span id="minutes">00</span><span id="minutesText">විනාඩි</span>
-            </div>
-            <div class="countdown-item">
-                <span id="seconds">00</span><span id="secondsText">තත්පර</span>
+                <!-- Enhanced Google Login Button -->
+                <button onclick="googleLogin()" class="w-full flex items-center justify-center google-btn px-6 py-3 rounded-lg font-medium transition-colors mb-4 hover:shadow-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3" viewBox="0 0 24 24">
+                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                    </svg>
+                    <span id="googleLoginText" class="font-medium">Login with Google</span>
+                </button>
+
+                <!-- Language Toggle Button -->
+                <div class="flex justify-center mt-4">
+                    <button onclick="toggleLanguage()" class="text-sm text-gray-600 hover:text-emerald-700 transition-colors">
+                        <span id="languageToggleText">සිංහලට මාරු වන්න</span>
+                    </button>
+                </div>
+
+                <!-- Status Message -->
+                <p id="status" class="text-sm text-center mt-6 text-red-600"></p>
+
+                <!-- Footer Note -->
+                <p class="text-center text-gray-500 text-sm mt-8">
+                    By logging in, you agree to our Terms of Service and Privacy Policy
+                </p>
             </div>
         </div>
-        <div class="contact-info sinhala">
-            <p id="contactMessage">අප හා සම්බන්ධ වන්න:</p>
-            <p class="mt-2"><strong id="emailLabel">ඊමේල්:</strong> <a href="mailto:isaradilnuka@gmail.com" class="text-teal-600 hover:text-teal-800">isaradilnuka@gmail.com</a></p>
-            <p><strong id="phoneLabel">දුරකථන:</strong> <a href="tel:+94764164804" class="text-teal-600 hover:text-teal-800">+94 71 615 5666</a></p>
-            <p><strong id="addressLabel">ලිපිනය:</strong >Horana, Sri Lanka 12400</p>
-            <div class="social-links">
-                <a href="https://www.tiktok.com/@dilnuka.13x" target="_blank">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21,7H20a4,4,0,0,1-4-4H12V14.5a2.5,2.5,0,1,1-4-2V8.18a6.5,6.5,0,1,0,8,6.32V9.92A8,8,0,0,0,20,11h1Z" />
-                    </svg>
-                </a>
-                <a href="https://x.com/Dilnuka_13" target="_blank">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z" />
-                    </svg>
-                </a>
-                <a href="https://www.facebook.com/Dilnuka.13x" target="_blank">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" />
-                    </svg>
-                    </a>
-                    <br>
-                              <br>          
-                    
-                    
-                </a>
-            </div>
-        </div>
-        <div class="footer">
-                    <p>
-                        &copy; 2025 All rights reserved.
-                                  <br>
-                        <small> Designed by <a href="https://dilnuka13.github.io/my/" target="_blank" > Isara Dilnuka Amarathunga </a>
-    </small>
-                    </p>
     </div>
 
-    <script>
-        // Translations object for multilingual support
-        const translations = {
-            en: {
-                pageTitle: "DE Edu | Under Maintenance",
-                maintenanceTitle: "System Under Maintenance",
-                maintenanceMessage: "Our website is currently undergoing maintenance. We'll be back soon! Please try again later.",
-                countdownTitle: "We'll Be Back In",
-                daysText: "Days",
-                hoursText: "Hours",
-                minutesText: "Minutes",
-                secondsText: "Seconds",
-                contactMessage: "Contact us:",
-                emailLabel: "Email:",
-                phoneLabel: "Phone:",
-                addressLabel: "Address:"
-            },
-            si: {
-                pageTitle: "DE Edu | යාවත්කාලීනය",
-                maintenanceTitle: "පද්ධති යාවත්කාලීනයකින් පවතී",
-                maintenanceMessage: "අපගේ වෙබ් අඩවිය යාවත්කාලීන කිරීමකින් පවතින අතර, ඉක්මනින් ඔබ වෙත ආපසු පැමිණිමු! කරුණාකර පසුව නැවත උත්සාහ කරන්න.",
-                countdownTitle: "ආපසු එන්නේ",
-                daysText: "දින",
-                hoursText: "පැය",
-                minutesText: "විනාඩි",
-                secondsText: "තත්පර",
-                contactMessage: "අප හා සම්බන්ධ වන්න:",
-                emailLabel: "ඊමේල්:",
-                phoneLabel: "දුරකථන:",
-                addressLabel: "ලිපිනය:",
+    <!-- Main Content (Hidden until login) -->
+    <div id="mainContent" class="hidden">
+        <!-- Header Section -->
+        <header class="gradient-header text-white shadow-lg">
+            <div class="container mx-auto px-4 py-4">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center">
+                        <button id="mobileMenuButton" class="md:hidden text-white mr-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                            </svg>
+                        </button>
+                        <div>
+                            <h1 class="text-2xl md:text-3xl font-bold" id="headerTitle">DE Education.lk</h1>
+                            <p class="mt-1 text-emerald-100 text-sm" id="headerSubtitle">Complete Educational Resource Platform</p>
+                        </div>
+                    </div>
+                    <button id="langToggle" class="bg-emerald-600 hover:bg-emerald-700 px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                        සිංහල
+                    </button>
+                </div>
                 
+                <!-- Mobile Menu -->
+                <div id="mobileMenu" class="mobile-menu mt-4 md:hidden">
+                    <div class="flex flex-col space-y-2">
+                        <a href="#" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-emerald-700" data-tab="home">Home</a>
+                        <a href="#" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-emerald-700" data-tab="papers">Past Papers</a>
+                        <a href="#" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-emerald-700" data-tab="results">Exam Results</a>
+                        <a href="#" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-emerald-700" data-tab="ethaksalawa">E-Thaksalawa</a>
+                        <a href="#" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-emerald-700" data-tab="notices">Notices</a>
+                        <a href="#" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-emerald-700" data-tab="contact">Contact</a>
+                        <button onclick="logout()" class="text-left text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-emerald-700">Logout</button>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex space-x-4 mt-4">
+                    <a href="#" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-emerald-700" data-tab="home">Home</a>
+                    <a href="#" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-emerald-700" data-tab="papers">Past Papers</a>
+                    <a href="#" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-emerald-700" data-tab="results">Exam Results</a>
+                    <a href="#" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-emerald-700" data-tab="ethaksalawa">E-Thaksalawa</a>
+                    <a href="#" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-emerald-700" data-tab="notices">Notices</a>
+                    <a href="#" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-emerald-700" data-tab="contact">Contact</a>
+                    <button onclick="logout()" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-emerald-700">Logout</button>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="flex-grow container mx-auto px-4 py-8">
+            <!-- Home Tab -->
+            <div id="home" class="tab-content active">
+                <div class="animate__animated animate__fadeIn">
+                    <h2 class="text-2xl md:text-3xl font-bold text-emerald-800 mb-8 text-center">Welcome to DE Education.lk</h2>
                     
-            }
+                    <!-- Search Bar -->
+                    <div class="mb-8">
+                        <div class="flex justify-center max-w-2xl mx-auto rounded-lg overflow-hidden shadow-lg">
+                            <input type="text" id="globalSearch" placeholder="Search resources, papers, notices..." 
+                                   class="w-full p-3 md:p-4 border-none focus:outline-none focus:ring-2 focus:ring-emerald-300 text-gray-800 text-base md:text-lg">
+                            <button onclick="globalSearch()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 md:py-4 font-medium transition-colors flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-6 md:w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                                <span>Search</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Urgent Message Marquee -->
+                    <div class="marquee-container mb-8">
+                        <p class="marquee-text" id="urgentMessage">All subjects are not yet added. Please try again after the update. The next update will be released on 2025.09.21.</p>
+                    </div>
+
+                    <!-- Countdown Timer -->
+                    <div class="countdown-container mb-8">
+                        <h3 class="countdown-title">2025 A/L Start Countdown</h3>
+                        <div class="countdown-timer">
+                            <div class="countdown-item">
+                                <span id="days">00</span><span>Days</span>
+                            </div>
+                            <div class="countdown-item">
+                                <span id="hours">00</span><span>Hours</span>
+                            </div>
+                            <div class="countdown-item">
+                                <span id="minutes">00</span><span>Minutes</span>
+                            </div>
+                            <div class="countdown-item">
+                                <span id="seconds">00</span><span>Seconds</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Access Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <div class="bg-white p-6 rounded-xl shadow-md card-hover text-center">
+                            <div class="bg-blue-100 p-3 rounded-full inline-flex items-center justify-center mb-4">
+                                <i class="fas fa-file-pdf text-blue-600 text-2xl"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-800 mb-2">Past Papers</h3>
+                            <p class="text-gray-600 mb-4">Access A/L past papers and marking schemes</p>
+                            <a href="#" data-tab="papers" class="text-blue-600 hover:text-blue-800 font-medium">View Papers →</a>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-xl shadow-md card-hover text-center">
+                            <div class="bg-green-100 p-3 rounded-full inline-flex items-center justify-center mb-4">
+                                <i class="fas fa-chart-line text-green-600 text-2xl"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-800 mb-2">Exam Results</h3>
+                            <p class="text-gray-600 mb-4">Check latest examination results</p>
+                            <a href="#" data-tab="results" class="text-green-600 hover:text-green-800 font-medium">Check Results →</a>
+                        </div>
+
+
+
+                        <div class="bg-white p-6 rounded-xl shadow-md card-hover text-center">
+                            <div class="bg-red-100 p-3 rounded-full inline-flex items-center justify-center mb-4">
+                                <i class="fas fa-bullhorn text-red-600 text-2xl"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-800 mb-2">Notices</h3>
+                            <p class="text-gray-600 mb-4">Latest announcements and notices</p>
+                            <a href="#" data-tab="notices" class="text-red-600 hover:text-red-800 font-medium">View Notices →</a>
+                        </div>
+                                                <div class="bg-white p-6 rounded-xl shadow-md card-hover text-center">
+                            <div class="bg-green-100 p-3 rounded-full inline-flex items-center justify-center mb-4">
+                                <i class="fas fa-chart-line text-green-600 text-2xl"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-800 mb-2">E-Thaksalawa</h3>
+                            <p class="text-gray-600 mb-3">Login to E-Thaksalawa</p>
+                            <a href="https://www.e-thaksalawa.moe.gov.lk/Si/index.php" data-tab="ethaksalawa" class="text-green-600 hover:text-green-800 font-medium"> Go E-Thaksalawa →</a>
+                        </div> 
+                    </div>
+
+                   
+
+                    <!-- Recent Updates Section -->
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <h3 class="text-xl font-semibold text-emerald-800 mb-4">Recent Updates</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-start">
+                                <div class="bg-emerald-100 p-2 rounded-full mr-4">
+                                    <i class="fas fa-plus-circle text-emerald-600"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-800">New Engineering Technology Papers Added</h4>
+                                    <p class="text-gray-600 text-sm">2020-2023 past papers and marking schemes now available</p>
+                                    <p class="text-gray-500 text-xs">Posted on: 2025-08-15</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="bg-blue-100 p-2 rounded-full mr-4">
+                                    <i class="fas fa-bullhorn text-blue-600"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-800">2025 A/L Examination Schedule Released</h4>
+                                    <p class="text-gray-600 text-sm">Official examination dates published by the Department of Examinations</p>
+                                    <p class="text-gray-500 text-xs">Posted on: 2025-08-10</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="bg-purple-100 p-2 rounded-full mr-4">
+                                    <i class="fas fa-book text-purple-600"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-800">New Quiz Feature Available</h4>
+                                    <p class="text-gray-600 text-sm">Test your knowledge with subject-specific quizzes</p>
+                                    <p class="text-gray-500 text-xs">Posted on: 2025-08-05</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Past Papers Tab -->
+            <div id="papers" class="tab-content">
+                <h2 class="text-2xl md:text-3xl font-bold text-emerald-800 mb-8 text-center">Past Papers & Marking Schemes</h2>
+                
+                <!-- Stream Selection -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Select Your Stream</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="stream-card bg-white p-4 rounded-lg shadow-md text-center cursor-pointer" data-stream="science">
+                            <div class="bg-blue-100 p-3 rounded-full inline-flex items-center justify-center mb-3">
+                                <i class="fas fa-flask text-blue-600 text-xl"></i>
+                            </div>
+                            <h4 class="font-medium text-gray-800">Science Stream</h4>
+                        </div>
+                        
+                        <div class="stream-card bg-white p-4 rounded-lg shadow-md text-center cursor-pointer" data-stream="commerce">
+                            <div class="bg-green-100 p-3 rounded-full inline-flex items-center justify-center mb-3">
+                                <i class="fas fa-chart-line text-green-600 text-xl"></i>
+                            </div>
+                            <h4 class="font-medium text-gray-800">Commerce Stream</h4>
+                        </div>
+                        
+                        <div class="stream-card bg-white p-4 rounded-lg shadow-md text-center cursor-pointer" data-stream="arts">
+                            <div class="bg-purple-100 p-3 rounded-full inline-flex items-center justify-center mb-3">
+                                <i class="fas fa-palette text-purple-600 text-xl"></i>
+                            </div>
+                            <h4 class="font-medium text-gray-800">Arts Stream</h4>
+                        </div>
+                        
+                        <div class="stream-card bg-white p-4 rounded-lg shadow-md text-center cursor-pointer" data-stream="technology">
+                            <div class="bg-red-100 p-3 rounded-full inline-flex items-center justify-center mb-3">
+                                <i class="fas fa-cogs text-red-600 text-xl"></i>
+                            </div>
+                            <h4 class="font-medium text-gray-800">Technology Stream</h4>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Subject Selection (Initially Hidden) -->
+                <div id="subjectSelection" class="hidden mb-8">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Select Your Subject</h3>
+                    <div id="subjectList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <!-- Subjects will be populated dynamically based on stream selection -->
+                    </div>
+                </div>
+                
+                <!-- Papers Display (Initially Hidden) -->
+                <div id="papersDisplay" class="hidden">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4" id="subjectTitle">Engineering Technology Papers</h3>
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Year</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Paper</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Marking Scheme</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200" id="papersList">
+                                    <!-- Papers will be populated dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Other tabs remain unchanged -->
+            <!-- Exam Results Tab -->
+            <div id="results" class="tab-content">
+                <h2 class="text-2xl md:text-3xl font-bold text-emerald-800 mb-8 text-center">Exam Results</h2>
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-3">Check Examination Results</h3>
+                        <p class="text-gray-600 mb-4">Access results from various national examinations</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <a href="https://www.doenets.lk/examresults" target="_blank" class="bg-blue-100 hover:bg-blue-200 p-4 rounded-lg flex items-center justify-between transition-colors">
+                                <div>
+                                    <h4 class="font-medium text-blue-800">G.C.E. Advanced Level</h4>
+                                    <p class="text-blue-600 text-sm">Department of Examinations</p>
+                                </div>
+                                <i class="fas fa-external-link-alt text-blue-600"></i>
+                            </a>
+                            
+                            <a href="https://www.results.exams.gov.lk/viewresultsforexam.htm" target="_blank" class="bg-green-100 hover:bg-green-200 p-4 rounded-lg flex items-center justify-between transition-colors">
+                                <div>
+                                    <h4 class="font-medium text-green-800">General Information Technology (GIT)</h4>
+                                    <p class="text-green-600 text-sm">Department of Examinations</p>
+                                </div>
+                                <i class="fas fa-external-link-alt text-green-600"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-3">Recent Result Updates</h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                                <div>
+                                    <h4 class="font-medium">2024 A/L Results</h4>
+                                    <p class="text-sm text-gray-600">Released on: 2025-05-01</p>
+                                </div>
+                                <a href="https://www.doenets.lk/examresults" class="text-emerald-600 hover:text-emerald-800 font-medium flex items-center">
+                                    Check <i class="fas fa-arrow-right ml-1"></i>
+                                </a>
+                            </div>
+                            <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                                <div>
+                                    <h4 class="font-medium">2022/2023/2024 General Information Technology (GIT)</h4>
+                                    <p class="text-sm text-gray-600">Released on: 2025-08-26</p>
+                                </div>
+                                <a href="https://www.results.exams.gov.lk/viewresultsforexam.htm" class="text-emerald-600 hover:text-emerald-800 font-medium flex items-center">
+                                    Check <i class="fas fa-arrow-right ml-1"></i>
+                                </a>
+                            </div>    
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- E-Thaksalawa Tab -->
+            <div id="ethaksalawa" class="tab-content">
+                <h2 class="text-2xl md:text-3xl font-bold text-emerald-800 mb-8 text-center">E-Thaksalawa Integration</h2>
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-3">Access E-Thaksalawa Resources</h3>
+                        <p class="text-gray-600 mb-4">E-Thaksalawa is the official learning management system of the Ministry of Education</p>
+                        
+                        <div class="bg-blue-50 p-4 rounded-lg mb-6">
+                            <div class="flex items-start">
+                                <div class="bg-blue-100 p-3 rounded-full mr-4">
+                                    <i class="fas fa-graduation-cap text-blue-600"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-blue-800 mb-2">Login to E-Thaksalawa</h4>
+                                    <p class="text-blue-600 text-sm mb-3">Access your personalized learning portal</p>
+                                    <a href="https://www.e-thaksalawa.moe.gov.lk/" target="_blank" class="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                                        Go to E-Thaksalawa <i class="fas fa-external-link-alt ml-2"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-3">Available Resources</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <div class="flex items-center mb-3">
+                                    <div class="bg-purple-100 p-2 rounded-full mr-3">
+                                        <i class="fas fa-book-open text-purple-600"></i>
+                                    </div>
+                                    <h4 class="font-medium text-gray-800">Learning Materials</h4>
+                                </div>
+                                <p class="text-gray-600 text-sm">Textbooks, lessons and educational content for all grades</p>
+                            </div>
+                            
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <div class="flex items-center mb-3">
+                                    <div class="bg-green-100 p-2 rounded-full mr-3">
+                                        <i class="fas fa-video text-green-600"></i>
+                                    </div>
+                                    <h4 class="font-medium text-gray-800">Video Lessons</h4>
+                                </div>
+                                <p class="text-gray-600 text-sm">Recorded lessons by experienced teachers</p>
+                            </div>
+                            
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <div class="flex items-center mb-3">
+                                    <div class="bg-red-100 p-2 rounded-full mr-3">
+                                        <i class="fas fa-tasks text-red-600"></i>
+                                    </div>
+                                    <h4 class="font-medium text-gray-800">Activities</h4>
+                                </div>
+                                <p class="text-gray-600 text-sm">Interactive exercises and assignments</p>
+                            </div>
+                            
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <div class="flex items-center mb-3">
+                                    <div class="bg-yellow-100 p-2 rounded-full mr-3">
+                                        <i class="fas fa-chalkboard-teacher text-yellow-600"></i>
+                                    </div>
+                                    <h4 class="font-medium text-gray-800">Teacher Guides</h4>
+                                </div>
+                                <p class="text-gray-600 text-sm">Resources and guides for educators</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <!-- Notices Tab -->
+            <div id="notices" class="tab-content">
+                <h2 class="text-2xl md:text-3xl font-bold text-emerald-800 mb-8 text-center">Notices & Announcements</h2>
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Latest Announcements</h3>
+                        
+                        <div class="space-y-4">
+                            <div class="p-4 bg-red-50 border-l-4 border-red-400">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0">
+                                        <i class="fas fa-exclamation-circle text-red-400"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <h4 class="text-sm font-medium text-red-800">Important: 2025 A/L Examination Application</h4>
+                                        <p class="mt-1 text-sm text-red-700">Deadline for application submission is 2025-07-31. Late applications will not be accepted.</p>
+                                        <p class="mt-2 text-xs text-red-600">Published: 2025-06-15</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="p-4 bg-blue-50 border-l-4 border-blue-400">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0">
+                                        <i class="fas fa-info-circle text-blue-400"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <h4 class="text-sm font-medium text-blue-800">New Syllabus Implementation</h4>
+                                        <p class="mt-1 text-sm text-blue-700">The new syllabus for G.C.E. Advanced Level will be implemented starting from 2025 academic year.</p>
+                                        <p class="mt-2 text-xs text-blue-600">Published: 2025-06-10</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="p-4 bg-green-50 border-l-4 border-green-400">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0">
+                                        <i class="fas fa-check-circle text-green-400"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <h4 class="text-sm font-medium text-green-800">School Term Dates Confirmed</h4>
+                                        <p class="mt-1 text-sm text-green-700">The Ministry of Education has confirmed the school term dates for 2025 academic year.</p>
+                                        <p class="mt-2 text-xs text-green-600">Published: 2025-05-25</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Previous Notices</h3>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Source</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-800">2025-05-10</td>
+                                        <td class="px-4 py-4 text-sm text-gray-800">Circular on School Uniform Regulations</td>
+                                        <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600">Ministry of Education</td>
+                                        <td class="px-4 py-4 whitespace-nowrap text-sm font-medium">
+                                            <a href="#" class="text-emerald-600 hover:text-emerald-900">Download</a>
+                                        </td>
+                                    </tr>
+                                    <tr class="bg-gray-50">
+                                        <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-800">2025-04-28</td>
+                                        <td class="px-4 py-4 text-sm text-gray-800">Scholarship Examination Results</td>
+                                        <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600">Department of Examinations</td>
+                                        <td class="px-4 py-4 whitespace-nowrap text-sm font-medium">
+                                            <a href="#" class="text-emerald-600 hover:text-emerald-900">View</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-800">2025-04-15</td>
+                                        <td class="px-4 py-4 text-sm text-gray-800">Teacher Transfer Guidelines</td>
+                                        <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600">Ministry of Education</td>
+                                        <td class="px-4 py-4 whitespace-nowrap text-sm font-medium">
+                                            <a href="#" class="text-emerald-600 hover:text-emerald-900">Download</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Tab -->
+            <div id="contact" class="tab-content">
+                <h2 class="text-2xl md:text-3xl font-bold text-emerald-800 mb-8 text-center">Contact Us</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Get in Touch</h3>
+                        <p class="text-gray-600 mb-6">Have questions or feedback? Reach out to us using the form below or through our contact information.</p>
+                        
+                        <form id="contactForm" class="space-y-4">
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                                <input type="text" id="name" name="name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500">
+                            </div>
+                            
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                <input type="email" id="email" name="email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500">
+                            </div>
+                            
+                            <div>
+                                <label for="subject" class="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+                                <input type="text" id="subject" name="subject" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500">
+                            </div>
+                            
+                            <div>
+                                <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                                <textarea id="message" name="message" rows="4" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500"></textarea>
+                            </div>
+                            
+                            <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                                Send Message
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div>
+                        <div class="bg-white p-6 rounded-xl shadow-md mb-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Contact Information</h3>
+                            
+                            <div class="space-y-4">
+                                <div class="flex items-start">
+                                    <div class="contact-icon-wrapper p-3 rounded-full mr-4">
+                                        <i class="fas fa-map-marker-alt text-emerald-600"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium text-gray-800">Address</h4>
+                                        <p class="text-gray-600">Horana, Sri Lanka 12400</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <div class="contact-icon-wrapper p-3 rounded-full mr-4">
+                                        <i class="fas fa-phone-alt text-emerald-600"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium text-gray-800">Phone</h4>
+                                        <p class="text-gray-600">+94 776 611 573</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <div class="contact-icon-wrapper p-3 rounded-full mr-4">
+                                        <i class="fas fa-envelope text-emerald-600"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium text-gray-800">Email</h4>
+                                        <p class="text-gray-600">isaradilnuka@gmail.com</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <div class="contact-icon-wrapper p-3 rounded-full mr-4">
+                                        <i class="fas fa-globe text-emerald-600"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium text-gray-800">Website</h4>
+                                        <p class="text-gray-600">https://dilnuka13.github.io/my/</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white p-6 rounded-xl shadow-md">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Follow Us</h3>
+                            
+                            <div class="flex space-x-4">
+                                <a href="https://www.facebook.com/Dilnuka.13x" class="contact-icon-wrapper p-3 rounded-full">
+                                    <i class="fab fa-facebook-f text-emerald-600"></i>
+                                </a>
+                                <a href="https://x.com/Dilnuka_13" class="contact-icon-wrapper p-3 rounded-full">
+                                    <i class="fab fa-twitter text-emerald-600"></i>
+                                </a>
+                                <a href="https://www.instagram.com/dilnuka.13x/" class="contact-icon-wrapper p-3 rounded-full">
+                                    <i class="fab fa-instagram text-emerald-600"></i>
+                                </a>
+                                <a href="https://www.youtube.com/channel/UC6dd601bYXS5lMI6HiJjy7Q" class="contact-icon-wrapper p-3 rounded-full">
+                                    <i class="fab fa-youtube text-emerald-600"></i>
+                                </a>
+                                <a href="https://www.linkedin.com/in/isara-dilnuka-2b58b82a2" class="contact-icon-wrapper p-3 rounded-full">
+                                    <i class="fab fa-linkedin-in text-emerald-600"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-gray-800 text-white py-8">
+            <div class="container mx-auto px-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">DE Education.lk</h3>
+                        <p class="text-gray-400">DE Education: A platform for A/L papers, timetables, results with PDF preview, downloads, search, and admin features.</p>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+                        <ul class="space-y-2">
+                            <li><a href="#" data-tab="home" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
+                            <li><a href="#" data-tab="papers" class="text-gray-400 hover:text-white transition-colors">Past Papers</a></li>
+                            <li><a href="#" data-tab="results" class="text-gray-400 hover:text-white transition-colors">Exam Results</a></li>
+                            <li><a href="#" data-tab="ethaksalawa" class="text-gray-400 hover:text-white transition-colors">E-Thaksalawa</a></li>
+                            
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">Legal</h3>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Privacy Policy</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Terms of Service</a></li>
+
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400 text-sm">
+                    <p>&copy; 2025 DE Education.lk. All rights reserved.</p>
+                    <p class="mt-2"><small> Designed by <a href="https://dilnuka13.github.io/my/" target="_blank" > Isara Dilnuka Amarathunga </a>
+    </small></p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Back to Top Button -->
+    <button id="backToTopBtn" class="animate__animated" title="Go to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+
+        
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDummyAPIKeyForEduPortalProject",
+            authDomain: "eduportal-lk.firebaseapp.com",
+            projectId: "eduportal-lk",
+            storageBucket: "eduportal-lk.appspot.com",
+            messagingSenderId: "1234567890",
+            appId: "1:1234567890:web:dummyappidforeduportal"
         };
-
-        let currentLang = 'en'; // Default language
-
-        // Function to toggle language between English and Sinhala
-        function toggleLanguage() {
-            currentLang = currentLang === 'en' ? 'si' : 'en';
-            document.getElementById('langToggle').textContent = currentLang === 'en' ? 'සිංහල' : 'English';
-            document.querySelector('html').classList.toggle('sinhala', currentLang === 'si');
-            updateContent();
-        }
-
-        // Function to update content based on language
-        function updateContent() {
-            const t = translations[currentLang];
-            document.getElementById('pageTitle').textContent = t.pageTitle;
-            document.getElementById('maintenanceTitle').textContent = t.maintenanceTitle;
-            document.getElementById('maintenanceMessage').textContent = t.maintenanceMessage;
-            document.getElementById('countdownTitle').textContent = t.countdownTitle;
-            document.getElementById('daysText').textContent = t.daysText;
-            document.getElementById('hoursText').textContent = t.hoursText
-
-System: ;document.getElementById('minutesText').textContent = t.minutesText;
-            document.getElementById('secondsText').textContent = t.secondsText;
-            document.getElementById('contactMessage').innerHTML = `${t.contactMessage}`;
-            document.getElementById('emailLabel').textContent = t.emailLabel;
-            document.getElementById('phoneLabel').textContent = t.phoneLabel;
-            document.getElementById('addressLabel').textContent = t.addressLabel;
-        }
-
-        // Countdown Timer Logic
-        // Maintenance end set to July 08, 2025, 21:00 (9:00 PM)
-        const maintenanceEnd = new Date("2025-09-30T21:00:00").getTime();
-
-        const countdownInterval = setInterval(function() {
-            const now = new Date().getTime();
-            const distance = maintenanceEnd - now;
-
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            document.getElementById("days").textContent = String(days).padStart(2, '0');
-            document.getElementById("hours").textContent = String(hours).padStart(2, '0');
-            document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
-            document.getElementById("seconds").textContent = String(seconds).padStart(2, '0');
-
-            if (distance < 0) {
-                clearInterval(countdownInterval);
-                document.getElementById("countdownTitle").textContent = currentLang === 'en' ? "Maintenance Complete!" : "යාවත්කාලීනය සම්පූර්ණයි!";
-                document.querySelector('.countdown-timer').style.display = 'none';
-                document.querySelector('.maintenance-container').style.animation = 'none';
-                document.querySelector('.maintenance-container').style.boxShadow = 'none';
-                document.getElementById("maintenanceMessage").textContent = currentLang === 'en' ? "Maintenance is complete! Please refresh the page." : "යාවත්කාලීනය සම්පූර්ණයි! කරුණාකර පිටුව Refresh කරන්න.";
+        
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        
+        // Initialize EmailJS
+        emailjs.init("user_dummyemailjskey");
+        
+        // DOM Elements
+        const loginModal = document.getElementById('loginModal');
+        const mainContent = document.getElementById('mainContent');
+        const mobileMenuButton = document.getElementById('mobileMenuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const backToTopBtn = document.getElementById('backToTopBtn');
+        const tabLinks = document.querySelectorAll('[data-tab]');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const langToggle = document.getElementById('langToggle');
+        const streamCards = document.querySelectorAll('.stream-card');
+        const subjectSelection = document.getElementById('subjectSelection');
+        const subjectList = document.getElementById('subjectList');
+        const papersDisplay = document.getElementById('papersDisplay');
+        const papersList = document.getElementById('papersList');
+        const subjectTitle = document.getElementById('subjectTitle');
+        
+        // Stream subjects data
+        const streamSubjects = {
+            science: [
+                { name: 'Biology', icon: 'fa-dna' },
+                { name: 'Physics', icon: 'fa-atom' },
+                { name: 'Chemistry', icon: 'fa-flask' },
+                { name: 'Combined Mathematics', icon: 'fa-square-root-alt' }
+            ],
+            commerce: [
+                { name: 'Accounting', icon: 'fa-calculator' },
+                { name: 'Business Studies', icon: 'fa-chart-line' },
+                { name: 'Economics', icon: 'fa-money-bill-wave' },
+                { name: 'Business Statistics', icon: 'fa-chart-bar' }
+            ],
+            arts: [
+                { name: 'Economics', icon: 'fa-money-bill-wave' },
+                { name: 'History', icon: 'fa-landmark' },
+                { name: 'Geography', icon: 'fa-globe-asia' },
+                { name: 'Political Science', icon: 'fa-university' },
+                { name: 'Sinhala', icon: 'fa-language' },
+                { name: 'English', icon: 'fa-language' }
+            ],
+            technology: [
+                { name: 'Engineering Technology', icon: 'fa-cogs' },
+                { name: 'Bio-System Technology', icon: 'fa-leaf' },
+                { name: 'Science for Technology', icon: 'fa-microscope' },
+                { name: 'ICT', icon: 'fa-laptop-code' }
+            ]
+        };
+        
+        // Engineering Technology papers data
+        const engineeringTechPapers = [
+            { year: 2023, paper: 'https://drive.google.com/file/d/1LGBXNnLH1mQX83kJLHxyLpLzU-FWUNjF/view?usp=sharing', marking: 'https://drive.google.com/file/d/1Q74VrZQ0BAublwAZu9r4hhyeTPf-xgKb/view?usp=sharing' },
+            { year: 2022, paper: 'https://drive.google.com/file/d/1B7F9esQIcMmQ7BNs8tB1UO-40C5KmJYw/view?usp=drive_link', marking: 'https://drive.google.com/file/d/1pwAn0cDJEkrhrkfLP_Ue1lQNIJJ6dsTR/view?usp=drive_link' },
+            { year: 2021, paper: 'https://drive.google.com/file/d/1niEWutcNEd-aBOTCvNMwXcfqgBVmO9r9/view?usp=drive_link', marking: 'https://drive.google.com/file/d/1NzJQW6YVnO0J60oGmXi39G31WgjMrysq/view?usp=drive_link' },
+            { year: 2020, paper: 'https://drive.google.com/file/d/1xizBDUl3-ijwmBCpt_8pkp44Ux6_b0C2/view?usp=drive_link', marking: 'https://drive.google.com/file/d/11plNH7GsK4uQNiYV6e7tmWK2UpNdr1or/view?usp=drive_link' },
+            { year: 2019, paper: 'https://drive.google.com/file/d/1pS9IMp9xN1uWonUHd8r1vRfkAGKe3WiO/view?usp=drive_link', marking: 'https://drive.google.com/file/d/1kx76Pe47rztWHEAOZrw-kw7CvhNtAEG9/view?usp=drive_link' },
+            { year: 2018, paper: 'https://drive.google.com/file/d/13j5JO7CLBRw3_0MBq1du-oCg3teVIZU4/view?usp=drive_link', marking: 'https://drive.google.com/file/d/167Nmyh99p1-w_M5I9Wc9pusnvSkl5bEc/view?usp=drive_link' },
+            { year: 2017, paper: 'https://drive.google.com/file/d/1tz_GBsuPgodZUYTwsfT1-2CxIJEUtThz/view?usp=drive_link', marking: 'https://drive.google.com/file/d/1Ed8uR6eQ2FRc5yJ137OmEcztb2mSKvIH/view?usp=drive_link' },
+            { year: 2016, paper: 'https://drive.google.com/file/d/1JF0sVCiQYAUI95kZ2h-4VJOLG4ELVM_-/view?usp=drive_link', marking: 'https://drive.google.com/file/d/1Ve1SeGAfEWFsSj3Clh1zBCKVD7zh1L6f/view?usp=drive_link' },
+            { year: 2015, paper: 'https://drive.google.com/file/d/1MGppNRAPZQPMtse-e3A6Vhs63wZLWjJA/view?usp=drive_link', marking: 'https://drive.google.com/file/d/1-80Mh6QOsdosM25xKJdhaVcSXRvBTcSf/view?usp=drive_link' }
+        ];
+        
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize countdown timer
+            initCountdown();
+            
+            // Check if user is already logged in
+            const user = localStorage.getItem('user');
+            if (user) {
+                loginModal.classList.add('hidden');
+                mainContent.classList.remove('hidden');
             }
-        }, 1000);
-
-        // Event listeners
-        document.addEventListener('DOMContentLoaded', updateContent);
-        document.getElementById('langToggle').addEventListener('click', toggleLanguage);
+        });
+        
+        mobileMenuButton.addEventListener('click', function() {
+            mobileMenu.classList.toggle('active');
+        });
+        
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                backToTopBtn.style.display = 'block';
+                backToTopBtn.classList.add('animate__fadeIn');
+                backToTopBtn.classList.remove('animate__fadeOut');
+            } else {
+                backToTopBtn.classList.remove('animate__fadeIn');
+                backToTopBtn.classList.add('animate__fadeOut');
+                setTimeout(() => {
+                    backToTopBtn.style.display = 'none';
+                }, 500);
+            }
+        });
+        
+        backToTopBtn.addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        
+        tabLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const tabId = this.getAttribute('data-tab');
+                
+                // Hide all tab contents
+                tabContents.forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                
+                // Show the selected tab content
+                document.getElementById(tabId).classList.add('active');
+                
+                // Close mobile menu if open
+                mobileMenu.classList.remove('active');
+                
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+        
+        langToggle.addEventListener('click', function() {
+            const isSinhala = this.textContent === 'English';
+            this.textContent = isSinhala ? 'සිංහල' : 'English';
+            
+            // Update page content based on language
+            toggleLanguage(isSinhala);
+        });
+        
+        // Stream selection functionality
+        streamCards.forEach(card => {
+            card.addEventListener('click', function() {
+                // Remove active class from all cards
+                streamCards.forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked card
+                this.classList.add('active');
+                
+                // Get selected stream
+                const stream = this.getAttribute('data-stream');
+                
+                // Populate subjects for the selected stream
+                populateSubjects(stream);
+                
+                // Show subject selection
+                subjectSelection.classList.remove('hidden');
+                
+                // Scroll to subject selection
+                subjectSelection.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+        
+        // Functions
+        function initCountdown() {
+            const targetDate = new Date("November 10, 2025 08:30:00").getTime();
+            
+            setInterval(() => {
+                const now = new Date().getTime();
+                const distance = targetDate - now;
+                
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                
+                document.getElementById("days").textContent = String(days).padStart(2, '0');
+                document.getElementById("hours").textContent = String(hours).padStart(2, '0');
+                document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
+                document.getElementById("seconds").textContent = String(seconds).padStart(2, '0');
+            }, 1000);
+        }
+        
+        function googleLogin() {
+            const status = document.getElementById('status');
+            const hcaptchaResponse = document.querySelector('[name=h-captcha-response]').value;
+            
+            if (!hcaptchaResponse) {
+                status.textContent = 'Please complete the captcha verification.';
+                return;
+            }
+            
+            // Simulate successful login
+            status.textContent = 'Logging in...';
+            
+            setTimeout(() => {
+                localStorage.setItem('user', JSON.stringify({
+                    displayName: 'Student User',
+                    email: 'student@DE Education.lk',
+                    photoURL: ''
+                }));
+                
+                loginModal.classList.add('hidden');
+                mainContent.classList.remove('hidden');
+                
+                // Show welcome message
+                alert('Welcome to DE Education.lk!');
+            }, 1500);
+        }
+        
+        function logout() {
+            localStorage.removeItem('user');
+            loginModal.classList.remove('hidden');
+            mainContent.classList.add('hidden');
+        }
+        
+        function toggleLanguage(isSinhala = null) {
+            // This would be implemented to toggle between Sinhala and English
+            // For now, we'll just show an alert
+            alert('Language toggle functionality will be implemented in the next version.');
+        }
+        
+        function globalSearch() {
+            const searchTerm = document.getElementById('globalSearch').value;
+            if (searchTerm.trim() !== '') {
+                alert(`Search functionality for "${searchTerm}" will be implemented in the next version.`);
+            }
+        }
+        
+        function populateSubjects(stream) {
+            // Clear previous subjects
+            subjectList.innerHTML = '';
+            
+            // Get subjects for the selected stream
+            const subjects = streamSubjects[stream];
+            
+            // Create subject cards
+            subjects.forEach(subject => {
+                const subjectCard = document.createElement('div');
+                subjectCard.className = 'bg-white p-4 rounded-lg shadow-md text-center cursor-pointer paper-item';
+                subjectCard.innerHTML = `
+                    <div class="bg-emerald-100 p-3 rounded-full inline-flex items-center justify-center mb-3">
+                        <i class="fas ${subject.icon} text-emerald-600 text-xl"></i>
+                    </div>
+                    <h4 class="font-medium text-gray-800">${subject.name}</h4>
+                `;
+                
+                // Add click event to show papers
+                subjectCard.addEventListener('click', function() {
+                    showPapers(stream, subject.name);
+                });
+                
+                subjectList.appendChild(subjectCard);
+            });
+        }
+        
+        function showPapers(stream, subject) {
+            // Set subject title
+            subjectTitle.textContent = `${subject} Papers`;
+            
+            // Clear previous papers
+            papersList.innerHTML = '';
+            
+            // For now, we'll only show Engineering Technology papers
+            // In a full implementation, we would show papers based on the selected subject
+            if (subject === 'Engineering Technology') {
+                engineeringTechPapers.forEach(paper => {
+                    const paperRow = document.createElement('tr');
+                    paperRow.className = 'paper-item';
+                    paperRow.innerHTML = `
+                        <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-800">${paper.year}</td>
+                        <td class="px-4 py-4 text-sm text-gray-800">
+                            <a href="${paper.paper}" target="_blank" class="text-blue-600 hover:text-blue-800 font-medium">
+                                Download Paper <i class="fas fa-external-link-alt ml-1 text-xs"></i>
+                            </a>
+                        </td>
+                        <td class="px-4 py-4 text-sm text-gray-800">
+                            <a href="${paper.marking}" target="_blank" class="text-green-600 hover:text-green-800 font-medium">
+                                Download Marking Scheme <i class="fas fa-external-link-alt ml-1 text-xs"></i>
+                            </a>
+                        </td>
+                    `;
+                    papersList.appendChild(paperRow);
+                });
+            } else {
+                // For other subjects, show a message
+                papersList.innerHTML = `
+                    <tr>
+                        <td colspan="3" class="px-4 py-8 text-center text-gray-600">
+                            <i class="fas fa-info-circle text-3xl mb-3 text-blue-500"></i>
+                            <p>Papers for ${subject} will be added in the next update.</p>
+                            <p class="text-sm mt-2">Please check back later.</p>
+                        </td>
+                    </tr>
+                `;
+            }
+            
+            // Show papers display
+            papersDisplay.classList.remove('hidden');
+            
+            // Scroll to papers display
+            papersDisplay.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Contact form submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Simulate form submission
+            alert('Thank you for your message! We will get back to you soon.');
+            this.reset();
+        });
     </script>
 </body>
 </html>
