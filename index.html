@@ -64,8 +64,8 @@
         .countdown-container {
             margin-top: 1.5rem;
             background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-            padding: 2rem;
-            border-radius: 1rem;
+            padding: 1.5rem; /* Smaller padding */
+            border-radius: 0.75rem; /* Smaller border radius */
             border: 2px solid #34d399;
             text-align: center;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
@@ -73,32 +73,32 @@
         .countdown-title {
             font-weight: bold;
             color: #065f46;
-            margin-bottom: 1.5rem;
-            font-size: 1.75rem;
+            margin-bottom: 1rem; /* Smaller margin */
+            font-size: 1.5rem; /* Smaller font size */
             text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
         .countdown-timer {
             display: flex;
             justify-content: center;
-            gap: 1.5rem;
-            font-size: 2.5rem;
+            gap: 1rem; /* Smaller gap */
+            font-size: 2rem; /* Smaller font size */
             color: #047857;
             font-family: 'Inter', sans-serif;
             font-weight: 800;
         }
         .countdown-item {
             background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
-            padding: 1rem 1.25rem;
-            border-radius: 0.75rem;
-            min-width: 90px;
+            padding: 0.75rem 1rem; /* Smaller padding */
+            border-radius: 0.5rem; /* Smaller border radius */
+            min-width: 70px; /* Smaller min-width */
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
             border: 1px solid #a7f3d0;
         }
         .countdown-item span:last-child {
             display: block;
-            font-size: 0.9rem;
+            font-size: 0.8rem; /* Smaller font size */
             color: #065f46;
-            margin-top: 0.5rem;
+            margin-top: 0.4rem; /* Smaller margin */
             text-transform: uppercase;
             font-weight: 600;
             letter-spacing: 0.5px;
@@ -182,6 +182,91 @@
         .subject-list.open {
             max-height: 500px;
         }
+        /* NEW STYLES - REPLACE THE OLD ONES */
+.timetable-calendar {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Increased from 80px to 100px */
+    gap: 0.75rem; /* Increased from 0.5rem to 0.75rem */
+    text-align: center;
+}
+.calendar-day {
+    background-color: #fff;
+    padding: 0.75rem 0.5rem; /* Increased padding for better spacing */
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    transition: all 0.2s ease;
+    cursor: pointer;
+    min-height: 80px; /* Added minimum height for consistency */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.calendar-day .text-sm {
+    font-size: 0.7rem; /* Slightly larger than 0.6rem */
+    margin-bottom: 0.25rem;
+}
+.calendar-day .text-2xl {
+    font-size: 1.5rem; /* Increased from 1.25rem to 1.5rem */
+    font-weight: bold;
+    line-height: 1.2;
+}
+        
+.calendar-day.exam-day {
+    border: 2px solid;
+    background-color: #065f46; /* අඳුරු කොළ පැහැති පසුබිම */
+    color: white; /* සුදු අකුරු */
+    font-weight: bold;
+}
+.calendar-day.exam-day.general-stream {
+    background-color: #facc15; /* yellow-500 */
+    border-color: #facc15;
+    color: #44403c; /* stone-800 */
+}
+
+        .calendar-day.active-day {
+            background-color: #047857;
+            color: white;
+            border: 2px solid #065f46;
+        }
+        .calendar-day:hover:not(.active-day) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .calendar-day .text-sm {
+            font-size: 0.6rem; /* Smaller font size */
+        }
+        .calendar-day .text-2xl {
+            font-size: 1.25rem; /* Smaller font size */
+        }
+        .exam-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+        }
+        .exam-details.open {
+            max-height: 1000px; /* A large enough value to allow transition */
+        }
+        .timetable-container {
+            min-height: 500px;
+        }
+
+        /* Stream Colors for calendar */
+        .calendar-day.science-stream { border-color: #2563eb; }
+        .calendar-day.commerce-stream { border-color: #16a34a; }
+        .calendar-day.arts-stream { border-color: #9333ea; }
+        .calendar-day.technology-stream { border-color: #dc2626; }
+        .calendar-day.general-stream { border-color: #fbbf24; }
+
+        .notice-item {
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .notice-item:hover {
+            background-color: #f0fdf4;
+            transform: translateX(5px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -253,6 +338,7 @@
                         <a href="#" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-emerald-700" data-tab="home">Home</a>
                         <a href="#" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-emerald-700" data-tab="papers">Past Papers</a>
                         <a href="#" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-emerald-700" data-tab="results">Exam Results</a>
+                        <a href="#" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-emerald-700" data-tab="timetables">Time Tables</a>
                         <a href="#" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-emerald-700" data-tab="ethaksalawa">E-Thaksalawa</a>
                         <a href="#" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-emerald-700" data-tab="notices">Notices</a>
                         <a href="#" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-emerald-700" data-tab="contact">Contact</a>
@@ -265,6 +351,7 @@
                     <a href="#" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-emerald-700" data-tab="home">Home</a>
                     <a href="#" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-emerald-700" data-tab="papers">Past Papers</a>
                     <a href="#" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-emerald-700" data-tab="results">Exam Results</a>
+                    <a href="#" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-emerald-700" data-tab="timetables">Time Tables</a>
                     <a href="#" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-emerald-700" data-tab="ethaksalawa">E-Thaksalawa</a>
                     <a href="#" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-emerald-700" data-tab="notices">Notices</a>
                     <a href="#" class="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-emerald-700" data-tab="contact">Contact</a>
@@ -337,8 +424,15 @@
                             <p class="text-gray-600 mb-4">Check latest examination results</p>
                             <a href="#" data-tab="results" class="text-green-600 hover:text-green-800 font-medium">Check Results →</a>
                         </div>
-
-
+                        
+                        <div class="bg-white p-6 rounded-xl shadow-md card-hover text-center">
+                            <div class="bg-yellow-100 p-3 rounded-full inline-flex items-center justify-center mb-4">
+                                <i class="fas fa-calendar-alt text-yellow-600 text-2xl"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-800 mb-2">Time Tables</h3>
+                            <p class="text-gray-600 mb-4">View and search examination timetables</p>
+                            <a href="#" data-tab="timetables" class="text-yellow-600 hover:text-yellow-800 font-medium">View Timetables →</a>
+                        </div>
 
                         <div class="bg-white p-6 rounded-xl shadow-md card-hover text-center">
                             <div class="bg-red-100 p-3 rounded-full inline-flex items-center justify-center mb-4">
@@ -348,19 +442,8 @@
                             <p class="text-gray-600 mb-4">Latest announcements and notices</p>
                             <a href="#" data-tab="notices" class="text-red-600 hover:text-red-800 font-medium">View Notices →</a>
                         </div>
-                                                <div class="bg-white p-6 rounded-xl shadow-md card-hover text-center">
-                            <div class="bg-green-100 p-3 rounded-full inline-flex items-center justify-center mb-4">
-                                <i class="fas fa-chart-line text-green-600 text-2xl"></i>
-                            </div>
-                            <h3 class="text-lg font-semibold text-gray-800 mb-2">E-Thaksalawa</h3>
-                            <p class="text-gray-600 mb-3">Login to E-Thaksalawa</p>
-                            <a href="https://www.e-thaksalawa.moe.gov.lk/Si/index.php" data-tab="ethaksalawa" class="text-green-600 hover:text-green-800 font-medium"> Go E-Thaksalawa →</a>
-                        </div> 
                     </div>
 
-                   
-
-                    <!-- Recent Updates Section -->
                     <div class="bg-white p-6 rounded-xl shadow-md">
                         <h3 class="text-xl font-semibold text-emerald-800 mb-4">Recent Updates</h3>
                         <div class="space-y-4">
@@ -393,6 +476,49 @@
                                     <p class="text-gray-600 text-sm">Test your knowledge with subject-specific quizzes</p>
                                     <p class="text-gray-500 text-xs">Posted on: 2025-08-05</p>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timetables Tab (NEW) -->
+            <div id="timetables" class="tab-content">
+                <h2 class="text-2xl md:text-3xl font-bold text-emerald-800 mb-8 text-center">2025 A/L Timetable</h2>
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <div class="mb-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Official Timetable PDF</h3>
+                        <div class="flex flex-col md:flex-row items-center justify-between mb-4">
+                            <p class="text-gray-600 mb-2 md:mb-0">You can view the official timetable or download the PDF for offline access.</p>
+                            <a href="https://www.doenets.lk/images/resources/NEWS/AL%20Time%20Table%202025_1755235352612.pdf" download class="inline-flex items-center bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                                <i class="fas fa-download mr-2"></i> Download PDF
+                            </a>
+                        </div>
+
+                    </div>
+                    
+                    <hr class="my-8 border-gray-200">
+
+                    <div class="mb-6 mt-8">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Interactive Timetable</h3>
+                        <p class="text-gray-600 mb-4">Click a date with a colored border to see the examinations for that day. The color indicates the subject stream.</p>
+                        <div class="mb-4 flex flex-col sm:flex-row gap-4">
+                            <input type="text" id="timetableSearch" placeholder="Search by subject name..." 
+                                   class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-300 text-gray-800">
+                            <button onclick="copyTimetableToClipboard()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg font-medium transition-colors whitespace-nowrap">
+                                <i class="fas fa-share-alt mr-2"></i> Copy Timetable
+                            </button>
+                            <button onclick="downloadTimetableAsText()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg font-medium transition-colors whitespace-nowrap">
+                                <i class="fas fa-file-download mr-2"></i> Download as .txt
+                            </button>
+                        </div>
+                        <div class="timetable-calendar" id="timetableCalendar">
+                            <!-- Calendar days will be populated here -->
+                        </div>
+                        <div class="mt-8 timetable-container" id="timetableDetails">
+                            <h4 class="text-lg font-semibold text-gray-800 mb-4" id="timetableDayTitle">Select a date to view exams.</h4>
+                            <div class="space-y-4" id="examDetailsList">
+                                <!-- Exam details will be displayed here -->
                             </div>
                         </div>
                     </div>
@@ -600,89 +726,19 @@
                 <div class="bg-white p-6 rounded-xl shadow-md">
                     <div class="mb-6">
                         <h3 class="text-lg font-semibold text-gray-800 mb-4">Latest Announcements</h3>
-                        
-                        <div class="space-y-4">
-                            <div class="p-4 bg-red-50 border-l-4 border-red-400">
-                                <div class="flex items-start">
-                                    <div class="flex-shrink-0">
-                                        <i class="fas fa-exclamation-circle text-red-400"></i>
-                                    </div>
-                                    <div class="ml-3">
-                                        <h4 class="text-sm font-medium text-red-800">Important: 2025 A/L Examination Application</h4>
-                                        <p class="mt-1 text-sm text-red-700">Deadline for application submission is 2025-07-31. Late applications will not be accepted.</p>
-                                        <p class="mt-2 text-xs text-red-600">Published: 2025-06-15</p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="p-4 bg-blue-50 border-l-4 border-blue-400">
-                                <div class="flex items-start">
-                                    <div class="flex-shrink-0">
-                                        <i class="fas fa-info-circle text-blue-400"></i>
-                                    </div>
-                                    <div class="ml-3">
-                                        <h4 class="text-sm font-medium text-blue-800">New Syllabus Implementation</h4>
-                                        <p class="mt-1 text-sm text-blue-700">The new syllabus for G.C.E. Advanced Level will be implemented starting from 2025 academic year.</p>
-                                        <p class="mt-2 text-xs text-blue-600">Published: 2025-06-10</p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="p-4 bg-green-50 border-l-4 border-green-400">
-                                <div class="flex items-start">
-                                    <div class="flex-shrink-0">
-                                        <i class="fas fa-check-circle text-green-400"></i>
-                                    </div>
-                                    <div class="ml-3">
-                                        <h4 class="text-sm font-medium text-green-800">School Term Dates Confirmed</h4>
-                                        <p class="mt-1 text-sm text-green-700">The Ministry of Education has confirmed the school term dates for 2025 academic year.</p>
-                                        <p class="mt-2 text-xs text-green-600">Published: 2025-05-25</p>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="flex flex-col sm:flex-row gap-4 mb-4">
+                            <input type="text" id="noticesSearch" placeholder="Search notices..." 
+                                   class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-300 text-gray-800">
+                            <select id="noticesFilter" class="w-full sm:w-auto p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-300 text-gray-800">
+                                <option value="all">Sort by: All</option>
+                                <option value="title-asc">Title (A-Z)</option>
+                                <option value="title-desc">Title (Z-A)</option>
+                                <option value="date-desc">Date (Newest)</option>
+                                <option value="date-asc">Date (Oldest)</option>
+                            </select>
                         </div>
-                    </div>
-                    
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Previous Notices</h3>
-                        
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200">
-                                <thead class="bg-gray-50">
-                                    <tr>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Source</th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="bg-white divide-y divide-gray-200">
-                                    <tr>
-                                        <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-800">2025-05-10</td>
-                                        <td class="px-4 py-4 text-sm text-gray-800">Circular on School Uniform Regulations</td>
-                                        <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600">Ministry of Education</td>
-                                        <td class="px-4 py-4 whitespace-nowrap text-sm font-medium">
-                                            <a href="#" class="text-emerald-600 hover:text-emerald-900">Download</a>
-                                        </td>
-                                    </tr>
-                                    <tr class="bg-gray-50">
-                                        <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-800">2025-04-28</td>
-                                        <td class="px-4 py-4 text-sm text-gray-800">Scholarship Examination Results</td>
-                                        <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600">Department of Examinations</td>
-                                        <td class="px-4 py-4 whitespace-nowrap text-sm font-medium">
-                                            <a href="#" class="text-emerald-600 hover:text-emerald-900">View</a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-800">2025-04-15</td>
-                                        <td class="px-4 py-4 text-sm text-gray-800">Teacher Transfer Guidelines</td>
-                                        <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-600">Ministry of Education</td>
-                                        <td class="px-4 py-4 whitespace-nowrap text-sm font-medium">
-                                            <a href="#" class="text-emerald-600 hover:text-emerald-900">Download</a>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div id="noticesList" class="space-y-4">
+                            <!-- Notices will be populated here -->
                         </div>
                     </div>
                 </div>
@@ -811,6 +867,7 @@
                             <li><a href="#" data-tab="home" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
                             <li><a href="#" data-tab="papers" class="text-gray-400 hover:text-white transition-colors">Past Papers</a></li>
                             <li><a href="#" data-tab="results" class="text-gray-400 hover:text-white transition-colors">Exam Results</a></li>
+                            <li><a href="#" data-tab="timetables" class="text-gray-400 hover:text-white transition-colors">Time Tables</a></li>
                             <li><a href="#" data-tab="ethaksalawa" class="text-gray-400 hover:text-white transition-colors">E-Thaksalawa</a></li>
                             
                         </ul>
@@ -841,7 +898,6 @@
     </button>
 
     <script>
-
         
         // Firebase configuration
         const firebaseConfig = {
@@ -874,7 +930,18 @@
         const papersDisplay = document.getElementById('papersDisplay');
         const papersList = document.getElementById('papersList');
         const subjectTitle = document.getElementById('subjectTitle');
+        const timetableCalendar = document.getElementById('timetableCalendar');
+        const timetableSearch = document.getElementById('timetableSearch');
+        const timetableDetails = document.getElementById('timetableDetails');
+        const timetableDayTitle = document.getElementById('timetableDayTitle');
+        const examDetailsList = document.getElementById('examDetailsList');
+        let selectedDayElement = null;
         
+        // Notices tab elements
+        const noticesSearch = document.getElementById('noticesSearch');
+        const noticesFilter = document.getElementById('noticesFilter');
+        const noticesList = document.getElementById('noticesList');
+
         // Stream subjects data
         const streamSubjects = {
             science: [
@@ -914,7 +981,7 @@
             { year: 2019, paper: 'https://drive.google.com/file/d/1pS9IMp9xN1uWonUHd8r1vRfkAGKe3WiO/view?usp=drive_link', marking: 'https://drive.google.com/file/d/1kx76Pe47rztWHEAOZrw-kw7CvhNtAEG9/view?usp=drive_link' },
             { year: 2018, paper: 'https://drive.google.com/file/d/13j5JO7CLBRw3_0MBq1du-oCg3teVIZU4/view?usp=drive_link', marking: 'https://drive.google.com/file/d/167Nmyh99p1-w_M5I9Wc9pusnvSkl5bEc/view?usp=drive_link' },
             { year: 2017, paper: 'https://drive.google.com/file/d/1tz_GBsuPgodZUYTwsfT1-2CxIJEUtThz/view?usp=drive_link', marking: 'https://drive.google.com/file/d/1Ed8uR6eQ2FRc5yJ137OmEcztb2mSKvIH/view?usp=drive_link' },
-            { year: 2016, paper: 'https://drive.google.com/file/d/1JF0sVCiQYAUI95kZ2h-4VJOLG4ELVM_-/view?usp=drive_link', marking: 'https://drive.google.com/file/d/1Ve1SeGAfEWFsSj3Clh1zBCKVD7zh1L6f/view?usp=drive_link' },
+            { year: 2016, paper: 'https://drive.google.com/file/d/1JF0sVCiQYAUI95kZ2h-4VJOLG4ELVM_-/view?usp=drive_link', marking: 'https://drive.google.com/file/d/1Q6fiJnsaNXqntQKqrs25r_Afdf9_f7BS/view?usp=drive_link' },
             { year: 2015, paper: 'https://drive.google.com/file/d/1MGppNRAPZQPMtse-e3A6Vhs63wZLWjJA/view?usp=drive_link', marking: 'https://drive.google.com/file/d/1-80Mh6QOsdosM25xKJdhaVcSXRvBTcSf/view?usp=drive_link' }
         ];
 
@@ -933,6 +1000,391 @@
         const ictTechPapers = [
             { year: 2023, paper: 'https://drive.google.com/file/d/114FXfL-oLAmplxeRg—Hu072BKb0yTI/view?usp=sharing', marking: 'https://drive.google.com/file/d/1MY9_rmupRItzyKRvOTcEiTBPDla4g4bc/view?usp=sharing' }
         ];
+
+        // Hardcoded timetable data from the PDF with added streams
+        const timetableData = [
+            { date: 'November 10', day: 'Monday', exams: [
+                { time: '08:30-10:30', subjects: ['Combined Mathematics I', 'இணைந்த கணிதம் I', 'ඉංග්‍රීසි I'], code: '10', stream: 'Science' },
+                { time: '08:30-11:40', subjects: ['Biology I', 'ජීව විද්‍යාව I', 'ජීව විද්‍යාව I'], code: '09', stream: 'Science' },
+                { time: '08:30-11:40', subjects: ['Economics I', 'ආර්ථික විද්‍යාව I', 'ආර්ථික විද්‍යාව I'], code: '21', stream: 'Commerce' },
+                { time: '08:30-11:40', subjects: ['Buddhism I', 'බුද්ධ ධර්මය I', 'බුද්ධ ධර්මය I'], code: '41', stream: 'Arts' },
+                { time: '08:30-11:40', subjects: ['Hinduism I', 'හින්දු ධර්මය I', 'හින්දු ධර්මය I'], code: '42', stream: 'Arts' },
+                { time: '08:30-11:40', subjects: ['Christianity I', 'ක්‍රිස්තියානි I', 'ක්‍රිස්තියානි I'], code: '43', stream: 'Arts' },
+                { time: '08:30-11:40', subjects: ['Islam I', 'ඉස්ලාම් I', 'ඉස්ලාම් I'], code: '44', stream: 'Arts' },
+                { time: '08:30-11:40', subjects: ['Buddhist Civilization I', 'බෞද්ධ ශිෂ්ටාචාරය I', 'බෞද්ධ ශිෂ්ටාචාරය I'], code: '45', stream: 'Arts' },
+                { time: '08:30-11:40', subjects: ['Hindu Civilization I', 'හින්දු ශිෂ්ටාචාරය I', 'හින්දු ශිෂ්ටාචාරය I'], code: '46', stream: 'Arts' },
+                { time: '08:30-11:40', subjects: ['Islamic Civilization I', 'ඉස්ලාමීය ශිෂ්ටාචාරය I', 'ඉස්ලාමීය ශිෂ්ටාචාරය I'], code: '47', stream: 'Arts' },
+                { time: '08:30-11:40', subjects: ['Christian Civilization I', 'ක්‍රිස්තියානි ශිෂ්ටාචාරය I', 'ක්‍රිස්තියානි ශිෂ්ටාචාරය I'], code: '49', stream: 'Arts' }
+            ] },
+            { date: 'November 11', day: 'Tuesday', exams: [
+                { time: '08:30-11:40', subjects: ['Buddhism II', 'බුද්ධ ධර්මය II', 'බුද්ධ ධර්මය II'], code: '41', stream: 'Arts' },
+                { time: '08:30-11:40', subjects: ['Hinduism II', 'හින්දු ධර්මය II', 'හින්දු ධර්මය II'], code: '42', stream: 'Arts' },
+                { time: '08:30-11:40', subjects: ['Christianity II', 'ක්‍රිස්තියානි II', 'ක්‍රිස්තියානි II'], code: '43', stream: 'Arts' },
+                { time: '08:30-11:40', subjects: ['Islam II', 'ඉස්ලාම් II', 'ඉස්ලාම් II'], code: '44', stream: 'Arts' },
+                { time: '08:30-11:40', subjects: ['Buddhist Civilization II', 'බෞද්ධ ශිෂ්ටාචාරය II', 'බෞද්ධ ශිෂ්ටාචාරය II'], code: '45', stream: 'Arts' },
+                { time: '08:30-11:40', subjects: ['Hindu Civilization II', 'හින්දු ශිෂ්ටාචාරය II', 'හින්දු ශිෂ්ටාචාරය II'], code: '46', stream: 'Arts' },
+                { time: '08:30-11:40', subjects: ['Islamic Civilization II', 'ඉස්ලාමීය ශිෂ්ටාචාරය II', 'ඉස්ලාමීය ශිෂ්ටාචාරය II'], code: '47', stream: 'Arts' },
+                { time: '08:30-11:40', subjects: ['Christian Civilization II', 'ක්‍රිස්තියානි ශිෂ්ටාචාරය II', 'ක්‍රිස්තියානි ශිෂ්ටාචාරය II'], code: '49', stream: 'Arts' },
+                { time: '13:00-16:10', subjects: ['Biology II', 'ජීව විද්‍යාව II', 'ජීව විද්‍යාව II'], code: '09', stream: 'Science' },
+                { time: '13:00-16:10', subjects: ['Economics II', 'ආර්ථික විද්‍යාව II', 'ආර්ථික විද්‍යාව II'], code: '21', stream: 'Commerce' }
+            ] },
+            { date: 'November 12', day: 'Wednesday', exams: [
+                { time: '08:30-11:40', subjects: ['Combined Mathematics II', 'ඉංග්‍රීසි II', 'இணைந்த கணிதம் II'], code: '10', stream: 'Science' },
+                { time: '13:00-15:00', subjects: ['Logic & Scientific Method I', 'අළගි විද්‍යාව I', 'அளவையியலும் விஞ்ஞான முறையும் I'], code: '24', stream: 'Arts' },
+                { time: '13:00-15:00', subjects: ['Engineering Technology I', 'ඉංජිනේරු තාක්ෂණවේදය I', 'பொறியியல் தொழில்நுட்பவியல் I'], code: '65', stream: 'Technology' },
+                { time: '13:00-15:00', subjects: ['Bio Systems Technology I', 'ජෛව පද්ධති තාක්ෂණවේදය I', 'உயிர்முறைமைகள் தொழில்நுட்பவியல் I'], code: '66', stream: 'Technology' }
+            ] },
+            { date: 'November 13', day: 'Thursday', exams: [
+                { time: '08:30-10:30', subjects: ['Art I', 'කලා I', 'கலை I'], code: '51', stream: 'Arts' },
+                { time: '08:30-10:30', subjects: ['Dancing (Indigenous) I', 'නර්තනය (දේශීය) I', 'நடனம் (தேசிய) I'], code: '52', stream: 'Arts' },
+                { time: '08:30-10:30', subjects: ['Dancing (Bharatha) I', 'නර්තනය (භරත) I', 'நடனம் (பரத) I'], code: '53', stream: 'Arts' },
+                { time: '08:30-10:30', subjects: ['Oriental Music I', 'පෙරදිග සංගීතය I', 'கீழைத்தேய சங்கீதம் I'], code: '54', stream: 'Arts' },
+                { time: '08:30-10:30', subjects: ['Carnatic Music I', 'කර්ණාටක සංගීතය I', 'கர்நாடக சங்கீதம் I'], code: '55', stream: 'Arts' },
+                { time: '08:30-10:30', subjects: ['Western Music I', 'බටහිර සංගීතය I', 'மேலைத்தேய சங்கீதம் I'], code: '56', stream: 'Arts' },
+                { time: '13:00-15:00', subjects: ['Business Studies I', 'ව්‍යාපාර අධ්‍යයනය I', 'வணிகவியல் I'], code: '32', stream: 'Commerce' }
+            ] },
+            { date: 'November 14', day: 'Friday', exams: [
+                { time: '08:30-11:40', subjects: ['Art II', 'කලා II', 'கலை II'], code: '51', stream: 'Arts' },
+                { time: '08:30-11:40', subjects: ['Dancing (Indigenous) II', 'නර්තනය (දෙශීය) II', 'நடனம் (தேசிய) II'], code: '52', stream: 'Arts' },
+                { time: '08:30-11:40', subjects: ['Dancing (Bharatha) II', 'නර්තනය (භරත) II', 'நடனம் (பரத) II'], code: '53', stream: 'Arts' },
+                { time: '08:30-11:40', subjects: ['Oriental Music II', 'පෙරදිග සංගීතය II', 'கீழைத்தேய சங்கீதம் II'], code: '54', stream: 'Arts' },
+                { time: '08:30-11:40', subjects: ['Carnatic Music II', 'කර්ණාටක සංගීතය II', 'கர்நாடக சங்கீதம் II'], code: '55', stream: 'Arts' },
+                { time: '08:30-11:40', subjects: ['Western Music II', 'බටහිර සංගීතය II', 'மேலைத்தேய සංගීதம் II'], code: '56', stream: 'Arts' },
+                { time: '13:00-15:00', subjects: ['Logic & Scientific Method II', 'අළගි විද්‍යාව II', 'அளவையியலும் விஞ்ஞான முறையும் II'], code: '24', stream: 'Arts' },
+                { time: '13:00-15:00', subjects: ['Engineering Technology II', 'ඉංජිනේරු තාක්ෂණවේදය II', 'பொறியியல் தொழில்நுட்பவியல் II'], code: '65', stream: 'Technology' },
+                { time: '13:00-15:00', subjects: ['Bio Systems Technology II', 'ජෛව පද්ධති තාක්ෂණවේදය II', 'உயிர்முறைமைகள் தொழில்நுட்பவியல் II'], code: '66', stream: 'Technology' }
+            ] },
+            { date: 'November 15', day: 'Saturday', exams: [
+                { time: '08:30-11:40', subjects: ['Agricultural Science I', 'කෘෂි විද්‍යාව I', 'விவசாய விஞ்ஞானம் I'], code: '08', stream: 'Science' },
+                { time: '14:00-17:10', subjects: ['German I', 'ජර්මන් I', 'ஜேர்மன் I'], code: '82', stream: 'Arts' }
+            ] },
+            { date: 'November 17', day: 'Monday', exams: [
+                { time: '08:30-10:30', subjects: ['Physics I', 'භෞතික විද්‍යාව I', 'பௌதிகவியல் I'], code: '01', stream: 'Science' },
+                { time: '08:30-11:40', subjects: ['Pali I', 'පාලි I', 'பாலி I'], code: '74', stream: 'Arts' },
+                { time: '13:00-16:10', subjects: ['Agricultural Science II', 'කෘෂි විද්‍යාව II', 'விவசாய விஞ்ஞானம் II'], code: '08', stream: 'Science' },
+                { time: '13:00-16:10', subjects: ['German II', 'ජර්මන් II', 'ஜேர்மன் II'], code: '82', stream: 'Arts' }
+            ] },
+            { date: 'November 18', day: 'Tuesday', exams: [
+                { time: '08:30-11:40', subjects: ['Art III', 'කලා III', 'கலை III'], code: '51', stream: 'Arts' },
+                { time: '08:30-11:40', subjects: ['Business Studies II', 'ව්‍යාපාර අධ්‍යයනය II', 'வணிகவியல் II'], code: '32', stream: 'Commerce' },
+                { time: '13:00-15:00', subjects: ['Physics II', 'භෞතික විද්‍යාව II', 'பௌதிகவியல் II'], code: '01', stream: 'Science' },
+                { time: '13:00-15:00', subjects: ['Pali II', 'පාලි II', 'பாலி II'], code: '74', stream: 'Arts' }
+            ] },
+            { date: 'November 19', day: 'Wednesday', exams: [
+                { time: '08:30-11:40', subjects: ['Sinhala I', 'සිංහල I', 'சிங்களம் I'], code: '71', stream: 'Arts' },
+                { time: '08:30-11:40', subjects: ['Tamil I', 'දමිළ I', 'தமிழ் I'], code: '72', stream: 'Arts' },
+                { time: '13:00-15:00', subjects: ['Civil Technology I', 'සිවිල් තාක්ෂණවේදය I', 'குடிசார் தொழில்நுட்பவியல் I'], code: '14', stream: 'Technology' },
+                { time: '13:00-15:00', subjects: ['Mechanical Technology I', 'පොරිච්ඡන්න තාක්ෂණවේදය I', 'பொறிமுறைத் தொழில்நுட்பவியல் I'], code: '15', stream: 'Technology' },
+                { time: '13:00-15:00', subjects: ['Electrical, Electronic and Information Technology I', 'විදුලි, ඉලෙක්ට්‍රොනික හා තොරතුරු තාක්ෂණවේදය I', 'மின், இலத்திரனியல் மற்றும் தகவல் தொழில்நுட்பவியல் I'], code: '16', stream: 'Technology' },
+                { time: '13:00-15:00', subjects: ['Food Technology I', 'ආහාර තාක්ෂණවේදය I', 'உணவு தொழில்நுட்பவியல் I'], code: '17', stream: 'Technology' },
+                { time: '13:00-15:00', subjects: ['Agro Technology I', 'කෘෂි තාක්ෂණවේදය I', 'விவசாயத் தொழில்நுட்பவியல் I'], code: '18', stream: 'Technology' },
+                { time: '13:00-15:00', subjects: ['Bio Resource Technology I', 'ජෛව සම්පත් තාක්ෂණවේදය I', 'உயிர் வளත් தொழில்நுட்பவியல் I'], code: '19', stream: 'Technology' },
+                { time: '13:00-15:00', subjects: ['Business Statistics I', 'ව්‍යාපාර සංඛ්‍යාති I', 'வணிகப் புள்ளிவிபரவியல் I'], code: '31', stream: 'Commerce' },
+                { time: '13:00-15:00', subjects: ['Sanskrit I', 'සංස්කෘත I', 'சமஸ்கிருதம் I'], code: '76', stream: 'Arts' }
+            ] },
+            { date: 'November 20', day: 'Thursday', exams: [
+                { time: '08:30-10:30', subjects: ['Chemistry I', 'රසායන විද්‍යාව I', 'இரசாயனவியல் I'], code: '02', stream: 'Science' },
+                { time: '08:30-11:40', subjects: ['Political Science I', 'දේශපාලන විද්‍යාව I', 'அரசியல் விஞ்ஞானம் I'], code: '23', stream: 'Arts' },
+                { time: '08:30-11:40', subjects: ['Science for Technology I', 'තාක්ෂණවේදය සඳහා විද්‍යාව I', 'தொழில்நுட்பவியலுக்கான விஞ்ஞானம் I'], code: '67', stream: 'Technology' },
+                { time: '08:30-11:40', subjects: ['Drama & Theatre (Sinhala) I', 'නාට්‍ය හා රංග කලාව (සිංහල) I', 'நாடகமும் அரங்கியலும் (சிங்களம்) I'], code: '57', stream: 'Arts' },
+                { time: '08:30-11:40', subjects: ['Drama & Theatre (Tamil) I', 'නාට්‍ය හා රංග කලාව (දමිළ) I', 'நாடகமும் அரங்கியலும் (தமிழ்) I'], code: '58', stream: 'Arts' },
+                { time: '08:30-11:40', subjects: ['Drama & Theatre (English) I', 'නාට්‍ය හා රංග කලාව (ඉංග්‍රීසි) I', 'நாடகமும் அரங்கியலும் (ஆங்கிலம்) I'], code: '59', stream: 'Arts' },
+                { time: '13:00-16:10', subjects: ['Sinhala II', 'සිංහල II', 'சிங்களம் II'], code: '71', stream: 'Arts' },
+                { time: '13:00-16:10', subjects: ['Tamil II', 'දමිළ II', 'தமிழ் II'], code: '72', stream: 'Arts' }
+            ] },
+            { date: 'November 21', day: 'Friday', exams: [
+                { time: '08:30-11:40', subjects: ['Business Statistics II', 'ව්‍යාපාර සංඛ්‍යාති II', 'வணிகப் புள்ளிவிபரவியல் II'], code: '31', stream: 'Commerce' },
+                { time: '08:30-11:40', subjects: ['Drama & Theatre (Sinhala) II', 'නාට්‍ය හා රංග කලාව (සිංහල) II', 'நாடகமும் அரங்கியலும் (சிங்களம்) II'], code: '57', stream: 'Arts' },
+                { time: '08:30-11:40', subjects: ['Drama & Theatre (Tamil) II', 'නාට්‍ය හා රංග කලාව (දමිළ) II', 'நாடகமும் அரங்கியலும் (தமிழ்) I'], code: '58', stream: 'Arts' },
+                { time: '08:30-11:40', subjects: ['Drama & Theatre (English) II', 'නාට්‍ය හා රංග කලාව (ඉංග්‍රීසි) II', 'நாடகமும் அரங்கியலும் (ஆங்கிலம்) II'], code: '59', stream: 'Arts' },
+                { time: '08:30-11:40', subjects: ['Sanskrit II', 'සංස්කෘත II', 'சமஸ்கிருதம் II'], code: '76', stream: 'Arts' },
+                { time: '13:00-16:10', subjects: ['Civil Technology II', 'සිවිල් තාක්ෂණවේදය II', 'குடிசார் தொழில்நுட்பவியல் II'], code: '14', stream: 'Technology' },
+                { time: '13:00-16:10', subjects: ['Mechanical Technology II', 'පොරිච්ඡන්න තාක්ෂණවේදය II', 'பொறிமுறைத் தொழில்நுட்பவியல் II'], code: '15', stream: 'Technology' },
+                { time: '13:00-16:10', subjects: ['Electrical, Electronic and Information Technology II', 'විදුලි, ඉලෙක්ට්‍රොනික හා තොරතුරු තාක්ෂණවේදය II', 'மின், இலத்திரனியல் மற்றும் தகவல் தொழில்நுட்பவியல் II'], code: '16', stream: 'Technology' },
+                { time: '13:00-16:10', subjects: ['Food Technology II', 'ආහාර තාක්ෂණවේදය II', 'உணவு தொழில்நுட்பவியல் II'], code: '17', stream: 'Technology' },
+                { time: '13:00-16:10', subjects: ['Agro Technology II', 'කෘෂි තාක්ෂණවේදය II', 'விவசாயத் தொழில்நுட்பவியல் II'], code: '18', stream: 'Technology' },
+                { time: '13:00-16:10', subjects: ['Bio Resource Technology II', 'ජෛව සම්පත් තාක්ෂණවේදය II', 'உயிர் வளත් தொழில்நுட்பவியல் II'], code: '19', stream: 'Technology' }
+            ] },
+            { date: 'November 22', day: 'Saturday', exams: [
+                { time: '08:30-11:40', subjects: ['Chemistry II', 'රසායන විද්‍යාව II', 'இரசாயனவியல் II'], code: '02', stream: 'Science' },
+                { time: '14:00-17:10', subjects: ['French I', 'ප්‍රංශ I', 'பிரெஞ்சு I'], code: '81', stream: 'Arts' }
+            ] },
+            { date: 'November 24', day: 'Monday', exams: [
+                { time: '08:30-11:40', subjects: ['Political Science II', 'දේශපාලන විද්‍යාව II', 'අரசியල් விஞ்ஞானம் II'], code: '23', stream: 'Arts' },
+                { time: '08:30-11:40', subjects: ['Science for Technology II', 'තාක්ෂණවේදය සඳහා විද්‍යාව II', 'தொழில்நுட்பவியலுக்கான விஞ்ஞானம் II'], code: '67', stream: 'Technology' },
+                { time: '13:00-16:10', subjects: ['French II', 'ප්‍රංශ II', 'பிரெஞ்சு II'], code: '81', stream: 'Arts' }
+            ] },
+            { date: 'November 25', day: 'Tuesday', exams: [
+                { time: '08:30-10:30', subjects: ['Common General Test', 'සමස්ත සාමාන්‍ය පරීක්ෂණය', 'பொதுப் பரீட்சை'], code: '12', stream: 'General' },
+                { time: '13:00-15:00', subjects: ['General English II', 'සාමාන්‍ය ඉංග්‍රීසි II', 'பொது ஆங்கிலம் II'], code: '13', stream: 'General' }
+            ] },
+            { date: 'November 26', day: 'Wednesday', exams: [
+                { time: '08:30-10:30', subjects: ['Accounting I', 'ගිණුම්කරණය I', 'கணக்கியல் I'], code: '28', stream: 'Commerce' },
+                { time: '08:30-11:40', subjects: ['Home Economics I', 'ගෘහ ආර්ථික විද්‍යාව I', 'மனைப் பொருளியல் I'], code: '29', stream: 'Arts' },
+                { time: '13:00-14:00', subjects: ['History of India II', 'ඉන්දීය ඉතිහාසය II', 'இந்திய வரலாறு II'], code: '25A', stream: 'Arts' }
+            ] },
+            { date: 'November 27', day: 'Thursday', exams: [
+                { time: '08:30-11:40', subjects: ['General English I', 'සාමාන්‍ය ඉංග්‍රීසි I', 'பொது ஆங்கிலம் I'], code: '13', stream: 'General' },
+                { time: '13:00-16:10', subjects: ['Accounting II', 'ගිණුම්කරණය II', 'கணக்கியல் II'], code: '28', stream: 'Commerce' },
+                { time: '13:00-16:10', subjects: ['English II', 'ඉංග්‍රීසි II', 'ஆங்கிலம் II'], code: '73', stream: 'Arts' }
+            ] },
+            { date: 'November 28', day: 'Friday', exams: [
+                { time: '08:30-11:40', subjects: ['Home Economics II', 'ගෘහ ආර්ථික විද්‍යාව II', 'மனைப் பொருளியல் II'], code: '29', stream: 'Arts' },
+                { time: '08:30-11:40', subjects: ['Arabic I', 'අරාබි I', 'அரபு I'], code: '78', stream: 'Arts' },
+                { time: '08:30-11:40', subjects: ['Malay I', 'මැලේ I', 'மலாய் I'], code: '79', stream: 'Arts' },
+                { time: '08:30-11:40', subjects: ['Chinese I', 'චීන I', 'சீன மொழி I'], code: '86', stream: 'Arts' },
+                { time: '13:00-15:00', subjects: ['History of Europe II', 'යුරෝපීය ඉතිහාසය II', 'ஐரோப்பிய வரலாறு II'], code: '25B', stream: 'Arts' },
+                { time: '13:00-15:00', subjects: ['History of Modern World II', 'නවීන ලෝක ඉතිහාසය II', 'நவீன உலக வரலாறு II'], code: '25C', stream: 'Arts' }
+            ] },
+            { date: 'November 29', day: 'Saturday', exams: [
+                { time: '08:30-11:40', subjects: ['Arabic II', 'අරාබි II', 'அரபு II'], code: '78', stream: 'Arts' },
+                { time: '08:30-11:40', subjects: ['Chinese II', 'චීන II', 'சீன மொழி II'], code: '86', stream: 'Arts' },
+                { time: '13:00-15:00', subjects: ['History of Sri Lanka I', 'ශ්‍රී ලංකා ඉතිහාසය I', 'இலங்கை வரலாறு I'], code: '25', stream: 'Arts' },
+                { time: '13:00-15:00', subjects: ['Information & Communication Technology I', 'තොරතුරු හා සන්නිවේදන තාක්ෂණය I', 'தகவல் மற்றும் தொடர்பாடல் தொழில்நுட்பவியல் I'], code: '20', stream: 'Technology' },
+                { time: '13:00-15:00', subjects: ['Malay II', 'මැලේ II', 'மலாய் II'], code: '79', stream: 'Arts' }
+            ] },
+            { date: 'December 01', day: 'Monday', exams: [
+                { time: '08:30-10:30', subjects: ['Information & Communication Technology II', 'තොරතුරු හා සන්නිවේදන තාක්ෂණය II', 'தகவல் மற்றும் தொடர்பாடල් தொழில்நுட்பவியல் II'], code: '20', stream: 'Technology' },
+                { time: '14:00-17:10', subjects: ['Geography I', 'භූගෝල විද්‍යාව I', 'புவியியல் I'], code: '22', stream: 'Arts' }
+            ] },
+            { date: 'December 02', day: 'Tuesday', exams: [
+                { time: '08:30-10:30', subjects: ['Mathematics I', 'ගණිතය I', 'கணிதம் I'], code: '07', stream: 'Science' },
+                { time: '08:30-10:30', subjects: ['Higher Mathematics I', 'උසස් ගණිතය I', 'உயர்தர கணிதம் I'], code: '11', stream: 'Science' },
+                { time: '08:30-10:30', subjects: ['Greek and Roman Civilization I', 'ග්‍රීක සහ රෝම ශිෂ්ටාචාරය I', 'கிரேக்க மற்றும் ரோமானிய நாகரிகம் I'], code: '48', stream: 'Arts' },
+                { time: '08:30-10:30', subjects: ['Russian I', 'රුසියානු I', 'ரஷ்யன் I'], code: '83', stream: 'Arts' },
+                { time: '08:30-10:30', subjects: ['Japanese I', 'ජපන් I', 'ஜப்பனியன் I'], code: '87', stream: 'Arts' },
+                { time: '13:00-16:10', subjects: ['Geography II', 'භූගෝල විද්‍යාව II', 'புவியியல் II'], code: '22', stream: 'Arts' },
+                { time: '13:00-16:10', subjects: ['Hindi I', 'හින්දි I', 'இந்தி I'], code: '84', stream: 'Arts' },
+                { time: '13:00-16:10', subjects: ['Korean I', 'කොරියානු I', 'கொரியன் I'], code: '88', stream: 'Arts' }
+            ] },
+            { date: 'December 03', day: 'Wednesday', exams: [
+                { time: '08:30-11:40', subjects: ['Mathematics II', 'ගණිතය II', 'கணிதம் II'], code: '07', stream: 'Science' },
+                { time: '08:30-11:40', subjects: ['Russian II', 'රුසියානු II', 'ரஷ்யன் II'], code: '83', stream: 'Arts' },
+                { time: '08:30-11:40', subjects: ['Japanese II', 'ජපන් II', 'ஜப்பனியன் II'], code: '87', stream: 'Arts' },
+                { time: '13:00-15:00', subjects: ['Communication & Media Studies I', 'සන්නිවේදන හා මාධ්‍ය අධ්‍යයනය I', 'தகவல் மற்றும் ஊடகக் கற்கை I'], code: '20', stream: 'Arts' }
+            ] },
+            { date: 'December 05', day: 'Friday', exams: [
+                { time: '08:30-11:40', subjects: ['Hindi II', 'හින්දි II', 'இந்தி II'], code: '84', stream: 'Arts' },
+                { time: '08:30-11:40', subjects: ['Korean II', 'කොරියානු II', 'කොරියන් II'], code: '88', stream: 'Arts' },
+                { time: '14:00-17:10', subjects: ['Greek and Roman Civilization II', 'ග්‍රීක සහ රෝම ශිෂ්ටාචාරය II', 'கிரேக்க மற்றும் ரோமானிய நாகரிகம் II'], code: '48', stream: 'Arts' },
+                { time: '14:00-17:10', subjects: ['Higher Mathematics II', 'උසස් ගණිතය II', 'உயர்தர கணிதம் II'], code: '11', stream: 'Science' },
+                { time: '14:00-17:10', subjects: ['Communication & Media Studies II', 'සන්නිවේදන හා මාධ්‍ය අධ්‍යයනය II', 'தகவல் மற்றும் ஊடகக் கற்கை II'], code: '20', stream: 'Arts' }
+            ] }
+        ];
+
+        const noticesData = [
+            { date: '2025-08-15', title: 'New Engineering Technology Papers Added', content: '2020-2023 past papers and marking schemes now available', source: 'Internal' },
+            { date: '2025-08-10', title: '2025 A/L Examination Schedule Released', content: 'Official examination dates published by the Department of Examinations', source: 'Department of Examinations' },
+            { date: '2025-08-05', title: 'New Quiz Feature Available', content: 'Test your knowledge with subject-specific quizzes', source: 'Internal' },
+            { date: '2025-07-31', title: 'Deadline for A/L Application Submission', content: 'The deadline for submitting online applications for the 2025 A/L examination has been extended.', source: 'Ministry of Education' },
+            { date: '2025-07-28', title: 'Circular on School Uniform Regulations', content: 'New circular issued regarding school uniform guidelines for the upcoming academic year.', source: 'Ministry of Education' },
+            { date: '2025-07-25', title: 'A/L Z-Score Calculation Methodology Explained', content: 'A detailed document explaining the Z-score calculation for Advanced Level results has been published.', source: 'Department of Examinations' },
+            { date: '2025-07-20', title: 'Seminar on Career Guidance for A/L Students', content: 'A virtual seminar on post-A/L career pathways will be held on August 10th. Registration is required.', source: 'Internal' },
+        ];
+        
+        // Language specific strings
+        const langStrings = {
+            en: {
+                title: "DE Education.lk",
+                subtitle: "Complete Educational Resource Platform",
+                langToggleBtn: "සිංහල",
+                loginContinue: "Login to Continue",
+                googleLoginText: "Login with Google",
+                toggleLanguageText: "සිංහලට මාරු වන්න",
+                home: "Home",
+                papers: "Past Papers",
+                results: "Exam Results",
+                timetables: "Time Tables",
+                ethaksalawa: "E-Thaksalawa",
+                notices: "Notices",
+                contact: "Contact",
+                logout: "Logout",
+                welcomeTitle: "Welcome to DE Education.lk",
+                searchPlaceholder: "Search resources, papers, notices...",
+                searchBtn: "Search",
+                marqueeText: "All subjects are not yet added. Please try again after the update. The next update will be released on 2025.09.21.",
+                countdownTitle: "2025 A/L Start Countdown",
+                countdownDays: "Days",
+                countdownHours: "Hours",
+                countdownMinutes: "Minutes",
+                countdownSeconds: "Seconds",
+                papersTitle: "Past Papers & Marking Schemes",
+                papersStreamSelection: "Select Your Stream",
+                scienceStream: "Science Stream",
+                commerceStream: "Commerce Stream",
+                artsStream: "Arts Stream",
+                technologyStream: "Technology Stream",
+                papersSubjectSelection: "Select Your Subject",
+                papersSubjectTitle: (subject) => `${subject} Papers`,
+                papersTableYear: "Year",
+                papersTablePaper: "Paper",
+                papersTableMarkingScheme: "Marking Scheme",
+                papersDownloadPaper: "Download Paper",
+                papersDownloadMarkingScheme: "Download Marking Scheme",
+                papersNotAvailable: (subject) => `Papers for ${subject} will be added in the next update.`,
+                papersCheckBack: "Please check back later.",
+                resultsTitle: "Exam Results",
+                resultsCheck: "Check",
+                timetablesTitle: "2025 A/L Timetable",
+                timetablePDFTitle: "Official Timetable PDF",
+                timetablePDFDesc: "You can view the official timetable or download the PDF for offline access.",
+                timetablePDFBtn: "Download PDF",
+                timetableInteractiveTitle: "Interactive Timetable",
+                timetableInteractiveDesc: "Click a date with a colored border to see the examinations for that day. The color indicates the subject stream.",
+                timetableSearchPlaceholder: "Search by subject name...",
+                timetableCopyBtn: "Copy Timetable",
+                timetableDownloadBtn: "Download as .txt",
+                timetableDayTitle: "Select a date to view exams.",
+                noticesTitle: "Notices & Announcements",
+                noticesLatest: "Latest Announcements",
+                noticesSearchPlaceholder: "Search notices...",
+                noticesSort: "Sort by:",
+                noticesSortOptions: {
+                    all: "All",
+                    titleAsc: "Title (A-Z)",
+                    titleDesc: "Title (Z-A)",
+                    dateDesc: "Date (Newest)",
+                    dateAsc: "Date (Oldest)"
+                },
+                contactTitle: "Contact Us",
+                contactGetInTouch: "Get in Touch",
+                contactGetInTouchDesc: "Have questions or feedback? Reach out to us using the form below or through our contact information.",
+                contactName: "Name",
+                contactEmail: "Email",
+                contactSubject: "Subject",
+                contactMessage: "Message",
+                contactSend: "Send Message",
+                contactInfo: "Contact Information",
+                contactAddress: "Address",
+                contactPhone: "Phone",
+                contactEmailLabel: "Email",
+                contactWebsite: "Website",
+                contactFollow: "Follow Us",
+                footerText: "DE Education: A platform for A/L papers, timetables, results with PDF preview, downloads, search, and admin features.",
+                footerQuickLinks: "Quick Links",
+                footerLegal: "Legal",
+                footerPrivacy: "Privacy Policy",
+                footerTerms: "Terms of Service",
+                footerCopyright: (year) => `© ${year} DE Education.lk. All rights reserved.`,
+                footerDesignedBy: (name) => `Designed by ${name}`,
+                alertLogin: "Welcome to DE Education.lk!",
+                alertCaptcha: "Please complete the captcha verification.",
+                alertSearch: (term) => `Search functionality for "${term}" will be implemented in the next version.`,
+                alertContact: "Thank you for your message! We will get back to you soon.",
+                alertTimetableCopy: "Timetable copied to clipboard!",
+                noExamsFound: "No exams found for the search term."
+            },
+            si: {
+                title: "DE Education.lk",
+                subtitle: "සම්පූර්ණ අධ්‍යාපනික සම්පත් වේදිකාව",
+                langToggleBtn: "English",
+                loginContinue: "ඉදිරියට යාමට ලොග් වන්න",
+                googleLoginText: "Google සමඟින් ලොග් වන්න",
+                toggleLanguageText: "Switch to English",
+                home: "මුල් පිටුව",
+                papers: "පසුගිය ප්‍රශ්න පත්‍ර",
+                results: "විභාග ප්‍රතිඵල",
+                timetables: "කාලසටහන්",
+                ethaksalawa: "ඊ-තක්සලාව",
+                notices: "නිවේදන",
+                contact: "අප අමතන්න",
+                logout: "ඉවත් වන්න",
+                welcomeTitle: "DE Education.lk වෙත ඔබව සාදරයෙන් පිළිගනිමු",
+                searchPlaceholder: "සම්පත්, ප්‍රශ්න පත්‍ර, නිවේදන සොයන්න...",
+                searchBtn: "සොයන්න",
+                marqueeText: "සියලුම විෂයයන් තවමත් එකතු කර නොමැත. කරුණාකර ඊළඟ යාවත්කාලීන කිරීමෙන් පසුව නැවත උත්සාහ කරන්න. ඊළඟ යාවත්කාලීන කිරීම 2025.09.21 දින නිකුත් වේ.",
+                countdownTitle: "2025 A/L ආරම්භක කවුන්ට්ඩවුන්",
+                countdownDays: "දින",
+                countdownHours: "පැය",
+                countdownMinutes: "මිනිත්තු",
+                countdownSeconds: "තත්පර",
+                papersTitle: "පසුගිය ප්‍රශ්න පත්‍ර සහ පිළිතුරු පත්‍ර",
+                papersStreamSelection: "ඔබේ විෂය ධාරාව තෝරන්න",
+                scienceStream: "විද්‍යා",
+                commerceStream: "වාණිජ",
+                artsStream: "කලා",
+                technologyStream: "තාක්ෂණ",
+                papersSubjectSelection: "ඔබේ විෂය තෝරන්න",
+                papersSubjectTitle: (subject) => `${subject} ප්‍රශ්න පත්‍ර`,
+                papersTableYear: "වසර",
+                papersTablePaper: "ප්‍රශ්න පත්‍රය",
+                papersTableMarkingScheme: "පිළිතුරු පත්‍රය",
+                papersDownloadPaper: "ප්‍රශ්න පත්‍රය බාගත කරන්න",
+                papersDownloadMarkingScheme: "පිළිතුරු පත්‍රය බාගත කරන්න",
+                papersNotAvailable: (subject) => `${subject} සඳහා ප්‍රශ්න පත්‍ර ඊළඟ යාවත්කාලීන කිරීමේදී එකතු කරනු ඇත.`,
+                papersCheckBack: "කරුණාකර පසුව නැවත පරීක්ෂා කරන්න.",
+                resultsTitle: "විභාග ප්‍රතිඵල",
+                resultsCheck: "පරීක්ෂා කරන්න",
+                timetablesTitle: "2025 උසස් පෙළ කාලසටහන",
+                timetablePDFTitle: "නිල කාලසටහන PDF",
+                timetablePDFDesc: "ඔබට නිල කාලසටහන බැලීමට හෝ නොබැඳි භාවිතය සඳහා PDF එක බාගත කළ හැක.",
+                timetablePDFBtn: "PDF බාගත කරන්න",
+                timetableInteractiveTitle: "අන්තර්ක්‍රියාකාරී කාලසටහන",
+                timetableInteractiveDesc: "දවසට අදාළ විභාග බැලීමට වර්ණවත් දේශසීමාවක් සහිත දිනයක් මත ක්ලික් කරන්න. වර්ණයෙන් විෂය ධාරාව දැක්වේ.",
+                timetableSearchPlaceholder: "විෂය නම අනුව සොයන්න...",
+                timetableCopyBtn: "කාලසටහන පිටපත් කරන්න",
+                timetableDownloadBtn: "වෙත බාගත කරන්න .txt",
+                timetableDayTitle: "විභාග බැලීමට දිනයක් තෝරන්න.",
+                noticesTitle: "නිවේදන",
+                noticesLatest: "නවතම නිවේදන",
+                noticesSearchPlaceholder: "නිවේදන සොයන්න...",
+                noticesSort: "අනුපිළිවෙල:",
+                noticesSortOptions: {
+                    all: "සියල්ල",
+                    titleAsc: "මාතෘකාව (A-Z)",
+                    titleDesc: "මාතෘකාව (Z-A)",
+                    dateDesc: "දිනය (නවතම)",
+                    dateAsc: "දිනය (පැරණිතම)"
+                },
+                contactTitle: "අප අමතන්න",
+                contactGetInTouch: "සම්බන්ධ වන්න",
+                contactGetInTouchDesc: "ප්‍රශ්න හෝ ප්‍රතිපෝෂණ තිබේද? පහත ආකෘතිය භාවිතා කර හෝ අපගේ සම්බන්ධතා තොරතුරු හරහා අප හා සම්බන්ධ වන්න.",
+                contactName: "නම",
+                contactEmail: "විද්‍යුත් තැපෑල",
+                contactSubject: "විෂය",
+                contactMessage: "පණිවිඩය",
+                contactSend: "පණිවිඩය යවන්න",
+                contactInfo: "සම්බන්ධතා තොරතුරු",
+                contactAddress: "ලිපිනය",
+                contactPhone: "දුරකථන",
+                contactEmailLabel: "විද්‍යුත් තැපෑල",
+                contactWebsite: "වෙබ් අඩවිය",
+                contactFollow: "අපව අනුගමනය කරන්න",
+                footerText: "DE අධ්‍යාපනය: A/L ප්‍රශ්න පත්‍ර, කාලසටහන්, PDF පෙරදසුන, බාගැනීම්, සෙවීම සහ පරිපාලන විශේෂාංග සහිත වේදිකාවකි.",
+                footerQuickLinks: "ඉක්මන් සබැඳි",
+                footerLegal: "නීතිමය",
+                footerPrivacy: "පෞද්ගලිකත්ව ප්‍රතිපත්තිය",
+                footerTerms: "සේවා කොන්දේසි",
+                footerCopyright: (year) => `© ${year} DE Education.lk. සියලුම හිමිකම් ඇවිරිණි.`,
+                footerDesignedBy: (name) => `නිර්මාණය: ${name} විසිනි`,
+                alertLogin: "DE Education.lk වෙත සාදරයෙන් පිළිගනිමු!",
+                alertCaptcha: "කරුණාකර කැප්චා තහවුරු කිරීම සම්පූර්ණ කරන්න.",
+                alertSearch: (term) => `"${term}" සඳහා සෙවුම් විශේෂාංගය ඊළඟ අනුවාදයේ ක්‍රියාත්මක කරනු ඇත.`,
+                alertContact: "ඔබගේ පණිවිඩය ලැබුණා, ස්තුතියි! අපි ඉක්මනින්ම ඔබ හා සම්බන්ධ වෙමු.",
+                alertTimetableCopy: "කාලසටහන ක්ලිප්බෝඩ් එකට පිටපත් කරන ලදී!",
+                noExamsFound: "සෙවුම් පදයට විභාග කිසිවක් හමු නොවීය."
+            }
+        };
+
+        const streamColorMap = {
+            'Science': 'border-blue-600',
+            'Commerce': 'border-green-600',
+            'Arts': 'border-purple-600',
+            'Technology': 'border-red-600',
+            'General': 'border-yellow-600'
+        };
+
+        const streamTextColorMap = {
+            'Science': 'text-blue-800',
+            'Commerce': 'text-green-800',
+            'Arts': 'text-purple-800',
+            'Technology': 'text-red-800',
+            'General': 'text-yellow-800'
+        };
+
+        let currentTimetableData = timetableData;
+        let activeDayData = null;
+        let currentLang = 'en';
         
         // Event Listeners
         document.addEventListener('DOMContentLoaded', function() {
@@ -945,6 +1397,11 @@
                 loginModal.classList.add('hidden');
                 mainContent.classList.remove('hidden');
             }
+
+            // Populate calendar on page load
+            renderTimetableCalendar();
+            renderNotices(noticesData);
+            updatePageContent();
         });
         
         mobileMenuButton.addEventListener('click', function() {
@@ -991,11 +1448,8 @@
         });
         
         langToggle.addEventListener('click', function() {
-            const isSinhala = this.textContent === 'English';
-            this.textContent = isSinhala ? 'සිංහල' : 'English';
-            
-            // Update page content based on language
-            toggleLanguage(isSinhala);
+            currentLang = currentLang === 'en' ? 'si' : 'en';
+            updatePageContent();
         });
         
         // Stream selection functionality
@@ -1020,8 +1474,250 @@
                 subjectSelection.scrollIntoView({ behavior: 'smooth' });
             });
         });
+
+        // Timetable search functionality
+        timetableSearch.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase().trim();
+            if (searchTerm === '') {
+                currentTimetableData = timetableData;
+            } else {
+                currentTimetableData = timetableData.map(day => {
+                    const filteredExams = day.exams.filter(exam =>
+                        exam.subjects.some(subject => subject.toLowerCase().includes(searchTerm))
+                    );
+                    return { ...day, exams: filteredExams };
+                }).filter(day => day.exams.length > 0);
+            }
+            renderTimetableCalendar();
+            // Also update the details view if a day is active
+            if (activeDayData) {
+                const dayFound = currentTimetableData.find(d => d.date === activeDayData.date);
+                if (dayFound) {
+                    renderExamDetails(dayFound);
+                } else {
+                    renderExamDetails(null);
+                }
+            }
+        });
         
+        // Notices search and filter functionality
+        noticesSearch.addEventListener('input', filterNotices);
+        noticesFilter.addEventListener('change', filterNotices);
+
+        function filterNotices() {
+            const searchTerm = noticesSearch.value.toLowerCase().trim();
+            const sortBy = noticesFilter.value;
+            
+            let filteredNotices = noticesData.filter(notice => 
+                notice.title.toLowerCase().includes(searchTerm) || 
+                notice.content.toLowerCase().includes(searchTerm) || 
+                notice.source.toLowerCase().includes(searchTerm)
+            );
+
+            if (sortBy === 'title-asc') {
+                filteredNotices.sort((a, b) => a.title.localeCompare(b.title));
+            } else if (sortBy === 'title-desc') {
+                filteredNotices.sort((a, b) => b.title.localeCompare(a.title));
+            } else if (sortBy === 'date-asc') {
+                filteredNotices.sort((a, b) => new Date(a.date) - new Date(b.date));
+            } else if (sortBy === 'date-desc') {
+                filteredNotices.sort((a, b) => new Date(b.date) - new Date(a.date));
+            }
+            
+            renderNotices(filteredNotices);
+        }
+
         // Functions
+        function updatePageContent() {
+            const lang = currentLang;
+            const strings = langStrings[lang];
+
+            // Update header and title
+            const headerTitleEl = document.getElementById('headerTitle');
+            if (headerTitleEl) headerTitleEl.textContent = strings.title;
+            const headerSubtitleEl = document.getElementById('headerSubtitle');
+            if (headerSubtitleEl) headerSubtitleEl.textContent = strings.subtitle;
+            const langToggleEl = document.getElementById('langToggle');
+            if (langToggleEl) langToggleEl.textContent = strings.langToggleBtn;
+
+            // Update login modal
+            const loginContinueEl = document.getElementById('loginContinue');
+            if (loginContinueEl) loginContinueEl.textContent = strings.loginContinue;
+            const googleLoginTextEl = document.getElementById('googleLoginText');
+            if (googleLoginTextEl) googleLoginTextEl.textContent = strings.googleLoginText;
+            const languageToggleTextEl = document.getElementById('languageToggleText');
+            if (languageToggleTextEl) languageToggleTextEl.textContent = strings.toggleLanguageText;
+
+            // Update navigation links
+            const mobileHomeLink = document.querySelector('#mobileMenu a[data-tab="home"]');
+            if (mobileHomeLink) mobileHomeLink.textContent = strings.home;
+            const mobilePapersLink = document.querySelector('#mobileMenu a[data-tab="papers"]');
+            if (mobilePapersLink) mobilePapersLink.textContent = strings.papers;
+            const mobileResultsLink = document.querySelector('#mobileMenu a[data-tab="results"]');
+            if (mobileResultsLink) mobileResultsLink.textContent = strings.results;
+            const mobileTimetablesLink = document.querySelector('#mobileMenu a[data-tab="timetables"]');
+            if (mobileTimetablesLink) mobileTimetablesLink.textContent = strings.timetables;
+            const mobileEthaksalawaLink = document.querySelector('#mobileMenu a[data-tab="ethaksalawa"]');
+            if (mobileEthaksalawaLink) mobileEthaksalawaLink.textContent = strings.ethaksalawa;
+            const mobileNoticesLink = document.querySelector('#mobileMenu a[data-tab="notices"]');
+            if (mobileNoticesLink) mobileNoticesLink.textContent = strings.notices;
+            const mobileContactLink = document.querySelector('#mobileMenu a[data-tab="contact"]');
+            if (mobileContactLink) mobileContactLink.textContent = strings.contact;
+            const mobileLogoutBtn = document.querySelector('#mobileMenu > div > button');
+            if (mobileLogoutBtn) mobileLogoutBtn.textContent = strings.logout;
+            const navHomeLink = document.querySelector('nav > a[data-tab="home"]');
+            if (navHomeLink) navHomeLink.textContent = strings.home;
+            const navPapersLink = document.querySelector('nav > a[data-tab="papers"]');
+            if (navPapersLink) navPapersLink.textContent = strings.papers;
+            const navResultsLink = document.querySelector('nav > a[data-tab="results"]');
+            if (navResultsLink) navResultsLink.textContent = strings.results;
+            const navTimetablesLink = document.querySelector('nav > a[data-tab="timetables"]');
+            if (navTimetablesLink) navTimetablesLink.textContent = strings.timetables;
+            const navEthaksalawaLink = document.querySelector('nav > a[data-tab="ethaksalawa"]');
+            if (navEthaksalawaLink) navEthaksalawaLink.textContent = strings.ethaksalawa;
+            const navNoticesLink = document.querySelector('nav > a[data-tab="notices"]');
+            if (navNoticesLink) navNoticesLink.textContent = strings.notices;
+            const navContactLink = document.querySelector('nav > a[data-tab="contact"]');
+            if (navContactLink) navContactLink.textContent = strings.contact;
+            const navLogoutBtn = document.querySelector('nav > button');
+            if (navLogoutBtn) navLogoutBtn.textContent = strings.logout;
+            
+            // Update home page
+            const homeH2 = document.querySelector('#home h2');
+            if (homeH2) homeH2.textContent = strings.welcomeTitle;
+            const globalSearchInput = document.getElementById('globalSearch');
+            if (globalSearchInput) globalSearchInput.placeholder = strings.searchPlaceholder;
+            const homeSearchBtnSpan = document.querySelector('#home button span');
+            if (homeSearchBtnSpan) homeSearchBtnSpan.textContent = strings.searchBtn;
+            const urgentMessageEl = document.getElementById('urgentMessage');
+            if (urgentMessageEl) urgentMessageEl.textContent = strings.marqueeText;
+            const countdownTitleEl = document.querySelector('#home .countdown-title');
+            if (countdownTitleEl) countdownTitleEl.textContent = strings.countdownTitle;
+            const daysSpan = document.querySelector('#days + span');
+            if (daysSpan) daysSpan.textContent = strings.countdownDays;
+            const hoursSpan = document.querySelector('#hours + span');
+            if (hoursSpan) hoursSpan.textContent = strings.countdownHours;
+            const minutesSpan = document.querySelector('#minutes + span');
+            if (minutesSpan) minutesSpan.textContent = strings.countdownMinutes;
+            const secondsSpan = document.querySelector('#seconds + span');
+            if (secondsSpan) secondsSpan.textContent = strings.countdownSeconds;
+            
+            // Update papers tab
+            const papersH2 = document.querySelector('#papers h2');
+            if (papersH2) papersH2.textContent = strings.papersTitle;
+            const papersH3 = document.querySelector('#papers h3');
+            if (papersH3) papersH3.textContent = strings.papersStreamSelection;
+            const scienceStreamH4 = document.querySelector('[data-stream="science"] h4');
+            if (scienceStreamH4) scienceStreamH4.textContent = strings.scienceStream;
+            const commerceStreamH4 = document.querySelector('[data-stream="commerce"] h4');
+            if (commerceStreamH4) commerceStreamH4.textContent = strings.commerceStream;
+            const artsStreamH4 = document.querySelector('[data-stream="arts"] h4');
+            if (artsStreamH4) artsStreamH4.textContent = strings.artsStream;
+            const technologyStreamH4 = document.querySelector('[data-stream="technology"] h4');
+            if (technologyStreamH4) technologyStreamH4.textContent = strings.technologyStream;
+            const subjectSelectionH3 = document.querySelector('#subjectSelection h3');
+            if (subjectSelectionH3) subjectSelectionH3.textContent = strings.papersSubjectSelection;
+            const papersTableYearTh = document.querySelector('#papersDisplay table th:nth-child(1)');
+            if (papersTableYearTh) papersTableYearTh.textContent = strings.papersTableYear;
+            const papersTablePaperTh = document.querySelector('#papersDisplay table th:nth-child(2)');
+            if (papersTablePaperTh) papersTablePaperTh.textContent = strings.papersTablePaper;
+            const papersTableMarkingSchemeTh = document.querySelector('#papersDisplay table th:nth-child(3)');
+            if (papersTableMarkingSchemeTh) papersTableMarkingSchemeTh.textContent = strings.papersTableMarkingScheme;
+
+            // Update results tab
+            const resultsH2 = document.querySelector('#results h2');
+            if (resultsH2) resultsH2.textContent = strings.resultsTitle;
+            document.querySelectorAll('#results a.font-medium').forEach(link => {
+                if (link) link.textContent = strings.resultsCheck;
+            });
+
+            // Update timetable tab
+            const timetablesH2 = document.querySelector('#timetables h2');
+            if (timetablesH2) timetablesH2.textContent = strings.timetablesTitle;
+            const timetablePDFTitleEl = document.querySelector('#timetables .mb-6 h3');
+            if (timetablePDFTitleEl) timetablePDFTitleEl.textContent = strings.timetablePDFTitle;
+            const timetablePDFDescEl = document.querySelector('#timetables .mb-6 p');
+            if (timetablePDFDescEl) timetablePDFDescEl.textContent = strings.timetablePDFDesc;
+            const timetablePDFBtnSpan = document.querySelector('#timetables .mb-6 a span');
+            if (timetablePDFBtnSpan) timetablePDFBtnSpan.textContent = strings.timetablePDFBtn;
+            const timetableInteractiveTitleEl = document.querySelector('#timetables .mt-8 h3');
+            if (timetableInteractiveTitleEl) timetableInteractiveTitleEl.textContent = strings.timetableInteractiveTitle;
+            const timetableInteractiveDescEl = document.querySelector('#timetables .mt-8 p');
+            if (timetableInteractiveDescEl) timetableInteractiveDescEl.textContent = strings.timetableInteractiveDesc;
+            const timetableSearchInput = document.getElementById('timetableSearch');
+            if (timetableSearchInput) timetableSearchInput.placeholder = strings.timetableSearchPlaceholder;
+            const copyTimetableBtn = document.querySelector('#timetables button:nth-child(2)');
+            if (copyTimetableBtn) copyTimetableBtn.textContent = strings.timetableCopyBtn;
+            const downloadTimetableBtn = document.querySelector('#timetables button:nth-child(3)');
+            if (downloadTimetableBtn) downloadTimetableBtn.textContent = strings.timetableDownloadBtn;
+            const timetableDayTitleEl = document.getElementById('timetableDayTitle');
+            if (timetableDayTitleEl) timetableDayTitleEl.textContent = strings.timetableDayTitle;
+            
+            // Update notices tab
+            const noticesH2 = document.querySelector('#notices h2');
+            if (noticesH2) noticesH2.textContent = strings.noticesTitle;
+            const noticesH3 = document.querySelector('#notices h3');
+            if (noticesH3) noticesH3.textContent = strings.noticesLatest;
+            const noticesSearchInput = document.getElementById('noticesSearch');
+            if (noticesSearchInput) noticesSearchInput.placeholder = strings.noticesSearchPlaceholder;
+            const noticesFilterSelect = document.getElementById('noticesFilter');
+            if (noticesFilterSelect) {
+                noticesFilterSelect.querySelector('option[value="all"]').textContent = strings.noticesSortOptions.all;
+                noticesFilterSelect.querySelector('option[value="title-asc"]').textContent = strings.noticesSortOptions.titleAsc;
+                noticesFilterSelect.querySelector('option[value="title-desc"]').textContent = strings.noticesSortOptions.titleDesc;
+                noticesFilterSelect.querySelector('option[value="date-desc"]').textContent = strings.noticesSortOptions.dateDesc;
+                noticesFilterSelect.querySelector('option[value="date-asc"]').textContent = strings.noticesSortOptions.dateAsc;
+            }
+
+            // Update contact tab
+            const contactH2 = document.querySelector('#contact h2');
+            if (contactH2) contactH2.textContent = strings.contactTitle;
+            const contactGridH3 = document.querySelector('#contact .grid h3');
+            if (contactGridH3) contactGridH3.textContent = strings.contactGetInTouch;
+            const contactGridP = document.querySelector('#contact .grid p');
+            if (contactGridP) contactGridP.textContent = strings.contactGetInTouchDesc;
+            const nameLabel = document.querySelector('label[for="name"]');
+            if (nameLabel) nameLabel.textContent = strings.contactName;
+            const emailLabel = document.querySelector('label[for="email"]');
+            if (emailLabel) emailLabel.textContent = strings.contactEmail;
+            const subjectLabel = document.querySelector('label[for="subject"]');
+            if (subjectLabel) subjectLabel.textContent = strings.contactSubject;
+            const messageLabel = document.querySelector('label[for="message"]');
+            if (messageLabel) messageLabel.textContent = strings.contactMessage;
+            const contactFormBtn = document.querySelector('#contactForm button');
+            if (contactFormBtn) contactFormBtn.textContent = strings.contactSend;
+            const contactInfoH3 = document.querySelector('.grid .bg-white.mb-6 h3');
+            if (contactInfoH3) contactInfoH3.textContent = strings.contactInfo;
+            const addressH4 = document.querySelector('.grid .bg-white.mb-6 h4:nth-child(1)');
+            if (addressH4) addressH4.textContent = strings.contactAddress;
+            const phoneH4 = document.querySelector('.grid .bg-white.mb-6 h4:nth-child(2)');
+            if (phoneH4) phoneH4.textContent = strings.contactPhone;
+            const emailH4 = document.querySelector('.grid .bg-white.mb-6 h4:nth-child(3)');
+            if (emailH4) emailH4.textContent = strings.contactEmailLabel;
+            const websiteH4 = document.querySelector('.grid .bg-white.mb-6 h4:nth-child(4)');
+            if (websiteH4) websiteH4.textContent = strings.contactWebsite;
+            const followH3 = document.querySelector('.grid .bg-white:nth-child(2) h3');
+            if (followH3) followH3.textContent = strings.contactFollow;
+            
+            // Update footer
+            const footerTitleH3 = document.querySelector('footer h3:nth-child(1)');
+            if (footerTitleH3) footerTitleH3.textContent = strings.title;
+            const footerP2 = document.querySelector('footer p:nth-child(2)');
+            if (footerP2) footerP2.textContent = strings.footerText;
+            const footerQuickLinksH3 = document.querySelector('footer h3:nth-child(3)');
+            if (footerQuickLinksH3) footerQuickLinksH3.textContent = strings.footerQuickLinks;
+            const footerLegalH3 = document.querySelector('footer h3:nth-child(4)');
+            if (footerLegalH3) footerLegalH3.textContent = strings.footerLegal;
+            const footerPrivacyLink = document.querySelector('footer ul li:nth-child(1) a');
+            if (footerPrivacyLink) footerPrivacyLink.textContent = strings.footerPrivacy;
+            const footerTermsLink = document.querySelector('footer ul li:nth-child(2) a');
+            if (footerTermsLink) footerTermsLink.textContent = strings.footerTerms;
+            const footerCopyrightP = document.querySelector('footer p:nth-child(1)');
+            if (footerCopyrightP) footerCopyrightP.textContent = strings.footerCopyright(new Date().getFullYear());
+            const footerSmallEl = document.querySelector('footer small');
+            if (footerSmallEl) footerSmallEl.textContent = strings.footerDesignedBy("Isara Dilnuka Amarathunga");
+        }
+
         function initCountdown() {
             const targetDate = new Date("November 10, 2025 08:30:00").getTime();
             
@@ -1046,7 +1742,7 @@
             const hcaptchaResponse = document.querySelector('[name=h-captcha-response]').value;
             
             if (!hcaptchaResponse) {
-                status.textContent = 'Please complete the captcha verification.';
+                status.textContent = langStrings[currentLang].alertCaptcha;
                 return;
             }
             
@@ -1064,7 +1760,8 @@
                 mainContent.classList.remove('hidden');
                 
                 // Show welcome message
-                alert('Welcome to DE Education.lk!');
+                // Using a simple alert for now as per instructions
+                alert(langStrings[currentLang].alertLogin);
             }, 1500);
         }
         
@@ -1074,16 +1771,15 @@
             mainContent.classList.add('hidden');
         }
         
-        function toggleLanguage(isSinhala = null) {
-            // This would be implemented to toggle between Sinhala and English
-            // For now, we'll just show an alert
-            alert('Language toggle functionality will be implemented in the next version.');
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'si' : 'en';
+            updatePageContent();
         }
         
         function globalSearch() {
             const searchTerm = document.getElementById('globalSearch').value;
             if (searchTerm.trim() !== '') {
-                alert(`Search functionality for "${searchTerm}" will be implemented in the next version.`);
+                alert(langStrings[currentLang].alertSearch(searchTerm));
             }
         }
         
@@ -1116,7 +1812,8 @@
         
         function showPapers(subject) {
             // Set subject title
-            subjectTitle.textContent = `${subject} Papers`;
+            const subjectTitleEl = document.getElementById('subjectTitle');
+            if (subjectTitleEl) subjectTitleEl.textContent = langStrings[currentLang].papersSubjectTitle(subject);
             
             // Clear previous papers
             papersList.innerHTML = '';
@@ -1145,12 +1842,12 @@
                         <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-800">${paper.year}</td>
                         <td class="px-4 py-4 text-sm text-gray-800">
                             <a href="${paper.paper}" target="_blank" class="text-blue-600 hover:text-blue-800 font-medium">
-                                Download Paper <i class="fas fa-external-link-alt ml-1 text-xs"></i>
+                                ${langStrings[currentLang].papersDownloadPaper} <i class="fas fa-external-link-alt ml-1 text-xs"></i>
                             </a>
                         </td>
                         <td class="px-4 py-4 text-sm text-gray-800">
                             <a href="${paper.marking}" target="_blank" class="text-green-600 hover:text-green-800 font-medium">
-                                Download Marking Scheme <i class="fas fa-external-link-alt ml-1 text-xs"></i>
+                                ${langStrings[currentLang].papersDownloadMarkingScheme} <i class="fas fa-external-link-alt ml-1 text-xs"></i>
                             </a>
                         </td>
                     `;
@@ -1162,8 +1859,8 @@
                     <tr>
                         <td colspan="3" class="px-4 py-8 text-center text-gray-600">
                             <i class="fas fa-info-circle text-3xl mb-3 text-blue-500"></i>
-                            <p>Papers for ${subject} will be added in the next update.</p>
-                            <p class="text-sm mt-2">Please check back later.</p>
+                            <p>${langStrings[currentLang].papersNotAvailable(subject)}</p>
+                            <p class="text-sm mt-2">${langStrings[currentLang].papersCheckBack}</p>
                         </td>
                     </tr>
                 `;
@@ -1176,12 +1873,187 @@
             papersDisplay.scrollIntoView({ behavior: 'smooth' });
         }
         
+        function renderTimetableCalendar() {
+            timetableCalendar.innerHTML = '';
+            
+            const daysWithExams = currentTimetableData.map(day => day.date);
+            const allDates = generateCalendarDates(daysWithExams);
+
+            if (currentTimetableData.length === 0) {
+                timetableCalendar.innerHTML = `<p class="text-center text-gray-600 col-span-full">${langStrings[currentLang].noExamsFound}</p>`;
+                renderExamDetails(null);
+                return;
+            }
+
+            allDates.forEach(date => {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.innerHTML = `
+                    <span class="text-xs font-normal text-gray-500">${date.day.substring(0, 3)}</span>
+                    <p class="text-base md:text-xl font-bold">${date.date}</p>
+                `;
+                
+                const dayData = currentTimetableData.find(d => d.date === date.date);
+
+if (dayData) {
+    dayElement.classList.add('exam-day');
+    const hasGeneralExam = dayData.exams.some(exam => exam.stream === 'General');
+    if (hasGeneralExam) {
+        dayElement.classList.add('general-stream');
+    } else {
+        dayElement.classList.remove('bg-yellow-500', 'text-stone-800');
+    }
+}
+
+
+                dayElement.addEventListener('click', () => {
+                    if (dayData) {
+                        renderExamDetails(dayData);
+                        if (selectedDayElement) {
+                            selectedDayElement.classList.remove('active-day');
+                        }
+                        dayElement.classList.add('active-day');
+                        selectedDayElement = dayElement;
+                        timetableDetails.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+                
+                timetableCalendar.appendChild(dayElement);
+            });
+        }
+        
+        function generateCalendarDates(examDates) {
+            const allDates = [];
+            let currentDate = new Date('2025-11-01');
+            const endDate = new Date('2025-12-05'); // End date of exams is Dec 5th
+            
+            while (currentDate <= endDate) {
+                const dateString = currentDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+                const hasExam = examDates.includes(dateString.replace(',', ''));
+                allDates.push({
+                    date: dateString.replace(',', ''),
+                    day: currentDate.toLocaleDateString('en-US', { weekday: 'long' }),
+                    hasExam: hasExam
+                });
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            return allDates;
+        }
+
+        function renderExamDetails(dayData) {
+            const examDetailsListEl = document.getElementById('examDetailsList');
+            if (examDetailsListEl) examDetailsListEl.innerHTML = '';
+            const timetableDayTitleEl = document.getElementById('timetableDayTitle');
+            
+            if (!dayData) {
+                if (timetableDayTitleEl) timetableDayTitleEl.textContent = langStrings[currentLang].timetableDayTitle;
+                return;
+            }
+            
+            if (timetableDayTitleEl) timetableDayTitleEl.textContent = `${dayData.day}, ${dayData.date}`;
+
+            dayData.exams.forEach(exam => {
+                const examDiv = document.createElement('div');
+                const streamClass = streamColorMap[exam.stream] || 'border-gray-300';
+                const streamTextColor = streamTextColorMap[exam.stream] || 'text-gray-800';
+                
+                examDiv.className = `p-4 rounded-lg flex flex-col sm:flex-row justify-between items-start sm:items-center border-l-4 bg-gray-50 ${streamClass}`;
+                examDiv.innerHTML = `
+                    <div>
+                        <p class="text-sm font-semibold text-gray-700">${exam.time}</p>
+                        <h5 class="text-lg font-bold ${streamTextColor}">${exam.subjects[0]} (${exam.code})</h5>
+                        <p class="text-sm text-gray-500 sinhala">${exam.subjects[1]} | ${exam.subjects[2]}</p>
+                    </div>
+                `;
+                if (examDetailsListEl) examDetailsListEl.appendChild(examDiv);
+            });
+        }
+        
+        function renderNotices(notices) {
+            noticesList.innerHTML = '';
+            if (notices.length === 0) {
+                noticesList.innerHTML = `<p class="text-center text-gray-600 py-8">No notices found.</p>`;
+                return;
+            }
+
+            notices.forEach(notice => {
+                const noticeDiv = document.createElement('div');
+                const isUrgent = notice.title.toLowerCase().includes('important') || notice.title.toLowerCase().includes('deadline');
+                const bgColor = isUrgent ? 'bg-red-50' : 'bg-green-50';
+                const borderColor = isUrgent ? 'border-red-400' : 'border-green-400';
+                const textColor = isUrgent ? 'text-red-800' : 'text-green-800';
+                const iconColor = isUrgent ? 'text-red-400' : 'text-green-400';
+                const icon = isUrgent ? 'fas fa-exclamation-circle' : 'fas fa-check-circle';
+
+                noticeDiv.className = `p-4 ${bgColor} border-l-4 ${borderColor} notice-item`;
+                noticeDiv.innerHTML = `
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <i class="${icon} ${iconColor}"></i>
+                        </div>
+                        <div class="ml-3">
+                            <h4 class="text-sm font-medium ${textColor}">${notice.title}</h4>
+                            <p class="mt-1 text-sm ${textColor}">${notice.content}</p>
+                            <p class="mt-2 text-xs text-gray-500">Published: ${notice.date} | Source: ${notice.source}</p>
+                        </div>
+                    </div>
+                `;
+                noticesList.appendChild(noticeDiv);
+            });
+        }
+        
+        function copyTimetableToClipboard() {
+            let formattedText = langStrings[currentLang].timetablesTitle + "\n\n";
+            currentTimetableData.forEach(day => {
+                if (day.exams.length > 0) {
+                    formattedText += `--- ${day.day}, ${day.date} ---\n`;
+                    day.exams.forEach(exam => {
+                        formattedText += `${exam.time}: ${exam.subjects[0]} (${exam.code}) [${exam.stream}]\n`;
+                    });
+                    formattedText += "\n";
+                }
+            });
+
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = formattedText;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            alert(langStrings[currentLang].alertTimetableCopy);
+        }
+
+        function downloadTimetableAsText() {
+            let formattedText = langStrings[currentLang].timetablesTitle + "\n\n";
+            currentTimetableData.forEach(day => {
+                if (day.exams.length > 0) {
+                    formattedText += `--- ${day.day}, ${day.date} ---\n`;
+                    day.exams.forEach(exam => {
+                        formattedText += `${exam.time}: ${exam.subjects[0]} (${exam.code}) [${exam.stream}]\n`;
+                    });
+                    formattedText += "\n";
+                }
+            });
+
+            const blob = new Blob([formattedText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'AL_Timetable_2025.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
         // Contact form submission
         document.getElementById('contactForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
             // Simulate form submission
-            alert('Thank you for your message! We will get back to you soon.');
+            // Using a simple alert for now as per instructions
+            alert(langStrings[currentLang].alertContact);
             this.reset();
         });
     </script>
