@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DE Education</title>
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" href="https://www.freeiconspng.com/uploads/green-circle-icon-14.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sinhala:wght@400;700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -86,23 +86,63 @@
             font-family: 'Inter', sans-serif;
             font-weight: 800;
         }
+
+        
         .countdown-item {
-            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
-            padding: 0.75rem 1rem; /* Smaller padding */
-            border-radius: 0.5rem; /* Smaller border radius */
-            min-width: 70px; /* Smaller min-width */
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            border: 1px solid #a7f3d0;
-        }
-        .countdown-item span:last-child {
-            display: block;
-            font-size: 0.8rem; /* Smaller font size */
-            color: #065f46;
-            margin-top: 0.4rem; /* Smaller margin */
-            text-transform: uppercase;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: transparent !important;
+    padding: 0.5rem !important;
+    min-width: 100px !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+.circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #047857;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    border: 2px solid #a7f3d0;
+}
+
+.circle svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: rotate(-90deg);
+}
+
+.circle circle {
+    fill: none;
+    stroke-width: 8;
+    stroke-linecap: round;
+    stroke: #34d399;
+    stroke-dasharray: 283;
+    stroke-dashoffset: 283;
+    transition: stroke-dashoffset 1s linear;
+}
+
+.countdown-item span:last-child {
+    display: block;
+    font-size: 0.9rem;
+    color: #065f46;
+    margin-top: 0.4rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
         .tab-content {
             display: none;
         }
@@ -386,24 +426,48 @@
                         <p class="marquee-text" id="urgentMessage">All subjects are not yet added. Please try again after the update. The next update will be released on 2025.09.21.</p>
                     </div>
 
-                    <!-- Countdown Timer -->
-                    <div class="countdown-container mb-8">
-                        <h3 class="countdown-title">2025 A/L Start Countdown</h3>
-                        <div class="countdown-timer">
-                            <div class="countdown-item">
-                                <span id="days">00</span><span>Days</span>
-                            </div>
-                            <div class="countdown-item">
-                                <span id="hours">00</span><span>Hours</span>
-                            </div>
-                            <div class="countdown-item">
-                                <span id="minutes">00</span><span>Minutes</span>
-                            </div>
-                            <div class="countdown-item">
-                                <span id="seconds">00</span><span>Seconds</span>
-                            </div>
-                        </div>
-                    </div>
+                   <!-- Countdown Timer -->
+<div class="countdown-container mb-8">
+    <h3 class="countdown-title">2025 A/L Start Countdown</h3>
+    <div class="countdown-timer">
+        <div class="countdown-item">
+            <div class="circle">
+                <svg width="100" height="100">
+                    <circle cx="50" cy="50" r="45"></circle>
+                </svg>
+                <span id="days">00</span>
+            </div>
+            <span>Days</span>
+        </div>
+        <div class="countdown-item">
+            <div class="circle">
+                <svg width="100" height="100">
+                    <circle cx="50" cy="50" r="45"></circle>
+                </svg>
+                <span id="hours">00</span>
+            </div>
+            <span>Hours</span>
+        </div>
+        <div class="countdown-item">
+            <div class="circle">
+                <svg width="100" height="100">
+                    <circle cx="50" cy="50" r="45"></circle>
+                </svg>
+                <span id="minutes">00</span>
+            </div>
+            <span>Minutes</span>
+        </div>
+        <div class="countdown-item">
+            <div class="circle">
+                <svg width="100" height="100">
+                    <circle cx="50" cy="50" r="45"></circle>
+                </svg>
+                <span id="seconds">00</span>
+            </div>
+            <span>Seconds</span>
+        </div>
+    </div>
+</div>
 
                     <!-- Quick Access Cards -->
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -1718,33 +1782,46 @@
             if (footerSmallEl) footerSmallEl.textContent = strings.footerDesignedBy("Isara Dilnuka Amarathunga");
         }
 
-        function initCountdown() {
-            const targetDate = new Date("November 10, 2025 08:30:00").getTime();
-            
-            setInterval(() => {
-                const now = new Date().getTime();
-                const distance = targetDate - now;
-                
-                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                
-                document.getElementById("days").textContent = String(days).padStart(2, '0');
-                document.getElementById("hours").textContent = String(hours).padStart(2, '0');
-                document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
-                document.getElementById("seconds").textContent = String(seconds).padStart(2, '0');
-            }, 1000);
+function initCountdown() {
+    const targetDate = new Date("November 10, 2025 08:00:00").getTime();
+    const totalDays = Math.ceil((targetDate - new Date().getTime()) / (1000 * 60 * 60 * 24)) || 365;
+    
+    const updateCountdown = () => {
+        const now = new Date().getTime();
+        const distance = targetDate - now;
+        
+        if (distance <= 0) {
+            document.getElementById("days").textContent = "00";
+            document.getElementById("hours").textContent = "00";
+            document.getElementById("minutes").textContent = "00";
+            document.getElementById("seconds").textContent = "00";
+            document.querySelectorAll(".circle circle").forEach(circle => {
+                circle.style.strokeDashoffset = 283;
+            });
+            clearInterval(interval);
+            return;
         }
         
-        function googleLogin() {
-            const status = document.getElementById('status');
-            const hcaptchaResponse = document.querySelector('[name=h-captcha-response]').value;
-            
-            if (!hcaptchaResponse) {
-                status.textContent = langStrings[currentLang].alertCaptcha;
-                return;
-            }
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        
+        document.getElementById("days").textContent = String(days).padStart(2, '0');
+        document.getElementById("hours").textContent = String(hours).padStart(2, '0');
+        document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
+        document.getElementById("seconds").textContent = String(seconds).padStart(2, '0');
+        
+        // Update progress circles
+        document.querySelectorAll(".circle circle")[0].style.strokeDashoffset = 283 - (1 - days / totalDays) * 283;
+        document.querySelectorAll(".circle circle")[1].style.strokeDashoffset = 283 - (hours / 24) * 283;
+        document.querySelectorAll(".circle circle")[2].style.strokeDashoffset = 283 - (minutes / 60) * 283;
+        document.querySelectorAll(".circle circle")[3].style.strokeDashoffset = 283 - (seconds / 60) * 283;
+    };
+    
+    const interval = setInterval(updateCountdown, 1000);
+    updateCountdown();
+}
             
             // Simulate successful login
             status.textContent = 'Logging in...';
@@ -1763,7 +1840,7 @@
                 // Using a simple alert for now as per instructions
                 alert(langStrings[currentLang].alertLogin);
             }, 1500);
-        }
+        
         
         function logout() {
             localStorage.removeItem('user');
