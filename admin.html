@@ -531,28 +531,50 @@
             });
         }
 
-        // Form submission
+        // Form submission - UPDATED FOR MULTI-STREAM SUBJECTS
         paperForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const formData = {
-                stream: streamSelect.value,
-                subject_code: subjectSelect.value,
-                subject_name: subjectSelect.options[subjectSelect.selectedIndex].text,
-                year: parseInt(document.getElementById('year').value),
-                paper_link: document.getElementById('paperLink').value,
-                marking_scheme_link: document.getElementById('markingLink').value || null
-            };
+            // Check if this is a multi-stream subject
+            const subjectCode = subjectSelect.value;
+            const isMultiStreamSubject = ['ict', 'agriculture', 'geography'].includes(subjectCode);
+            
+            let formDataArray = [];
+            
+            if (isMultiStreamSubject) {
+                // Create entries for all streams
+                const streams = ['science', 'commerce', 'arts', 'technology'];
+                streams.forEach(stream => {
+                    formDataArray.push({
+                        stream: stream,
+                        subject_code: subjectCode,
+                        subject_name: subjectSelect.options[subjectSelect.selectedIndex].text,
+                        year: parseInt(document.getElementById('year').value),
+                        paper_link: document.getElementById('paperLink').value,
+                        marking_scheme_link: document.getElementById('markingLink').value || null
+                    });
+                });
+            } else {
+                // Single stream entry (normal behavior)
+                formDataArray.push({
+                    stream: streamSelect.value,
+                    subject_code: subjectCode,
+                    subject_name: subjectSelect.options[subjectSelect.selectedIndex].text,
+                    year: parseInt(document.getElementById('year').value),
+                    paper_link: document.getElementById('paperLink').value,
+                    marking_scheme_link: document.getElementById('markingLink').value || null
+                });
+            }
             
             // Disable form and show spinner
             setFormLoading(true);
             
             try {
                 if (editingPaperId) {
-                    // Update
+                    // For editing, we only update the specific paper (normal behavior)
                     const { error } = await supabase
                         .from('past_papers')
-                        .update(formData)
+                        .update(formDataArray[0])
                         .eq('id', editingPaperId);
                     
                     if (error) throw error;
@@ -560,14 +582,17 @@
                     showNotification('Paper updated successfully', 'success');
                     resetForm();
                 } else {
-                    // Add new
+                    // For new entries, insert all form data
                     const { error } = await supabase
                         .from('past_papers')
-                        .insert([formData]);
+                        .insert(formDataArray);
                     
                     if (error) throw error;
                     
-                    showNotification('Paper added successfully', 'success');
+                    const message = isMultiStreamSubject ? 
+                        `Paper added to all streams successfully (${formDataArray.length} entries)` : 
+                        'Paper added successfully';
+                    showNotification(message, 'success');
                     resetForm();
                 }
                 
