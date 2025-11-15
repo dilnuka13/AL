@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en"> <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - DE Education</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         /* Define custom styles for smooth transitions and dark mode default */
         body {
@@ -65,56 +67,174 @@
         #loginModal .z-10 {
             z-index: 10;
         }
+        
+        /* --- NEW: Face Login Styles --- */
+        #video-container {
+            position: relative;
+            width: 400px;
+            height: 300px;
+            margin: auto;
+            border: 2px solid #333;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        #video-feed, #face-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        #video-feed { object-fit: cover; }
+        
+        #face-loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .view-active {
+            display: block !important;
+            animation: fadeIn 0.4s ease-out;
+        }
+        .view-hidden { display: none !important; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .modal-enter { animation: modalFadeIn 0.3s ease-out; }
+        .modal-content-enter { animation: modalScaleIn 0.3s ease-out; }
+        @keyframes modalFadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes modalScaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
     </style>
 </head>
 <body class="min-h-screen p-6 text-gray-800 dark:text-gray-200">
     
-    <!-- Login Modal -->
+    <div id="loader-view" class="fixed inset-0 bg-gray-100 dark:bg-gray-900 flex flex-col items-center justify-center z-[100]">
+        <div id="face-loader" class="mx-auto"></div>
+        <p class="mt-4 text-lg font-medium text-gray-700 dark:text-gray-300">Please wait...</p>
+        <p class="text-gray-500 dark:text-gray-400">Loading face recognition AI models.</p>
+    </div>
+
     <div id="loginModal" class="fixed inset-0 flex items-center justify-center z-50 transition-opacity duration-300 opacity-100">
-        <!-- Dark Overlay to dim the background image -->
         <div class="absolute inset-0 bg-black opacity-70 dark:opacity-80"></div> 
         
-        <!-- Actual Modal Content -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-8 max-w-md w-full transition-colors duration-300 relative z-10">
-            <div class="text-center mb-6">
-                <h2 class="text-2xl font-bold text-emerald-800 dark:text-emerald-400">Admin Login</h2>
-                <p class="text-gray-600 dark:text-gray-400">Enter your credentials to access the system</p>
+        <div id="login-modal-content" class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-8 max-w-md w-full transition-all duration-300 relative z-10">
+            
+            <div id="login-view" class="view-active">
+                <div class="text-center mb-6">
+                    <h2 class="text-2xl font-bold text-emerald-800 dark:text-emerald-400">Admin Login</h2>
+                    <p class="text-gray-600 dark:text-gray-400">Access the DE Education System</p>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label for="login-email" class="block text-gray-700 dark:text-gray-300 mb-2">Email Address</label>
+                        <input type="email" id="login-email" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                    </div>
+                    <button id="login-with-face-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-[1.01]">
+                        <i class="fas fa-camera mr-2"></i> Login with Face Scan
+                    </button>
+                    <p class="text-center text-sm text-gray-600 dark:text-gray-400 mt-4">
+                        Don't have an account? 
+                        <a href="#" id="show-register-link" class="font-medium text-emerald-600 hover:text-emerald-500 transition-colors">
+                            Register here
+                        </a>
+                    </p>
+                </div>
             </div>
-            <form id="loginForm" class="space-y-4">
-                <div>
-                    <label for="email" class="block text-gray-700 dark:text-gray-300 mb-2">Email</label>
-                    <input type="email" id="email" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+
+            <div id="admin-secret-view" class="view-hidden">
+                <div class="text-center mb-6">
+                    <h2 class="text-2xl font-bold text-yellow-600 dark:text-yellow-400">Admin Secret</h2>
+                    <p class="text-gray-600 dark:text-gray-400">Please enter the admin secret to register.</p>
                 </div>
-                <div>
-                    <label for="password" class="block text-gray-700 dark:text-gray-300 mb-2">Password</label>
-                    <input type="password" id="password" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                <div class="space-y-4">
+                    <div>
+                        <label for="admin-secret-input" class="block text-gray-700 dark:text-gray-300 mb-2">Admin Secret</label>
+                        <input type="password" id="admin-secret-input" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                    </div>
+                    <button id="submit-secret-btn" class="w-full bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg">
+                        Confirm
+                    </button>
+                    <p class="text-center text-sm text-gray-600 dark:text-gray-400 mt-4">
+                        <a href="#" id="show-login-link-secret" class="font-medium text-emerald-600 hover:text-emerald-500 transition-colors">
+                            <i class="fas fa-arrow-left mr-1"></i> Back to Login
+                        </a>
+                    </p>
                 </div>
-                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-[1.01]">
-                    Login
-                </button>
-            </form>
-            <p id="loginError" class="text-red-500 text-center mt-4 hidden">Invalid email or password</p>
+            </div>
+
+            <div id="register-view" class="view-hidden">
+                <h2 class="text-2xl font-bold text-center text-emerald-800 dark:text-emerald-400 mb-6">Create a new account</h2>
+                <div class="space-y-3">
+                    <input type="text" id="register-name" placeholder="Full Name" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <input type="email" id="register-email" placeholder="Email Address" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <input type="tel" id="register-phone" placeholder="Phone Number (Required)" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <input type="password" id="register-password" placeholder="Password" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    
+                    <button id="scan-face-btn" class="w-full bg-green-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-green-700 transition duration-300 shadow-sm active:scale-95">
+                        <i class="fas fa-id-card mr-2"></i> Start Face Scan
+                    </button>
+                    
+                    <p id="scan-feedback" class="text-center text-sm text-green-700 dark:text-green-400 font-medium"></p>
+                    
+                    <button id="register-btn" class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-700 transition duration-300 shadow-sm disabled:bg-gray-400 active:scale-95">
+                        Register
+                    </button>
+                    
+                    <p class="text-center text-sm text-gray-600 dark:text-gray-400 mt-4">
+                        <a href="#" id="show-login-link-register" class="font-medium text-emerald-600 hover:text-emerald-500 transition-colors">
+                            <i class="fas fa-arrow-left mr-1"></i> Back to Login
+                        </a>
+                    </p>
+                </div>
+            </div>
+
+            <div id="message-box" class="hidden mt-4 p-3 rounded-lg text-center text-white font-medium transition-all duration-300"></div>
+
         </div>
     </div>
 
-    <!-- Main Content (Initially Hidden) -->
+    <div id="camera-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[150]">
+        <div id="camera-modal-overlay" class="absolute inset-0 modal-enter"></div>
+        <div id="camera-modal-content" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl z-10 modal-content-enter">
+            <h3 id="camera-instruction" class="text-xl font-semibold text-center mb-4 text-gray-800 dark:text-gray-200">Look at the camera</h3>
+            <div id="video-container" class="rounded-lg overflow-hidden bg-black">
+                <video id="video-feed" autoplay muted playsinline></video>
+                <canvas id="face-canvas"></canvas>
+            </div>
+            <button id="stop-camera-btn" class="mt-4 w-full bg-red-500 text-white py-2 rounded-md hover:bg-red-600 transition-colors active:scale-95">
+                Stop
+            </button>
+        </div>
+    </div>
+
     <div id="mainContent" class="hidden">
         <div class="max-w-6xl mx-auto">
             <header class="text-center mb-8 flex justify-between items-center">
-                <!-- Title Block (Now a Link to DE Education) -->
                 <a href="https://dilnuka13.github.io/AL/" target="_blank" class="flex items-center group cursor-pointer transition-transform duration-200 hover:scale-[1.02]">
                     <div class="w-12 h-12 bg-emerald-600 rounded-lg flex items-center justify-center text-white font-bold text-xl mr-3 shadow-lg group-hover:shadow-xl transition-shadow">
                         DE
                     </div>
                     <h1 class="text-3xl font-bold text-emerald-800 dark:text-emerald-400 text-left transition-colors">Education.lk Papers Management System</h1>
                 </a>
-                <!-- Dark Mode Toggle Button -->
-                <button id="darkModeToggle" class="p-3 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 transition-colors shadow-md hover:shadow-lg transform hover:scale-105">
-                    <i class="fas fa-sun" id="toggleIcon"></i>
-                </button>
+                
+                <div class="flex items-center gap-4">
+                    <button id="darkModeToggle" class="p-3 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 transition-colors shadow-md hover:shadow-lg transform hover:scale-105">
+                        <i class="fas fa-sun" id="toggleIcon"></i>
+                    </button>
+                    <button id="logout-btn" class="p-3 rounded-full bg-red-600 dark:bg-red-700 text-white transition-colors shadow-md hover:shadow-lg transform hover:scale-105">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
             </header>
 
-            <!-- Tabs -->
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-1 mb-6 transition-colors duration-300">
                 <div class="flex">
                     <button id="dataEntryTab" class="flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-300 tab-active">
@@ -127,7 +247,6 @@
             </div>
 
             <div class="relative min-h-[400px]">
-                <!-- Data Entry Section -->
                 <div id="dataEntrySection" class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6 section-transition section-visible">
                     <h2 class="text-xl font-semibold text-emerald-800 dark:text-emerald-400 mb-4" id="formTitle">Add New Past Paper</h2>
                     
@@ -183,7 +302,6 @@
                     </form>
                 </div>
 
-                <!-- Data Management Section -->
                 <div id="dataManagementSection" class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 section-transition section-hidden">
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-xl font-semibold text-emerald-800 dark:text-emerald-400">Existing Past Papers</h2>
@@ -192,7 +310,6 @@
                         </button>
                     </div>
                     
-                    <!-- NEW FILTER BLOCK -->
                     <div class="mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
                         <input type="text" id="searchPapers" placeholder="Search papers..." class="md:col-span-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                         
@@ -204,30 +321,27 @@
                             <option value="technology">Technology</option>
                         </select>
                         
-                        <!-- Dynamic Subject Filter -->
                         <select id="filterSubject" class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white" disabled>
                             <option value="">Select Stream First</option>
                         </select>
 
                         <select id="filterYear" class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                             <option value="">All Years</option>
-                            <!-- Years will be populated dynamically if possible, or added manually -->
-                            
                             <option value="2024">2024</option>
                             <option value="2023">2023</option>
                             <option value="2022">2022</option>
                             <option value="2021">2021</option>
-                            <option value="2025">2020</option>
-                            <option value="2024">2019</option>
-                            <option value="2023">2018</option>
-                            <option value="2022">2017</option>
-                            <option value="2025">2016</option>
-                            <option value="2024">2015</option>
-                            <option value="2023">2014</option>
-                            <option value="2022">2013</option>
-                            <option value="2021">2012</option>
-                            <option value="2025">2011</option>
-                            <option value="2024">2010</option>
+                            <option value="2020">2020</option>
+                            <option value="2019">2019</option>
+                            <option value="2018">2018</option>
+                            <option value="2017">2017</option>
+                            <option value="2016">2016</option>
+                            <option value="2015">2015</option>
+                            <option value="2014">2014</option>
+                            <option value="2013">2013</option>
+                            <option value="2012">2012</option>
+                            <option value="2011">2011</option>
+                            <option value="2010">2010</option>
                         </select>
                     </div>
                     
@@ -237,15 +351,11 @@
                     </div>
                     
                     <div id="papersList" class="space-y-4">
-                        <!-- Papers list will be displayed here -->
-                    </div>
+                        </div>
                 </div>
-            </div> <!-- End of relative container -->
-
-        </div>
+            </div> </div>
     </div>
     
-    <!-- FOOTER -->
     <footer class="max-w-6xl mx-auto px-6">
         <div class="mt-8 border-t border-gray-300 dark:border-gray-700 pt-4 pb-12 text-center text-gray-500 dark:text-gray-400 text-sm transition-colors duration-300">
              <p>&copy; 2025 DE Education.lk. All rights reserved.</p>
@@ -258,20 +368,17 @@
              </p>
          </div>
     </footer>
-    <!-- END FOOTER -->
-
-    <script>
-        // Supabase configuration
+    <script type="module">
+        // Supabase configuration (This is your Admin Panel project)
         const supabaseUrl = 'https://hppojrbfhzttzvlvovre.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhwcG9qcmJmaHp0dHp2bHZvdnJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjExODgxNDYsImV4cCI6MjA3Njc2NDE0Nn0.aL2fegb_eRPY0E7P6Mwufhq3TCAeX8-hDCHBo9VeAsA';
+        // **FIX:** Using 'supabase' instead of 'supabaseClient' (to match original admin.html)
         const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-        // DOM elements
+        // --- Original Admin DOM elements ---
         const body = document.body;
         const loginModal = document.getElementById('loginModal');
         const mainContent = document.getElementById('mainContent');
-        const loginForm = document.getElementById('loginForm');
-        const loginError = document.getElementById('loginError');
         const dataEntryTab = document.getElementById('dataEntryTab');
         const dataEditTab = document.getElementById('dataEditTab');
         const dataEntrySection = document.getElementById('dataEntrySection');
@@ -285,7 +392,7 @@
         const formTitle = document.getElementById('formTitle');
         const searchInput = document.getElementById('searchPapers');
         const filterStream = document.getElementById('filterStream');
-        const filterSubject = document.getElementById('filterSubject'); // New Subject Filter
+        const filterSubject = document.getElementById('filterSubject');
         const filterYear = document.getElementById('filterYear');
         const papersList = document.getElementById('papersList');
         const loadingMessage = document.getElementById('loadingMessage');
@@ -296,16 +403,56 @@
         const submitBtnText = document.getElementById('submitBtnText');
         const updateBtnText = document.getElementById('updateBtnText');
 
-
         let editingPaperId = null;
         let allPapers = [];
 
         // Admin credentials
-        const adminEmail = 'isaradilnuka2005@gmail.com';
-        const adminPassword = 'AAID2005$$';
+        // **FIX:** Secret changed to '20050616' (your birthday)
+        const ADMIN_SECRET = '20050616'; 
+        
+        // --- NEW: Face Login DOM Elements ---
+        const loaderView = document.getElementById('loader-view');
+        
+        const loginView = document.getElementById('login-view');
+        const adminSecretView = document.getElementById('admin-secret-view');
+        const registerView = document.getElementById('register-view');
+        
+        const showRegisterLink = document.getElementById('show-register-link');
+        const showLoginLinkSecret = document.getElementById('show-login-link-secret');
+        const showLoginLinkRegister = document.getElementById('show-login-link-register');
+
+        const adminSecretInput = document.getElementById('admin-secret-input');
+        const submitSecretBtn = document.getElementById('submit-secret-btn');
+        
+        const loginEmailInput = document.getElementById('login-email');
+        const loginWithFaceBtn = document.getElementById('login-with-face-btn');
+        
+        const registerNameInput = document.getElementById('register-name');
+        const registerEmailInput = document.getElementById('register-email');
+        const registerPhoneInput = document.getElementById('register-phone'); // New
+        const registerPasswordInput = document.getElementById('register-password');
+        const scanFaceBtn = document.getElementById('scan-face-btn');
+        const registerBtn = document.getElementById('register-btn');
+        const scanFeedback = document.getElementById('scan-feedback');
+        
+        const logoutBtn = document.getElementById('logout-btn'); // New
+        const messageBox = document.getElementById('message-box');
+
+        const cameraModal = document.getElementById('camera-modal');
+        const cameraModalOverlay = document.getElementById('camera-modal-overlay');
+        const cameraModalContent = document.getElementById('camera-modal-content');
+        const video = document.getElementById('video-feed');
+        const canvas = document.getElementById('face-canvas');
+        const cameraInstruction = document.getElementById('camera-instruction');
+        const stopCameraBtn = document.getElementById('stop-camera-btn');
+
+        // --- NEW: App State ---
+        let registrationDescriptors = []; // Face data during registration
+        let stream; // Camera stream
+        let detectionInterval; // Face detection interval
 
 
-        /* --- DARK MODE LOGIC --- */
+        // --- DARK MODE LOGIC (Original) ---
         function toggleDarkMode() {
             if (body.classList.contains('dark')) {
                 body.classList.remove('dark');
@@ -334,40 +481,311 @@
         }
 
         darkModeToggle.addEventListener('click', toggleDarkMode);
-        /* ----------------------- */
+        
 
+        /* --- NEW: Face API Model Loading --- */
+        async function loadModels() {
+            const MODEL_URL = 'https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@0.22.2/weights';
+            try {
+                await Promise.all([
+                    faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
+                    faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
+                    faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL)
+                ]);
+                console.log("AI Models Loaded Successfully!");
+                // Hide loader and show app
+                loaderView.classList.add('opacity-0');
+                setTimeout(() => {
+                    loaderView.classList.add('hidden');
+                    // Show login modal (like in original admin.html)
+                    loginModal.classList.remove('hidden');
+                    showView('login'); // Show login view first
+                }, 300);
+            } catch (error) {
+                console.error("Error loading models:", error);
+                loaderView.innerHTML = '<p class="text-red-500">Error loading AI models. Please refresh the page.</p>';
+            }
+        }
 
-        // Login form submission
-        loginForm.addEventListener('submit', function(e) {
+        /* --- NEW: Login/Register View Switching --- */
+        function showView(viewName) {
+            [loginView, adminSecretView, registerView].forEach(view => {
+                view.classList.add('view-hidden');
+                view.classList.remove('view-active');
+            });
+            
+            const viewToShow = document.getElementById(`${viewName}-view`);
+            if (viewToShow) {
+                viewToShow.classList.remove('view-hidden');
+                viewToShow.classList.add('view-active');
+            }
+        }
+
+        showRegisterLink.addEventListener('click', (e) => {
             e.preventDefault();
-            
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            
-            if (email === adminEmail && password === adminPassword) {
-                // Successful login
-                loginModal.classList.add('hidden', 'opacity-0');
-                mainContent.classList.remove('hidden');
-                // Initialize theme after login
-                initTheme();
+            showView('admin-secret'); // Ask for secret before registration
+        });
+        
+        showLoginLinkSecret.addEventListener('click', (e) => { e.preventDefault(); showView('login'); });
+        showLoginLinkRegister.addEventListener('click', (e) => { e.preventDefault(); showView('login'); });
+
+        // --- NEW: Admin Secret Check ---
+        submitSecretBtn.addEventListener('click', () => {
+            if (adminSecretInput.value === ADMIN_SECRET) {
+                showView('register'); // If secret is correct, show register view
             } else {
-                // Failed login
-                loginError.classList.remove('hidden');
-                setTimeout(() => loginError.classList.add('hidden'), 3000);
+                showMessage("Incorrect secret!", 'error');
             }
         });
 
+        /* --- NEW: Show Message Box --- */
+        function showMessage(message, type = 'info') {
+            messageBox.classList.remove('hidden', 'opacity-0', 'bg-red-500', 'bg-green-500', 'bg-blue-500');
+            messageBox.textContent = message;
+            
+            if (type === 'error') messageBox.classList.add('bg-red-500');
+            else if (type === 'success') messageBox.classList.add('bg-green-500');
+            else messageBox.classList.add('bg-blue-500');
+
+            setTimeout(() => {
+                messageBox.classList.add('opacity-0');
+                setTimeout(() => messageBox.classList.add('hidden'), 300);
+            }, 4000);
+        }
+
+        /* --- NEW: Camera Functions --- */
+        async function startCamera() {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+                await video.play();
+                
+                cameraModal.classList.remove('hidden');
+                cameraModalOverlay.classList.add('modal-enter');
+                cameraModalContent.classList.add('modal-content-enter');
+                
+                const displaySize = { width: video.clientWidth, height: video.clientHeight };
+                faceapi.matchDimensions(canvas, displaySize);
+                return displaySize;
+            } catch (err) {
+                console.error("Camera error:", err);
+                showMessage("Cannot access camera. Please grant permission.", 'error');
+                return null;
+            }
+        }
+
+        function stopCamera() {
+            if (stream) stream.getTracks().forEach(track => track.stop());
+            if (detectionInterval) clearInterval(detectionInterval);
+            
+            cameraModalOverlay.classList.remove('modal-enter');
+            cameraModalContent.classList.remove('modal-content-enter');
+            cameraModal.classList.add('hidden');
+            video.srcObject = null;
+        }
+
+        stopCameraBtn.addEventListener('click', stopCamera);
+
+        /* --- NEW: Registration Logic (Updated) --- */
+        scanFaceBtn.addEventListener('click', async () => {
+            registrationDescriptors = [];
+            scanFeedback.textContent = "";
+            registerBtn.disabled = true;
+
+            const displaySize = await startCamera();
+            if (!displaySize) return;
+
+            let scans = 0;
+            cameraInstruction.textContent = "Look straight at the camera...";
+            
+            detectionInterval = setInterval(async () => {
+                const detections = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions())
+                                                .withFaceLandmarks()
+                                                .withFaceDescriptor();
+
+                canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+                if (detections) {
+                    const resizedDetections = faceapi.resizeResults(detections, displaySize);
+                    faceapi.draw.drawDetections(canvas, resizedDetections);
+
+                    registrationDescriptors.push(detections.descriptor);
+                    scans++;
+                    scanFeedback.textContent = `${scans} / 5 scans complete`;
+                    cameraInstruction.textContent = `Great! ${scans} / 5`;
+
+                    if (scans >= 5) {
+                        stopCamera();
+                        scanFeedback.textContent = "Face scan successful! You can now register.";
+                        registerBtn.disabled = false;
+                        showMessage("Scan successful", 'success');
+                    }
+                }
+            }, 1000);
+        });
+
+        registerBtn.addEventListener('click', async () => {
+            const name = registerNameInput.value;
+            const email = registerEmailInput.value;
+            const phone = registerPhoneInput.value; // New
+            const password = registerPasswordInput.value;
+
+            if (!name || !email || !password || !phone) { // phone is also required
+                return showMessage("Please fill in all fields", 'error');
+            }
+            if (registrationDescriptors.length < 5) {
+                return showMessage("Please scan your face first", 'error');
+            }
+
+            try {
+                const { data: existingUser, error: checkError } = await supabase
+                    .from('users')
+                    .select('email')
+                    .eq('email', email)
+                    .single();
+
+                if (existingUser) {
+                    return showMessage("This email is already registered", 'error');
+                }
+                
+                if (checkError && checkError.code !== 'PGRST116') throw checkError;
+
+                const serializableDescriptors = registrationDescriptors.map(d => Array.from(d));
+
+                // **FIX:** Using 'supabase'
+                // **UPDATE:** 'phone' field was added
+                const { error: insertError } = await supabase
+                    .from('users')
+                    .insert({ 
+                        name: name,
+                        email: email,
+                        password: password, 
+                        phone: phone, // new field
+                        face_descriptors: serializableDescriptors 
+                    });
+
+                if (insertError) throw insertError;
+                
+                // **** MODIFIED MESSAGE FOR EMAIL CONFIRMATION ****
+                showMessage("Registration successful! An administrator must approve your account before you can log in.", 'success');
+                showView('login');
+                
+                registerNameInput.value = "";
+                registerEmailInput.value = "";
+                registerPhoneInput.value = "";
+                registerPasswordInput.value = "";
+                registrationDescriptors = [];
+                scanFeedback.textContent = "";
+
+            } catch (error) {
+                console.error("Registration error:", error);
+                showMessage(`Registration error: ${error.message}`, 'error');
+            }
+        });
+
+        /* --- NEW: Login Logic (Updated) --- */
+        loginWithFaceBtn.addEventListener('click', async () => {
+            const email = loginEmailInput.value;
+            if (!email) {
+                return showMessage("Please enter your email address", 'error');
+            }
+
+            try {
+                // **FIX:** Using 'supabase'
+                // **** MODIFICATION: Added 'email_confirmed_at' to the select query ****
+                const { data: userData, error: fetchError } = await supabase
+                    .from('users')
+                    .select('name, face_descriptors, password, email_confirmed_at') // Get password (optional) and confirmation status
+                    .eq('email', email)
+                    .single();
+
+                if (fetchError) {
+                    if (fetchError.code === 'PGRST116') {
+                        return showMessage("No account found for this email", 'error');
+                    }
+                    throw fetchError;
+                }
+
+                if (!userData || !userData.face_descriptors) {
+                    return showMessage("Account not found or no face data exists", 'error');
+                }
+
+                // **** NEW: EMAIL CONFIRMATION CHECK ****
+                // This requires an 'email_confirmed_at' (timestamp) column in your 'users' table.
+                if (!userData.email_confirmed_at) {
+                    return showMessage("Your email has not been confirmed. Please check your inbox or contact an administrator.", 'error');
+                }
+                // *****************************************
+
+                const descriptors = userData.face_descriptors.map(d => new Float32Array(d));
+                const labeledFaceDescriptors = new faceapi.LabeledFaceDescriptors(email, descriptors);
+                const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.5); 
+
+                const displaySize = await startCamera();
+                if (!displaySize) return;
+
+                cameraInstruction.textContent = "Logging in... Look at the camera";
+
+                detectionInterval = setInterval(async () => {
+                    const detections = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions())
+                                                    .withFaceLandmarks()
+                                                    .withFaceDescriptor();
+                    
+                    canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+                    
+                    if (detections) {
+                        const resizedDetections = faceapi.resizeResults(detections, displaySize);
+                        faceapi.draw.drawDetections(canvas, resizedDetections);
+                        
+                        const bestMatch = faceMatcher.findBestMatch(detections.descriptor);
+                        
+                        if (bestMatch.label === email) {
+                            // *** Successful Login ***
+                            stopCamera();
+                            
+                            // Bring the original admin.html login logic here
+                            loginModal.classList.add('hidden', 'opacity-0');
+                            mainContent.classList.remove('hidden');
+                            initTheme(); // setting dark mode
+                            
+                            showMessage("Login successful!", 'success');
+                            loginEmailInput.value = ""; 
+                        
+                        } else {
+                            cameraInstruction.textContent = "Face does not match...";
+                        }
+                    } else {
+                        cameraInstruction.textContent = "No face detected...";
+                    }
+                }, 700);
+
+            } catch (error) {
+                console.error("Login error:", error);
+                showMessage(`Login error: ${error.message}`, 'error');
+            }
+        });
+
+        /* --- NEW: Logout Logic --- */
+        logoutBtn.addEventListener('click', () => {
+            // Hide admin panel and show login modal again
+            mainContent.classList.add('hidden');
+            loginModal.classList.remove('hidden', 'opacity-0');
+            showView('login'); // reset to login view
+            showMessage("You have been logged out successfully", 'info');
+        });
+
+
+        /* =========================================================
+         ORIGINAL ADMIN.HTML JAVASCRIPT (Paper Management, etc.)
+         (This code is not related to face recognition)
+        =========================================================
+        */
+
         /* --- TAB SWITCHING WITH ANIMATION --- */
         function switchTab(activeTab, activeSection, inactiveTab, inactiveSection) {
-            // Update tabs
             activeTab.classList.add('tab-active');
             inactiveTab.classList.remove('tab-active');
-
-            // Set up transition classes for inactive section
             inactiveSection.classList.add('section-hidden');
             inactiveSection.classList.remove('section-visible');
-
-            // Set up transition classes for active section
             activeSection.classList.remove('section-hidden');
             activeSection.classList.add('section-visible');
         }
@@ -428,14 +846,11 @@
 
         /* --- DATA MANAGEMENT FILTERS (NEW) --- */
         filterStream.addEventListener('change', function() {
-            // 1. Load papers based on new stream filter
             loadPapers();
-            // 2. Load subjects into the subject filter dropdown
             loadSubjectsForStream(this.value, filterSubject);
         });
 
         filterSubject.addEventListener('change', function() {
-            // Reload papers based on the new subject filter
             loadPapers();
         });
         /* -------------------------------------- */
@@ -452,28 +867,15 @@
                     .select('*')
                     .order('year', { ascending: false });
                 
-                // Filter by stream
-                if (filterStream.value) {
-                    query = query.eq('stream', filterStream.value);
-                }
-                
-                // Filter by year
-                if (filterYear.value) {
-                    query = query.eq('year', parseInt(filterYear.value));
-                }
-
-                // Filter by subject
-                if (filterSubject.value) {
-                    query = query.eq('subject_code', filterSubject.value);
-                }
+                if (filterStream.value) query = query.eq('stream', filterStream.value);
+                if (filterYear.value) query = query.eq('year', parseInt(filterYear.value));
+                if (filterSubject.value) query = query.eq('subject_code', filterSubject.value);
                 
                 const { data, error } = await query;
-                
                 if (error) throw error;
                 
                 allPapers = data || [];
-                // Client-side search and display
-                filterPapers();
+                filterPapers(); // Client-side search and display
             } catch (error) {
                 console.error('Error fetching papers:', error);
                 papersList.innerHTML = '<div class="text-center text-red-500 dark:text-red-400 py-4">Unable to fetch papers</div>';
@@ -496,7 +898,6 @@
                 paperElement.className = 'paper-item border border-gray-200 dark:border-gray-700 rounded-xl p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 shadow-md';
                 paperElement.style.animationDelay = `${index * 0.05}s`;
                 
-                // Determine appropriate delete function (using custom modal instead of confirm)
                 const deleteAction = `showDeleteModal('${paper.id}')`;
 
                 paperElement.innerHTML = `
@@ -535,14 +936,12 @@
         paperForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            // Check if this is a multi-stream subject
             const subjectCode = subjectSelect.value;
             const isMultiStreamSubject = ['ict', 'agriculture', 'geography'].includes(subjectCode);
             
             let formDataArray = [];
             
             if (isMultiStreamSubject) {
-                // Create entries for all streams
                 const streams = ['science', 'commerce', 'arts', 'technology'];
                 streams.forEach(stream => {
                     formDataArray.push({
@@ -555,7 +954,6 @@
                     });
                 });
             } else {
-                // Single stream entry (normal behavior)
                 formDataArray.push({
                     stream: streamSelect.value,
                     subject_code: subjectCode,
@@ -566,29 +964,24 @@
                 });
             }
             
-            // Disable form and show spinner
             setFormLoading(true);
             
             try {
                 if (editingPaperId) {
-                    // For editing, we only update the specific paper (normal behavior)
                     const { error } = await supabase
                         .from('past_papers')
                         .update(formDataArray[0])
                         .eq('id', editingPaperId);
                     
                     if (error) throw error;
-                    
                     showNotification('Paper updated successfully', 'success');
                     resetForm();
                 } else {
-                    // For new entries, insert all form data
                     const { error } = await supabase
                         .from('past_papers')
                         .insert(formDataArray);
                     
                     if (error) throw error;
-                    
                     const message = isMultiStreamSubject ? 
                         `Paper added to all streams successfully (${formDataArray.length} entries)` : 
                         'Paper added successfully';
@@ -596,7 +989,6 @@
                     resetForm();
                 }
                 
-                // Refresh list if we are in the management view
                 if (dataEditTab.classList.contains('tab-active')) {
                     loadPapers();
                 }
@@ -619,10 +1011,7 @@
                 
                 if (error) throw error;
                 
-                // Fill form
                 streamSelect.value = data.stream;
-                
-                // Load and select subjects (re-using function)
                 await loadSubjectsForStream(data.stream, subjectSelect);
                 subjectSelect.value = data.subject_code;
                 
@@ -630,17 +1019,13 @@
                 document.getElementById('paperLink').value = data.paper_link;
                 document.getElementById('markingLink').value = data.marking_scheme_link || '';
                 
-                // Set edit mode
                 editingPaperId = paperId;
                 updateBtn.classList.remove('hidden');
                 cancelBtn.classList.remove('hidden');
                 submitBtn.classList.add('hidden');
                 formTitle.textContent = 'Edit Past Paper (ID: ' + paperId.substring(0, 8) + '...)';
                 
-                // Switch to data entry tab
                 dataEntryTab.click();
-                
-                // Scroll to top
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             } catch (error) {
                 console.error('Error editing paper:', error);
@@ -657,7 +1042,6 @@
                     .eq('id', paperId);
                 
                 if (error) throw error;
-                
                 showNotification('Paper deleted successfully', 'success');
                 loadPapers();
             } catch (error) {
@@ -678,7 +1062,7 @@
             formTitle.textContent = 'Add New Past Paper';
         }
 
-        // Set form loading state (with spinner)
+        // Set form loading state
         function setFormLoading(loading) {
             const button = editingPaperId ? updateBtn : submitBtn;
             const spinner = editingPaperId ? updateSpinner : submitSpinner;
@@ -697,43 +1081,24 @@
             }
         }
 
-        // Cancel button
-        cancelBtn.addEventListener('click', function() {
-            resetForm();
-        });
-
-        // Search and filter inputs
+        cancelBtn.addEventListener('click', function() { resetForm(); });
         searchInput.addEventListener('input', function() { filterPapers(); });
-        // Stream and Subject filters trigger full loadPapers() for initial fetch, but the subsequent search is handled by filterPapers
         filterStream.addEventListener('change', function() { loadSubjectsForStream(this.value, filterSubject); loadPapers(); });
         filterSubject.addEventListener('change', function() { filterPapers(); });
         filterYear.addEventListener('change', function() { filterPapers(); });
         
-        // Filter papers (Client-side search and filtering)
+        // Filter papers (Client-side)
         function filterPapers() {
             const searchTerm = searchInput.value.toLowerCase();
             const streamFilter = filterStream.value;
-            const subjectFilter = filterSubject.value; // NEW
+            const subjectFilter = filterSubject.value;
             const yearFilter = filterYear.value;
             
             let filteredPapers = allPapers;
             
-            // Filter by stream (Already handled by loadPapers, but included for robustness if data is already client-side)
-            if (streamFilter) {
-                filteredPapers = filteredPapers.filter(paper => paper.stream === streamFilter);
-            }
-
-            // Filter by subject (NEW)
-            if (subjectFilter) {
-                filteredPapers = filteredPapers.filter(paper => paper.subject_code === subjectFilter);
-            }
-            
-            // Filter by year
-            if (yearFilter) {
-                filteredPapers = filteredPapers.filter(paper => paper.year.toString() === yearFilter);
-            }
-            
-            // Filter by search term
+            if (streamFilter) filteredPapers = filteredPapers.filter(paper => paper.stream === streamFilter);
+            if (subjectFilter) filteredPapers = filteredPapers.filter(paper => paper.subject_code === subjectFilter);
+            if (yearFilter) filteredPapers = filteredPapers.filter(paper => paper.year.toString() === yearFilter);
             if (searchTerm) {
                 filteredPapers = filteredPapers.filter(paper => 
                     paper.subject_name.toLowerCase().includes(searchTerm) ||
@@ -742,13 +1107,10 @@
                     paper.year.toString().includes(searchTerm)
                 );
             }
-            
             displayPapers(filteredPapers);
         }
 
-        /* --- Custom Notification and Confirmation Modal (Replaces alert/confirm) --- */
-
-        // Add Notification Container to Body
+        /* --- Custom Notification and Confirmation Modal (Original) --- */
         const notificationContainer = document.createElement('div');
         notificationContainer.id = 'notificationContainer';
         notificationContainer.className = 'fixed top-4 right-4 z-[100] space-y-2';
@@ -759,31 +1121,16 @@
             let bgColor, icon;
             
             switch (type) {
-                case 'success':
-                    bgColor = 'bg-green-500';
-                    icon = 'fas fa-check-circle';
-                    break;
-                case 'error':
-                    bgColor = 'bg-red-500';
-                    icon = 'fas fa-exclamation-triangle';
-                    break;
-                default:
-                    bgColor = 'bg-blue-500';
-                    icon = 'fas fa-info-circle';
+                case 'success': bgColor = 'bg-green-500'; icon = 'fas fa-check-circle'; break;
+                case 'error': bgColor = 'bg-red-500'; icon = 'fas fa-exclamation-triangle'; break;
+                default: bgColor = 'bg-blue-500'; icon = 'fas fa-info-circle'; break;
             }
 
             div.className = `${bgColor} text-white p-4 rounded-lg shadow-xl transition-all duration-500 transform translate-x-full opacity-0`;
             div.innerHTML = `<div class="flex items-center"><i class="${icon} mr-2"></i><span>${message}</span></div>`;
-
             notificationContainer.appendChild(div);
 
-            // Animate in
-            setTimeout(() => {
-                div.classList.remove('translate-x-full', 'opacity-0');
-                div.classList.add('translate-x-0', 'opacity-100');
-            }, 10);
-
-            // Animate out and remove
+            setTimeout(() => { div.classList.remove('translate-x-full', 'opacity-0'); div.classList.add('translate-x-0', 'opacity-100'); }, 10);
             setTimeout(() => {
                 div.classList.remove('translate-x-0', 'opacity-100');
                 div.classList.add('translate-x-full', 'opacity-0');
@@ -791,7 +1138,6 @@
             }, 4000);
         }
         
-        // Add Confirmation Modal Container to Body
         const modalHtml = `
             <div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-70 z-[90] flex items-center justify-center hidden">
                 <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-6 max-w-sm w-full transition-all duration-300 transform scale-95 opacity-0">
@@ -802,8 +1148,7 @@
                         <button id="confirmDeleteBtn" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">Delete</button>
                     </div>
                 </div>
-            </div>
-        `;
+            </div>`;
         document.body.insertAdjacentHTML('beforeend', modalHtml);
 
         const deleteModal = document.getElementById('deleteModal');
@@ -815,7 +1160,6 @@
         window.showDeleteModal = function(paperId) {
             currentPaperIdToDelete = paperId;
             deleteModal.classList.remove('hidden');
-            // Animate in
             setTimeout(() => {
                 deleteModal.style.opacity = '1';
                 modalDialog.classList.remove('scale-95', 'opacity-0');
@@ -824,7 +1168,6 @@
         };
 
         function hideDeleteModal() {
-            // Animate out
             modalDialog.classList.remove('scale-100', 'opacity-100');
             modalDialog.classList.add('scale-95', 'opacity-0');
             setTimeout(() => {
@@ -846,13 +1189,11 @@
 
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
-            // Show login modal by default
-            loginModal.classList.remove('hidden');
-            initTheme();
+            // First, start loading AI models
+            loadModels();
+            // loginModal.classList.remove('hidden'); // loadModels() does this
+            // initTheme(); // This is done after login
         });
     </script>
-    
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </body>
 </html>
