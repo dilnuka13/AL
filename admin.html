@@ -1,32 +1,25 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
-    <meta name="google-site-verification" content="lEJqM5jKwoWplwhVu_EZRgJ_wvvVjM_1pUyMZK-zO48" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DE Education | Modern Learning Platform</title>
+    <title>Admin Portal - DE Education</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sinhala:wght@400;500;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
     
-    <!-- Icons -->
+    <!-- Icons & Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sinhala:wght@400;500;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Animations -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-    
-    <!-- Supabase & Other Libs -->
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-    <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <!-- Tailwind Config for Custom Colors/Fonts -->
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -57,25 +50,13 @@
     </script>
 
     <style>
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
-        }
-        .dark ::-webkit-scrollbar-thumb {
-            background: #475569;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
+        /* --- Shared Styles from Index.html --- */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-        /* Glassmorphism Utilities */
         .glass {
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(10px);
@@ -94,850 +75,729 @@
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
         }
         .dark .glass-card {
-            background: rgba(30, 41, 59, 0.7); /* Slate-800 with opacity */
+            background: rgba(30, 41, 59, 0.7);
             border: 1px solid rgba(255, 255, 255, 0.05);
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
         }
 
-        /* Gradient Text */
-        .text-gradient {
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-image: linear-gradient(to right, #059669, #34d399);
-        }
-        .dark .text-gradient {
-            background-image: linear-gradient(to right, #34d399, #6ee7b7);
-        }
-
-        /* Tab Transitions */
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.4s ease-in-out;
-        }
-        .tab-content.active {
-            display: block;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Hero Pattern Background */
         .hero-pattern {
             background-color: #f0fdf4;
             background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23059669' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
         .dark .hero-pattern {
-            background-color: #0f172a; /* Slate-900 */
+            background-color: #0f172a;
             background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2334d399' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
 
-        /* Mobile Menu Transition */
-        #mobileMenu {
-            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
-            max-height: 0;
-            opacity: 0;
-            overflow: hidden;
+        /* --- Admin Specific Styles --- */
+        .loading { opacity: 0.6; pointer-events: none; }
+        
+        .tab-active {
+            background-color: #059669;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
-        #mobileMenu.active {
-            max-height: 500px;
-            opacity: 1;
+        .dark .tab-active {
+            background-color: #059669;
+            color: white;
         }
 
-        /* Notification Toast Animation */
-        @keyframes slideInRight {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+        .section-transition { transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; }
+        .section-hidden { opacity: 0; transform: translateY(10px); pointer-events: none; position: absolute; width: 100%; visibility: hidden; }
+        .section-visible { opacity: 1; transform: translateY(0); pointer-events: auto; position: relative; visibility: visible; }
+
+        #face-loader {
+            border: 4px solid rgba(16, 185, 129, 0.1);
+            border-top: 4px solid #10b981;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
         }
-        @keyframes slideOutRight {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(100%); opacity: 0; }
-        }
-        .toast-enter {
-            animation: slideInRight 0.5s forwards cubic-bezier(0.68, -0.55, 0.27, 1.55);
-        }
-        .toast-exit {
-            animation: slideOutRight 0.5s forwards;
-        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .view-active { display: block !important; animation: fadeIn 0.4s ease-out; }
+        .view-hidden { display: none !important; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Camera Feed */
+        #video-container { position: relative; width: 100%; aspect-ratio: 4/3; border-radius: 12px; overflow: hidden; background: black; }
+        #video-feed, #face-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
     </style>
-    
-    <!-- Prevent Context Menu & Back Nav -->
-    <script>
-        document.addEventListener('contextmenu', event => event.preventDefault());
-        window.addEventListener('beforeunload', function (e) { e.preventDefault(); e.returnValue = ''; });
-    </script>
 </head>
-<body class="min-h-screen flex flex-col bg-gray-50 dark:bg-slate-900 text-gray-800 dark:text-gray-200 transition-colors duration-300 selection:bg-emerald-500 selection:text-white hero-pattern font-sans">
+<body class="min-h-screen bg-gray-50 dark:bg-slate-900 text-gray-800 dark:text-gray-200 transition-colors duration-300 selection:bg-emerald-500 selection:text-white hero-pattern font-sans">
+    
+    <!-- Loading Overlay -->
+    <div id="loader-view" class="fixed inset-0 bg-white/80 dark:bg-slate-900/90 backdrop-blur-md flex flex-col items-center justify-center z-[100] transition-opacity duration-500">
+        <div id="face-loader" class="mx-auto mb-4"></div>
+        <h3 class="text-lg font-bold text-emerald-800 dark:text-emerald-400">Initializing Security</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400">Loading AI recognition models...</p>
+    </div>
 
-    <!-- Welcome Page Overlay -->
-    <div id="welcomePage" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-500">
-        <div class="glass-card w-full max-w-md rounded-2xl p-8 text-center animate__animated animate__zoomIn shadow-2xl">
-            <div class="mb-6 inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 mb-6">
-                <i class="fas fa-graduation-cap text-3xl"></i>
-            </div>
-            <h2 class="text-3xl font-bold mb-3 text-gray-900 dark:text-white">DE Education.lk</h2>
-            <p class="text-gray-600 dark:text-gray-300 mb-8 text-sm leading-relaxed">
-                Your complete educational resource platform for A/L students in Sri Lanka.
-            </p>
-
-            <button onclick="enterSite()" class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-xl text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all duration-300 transform hover:scale-[1.02] shadow-lg shadow-emerald-500/30">
-                <span class="absolute left-0 inset-y-0 flex items-center pl-3">
-                    <i class="fas fa-arrow-right text-emerald-200 group-hover:text-white transition-colors"></i>
-                </span>
-                Enter Site
-            </button>
-
-            <div class="mt-6">
-                <button onclick="toggleLanguage()" class="text-xs font-medium text-gray-500 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors underline decoration-dotted underline-offset-2">
-                    <span id="languageToggleText">සිංහලට මාරු වන්න</span>
-                </button>
-            </div>
+    <!-- Login Modal -->
+    <div id="loginModal" class="fixed inset-0 flex items-center justify-center z-50 transition-all duration-500 opacity-0 pointer-events-none scale-95">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div> 
+        
+        <div id="login-modal-content" class="glass-card rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4 relative z-10 border border-gray-200 dark:border-gray-700">
             
-            <p class="mt-8 text-[10px] text-gray-400 uppercase tracking-wider">
-                © 2025 DE Education.lk
-            </p>
+            <!-- Login View -->
+            <div id="login-view" class="view-active">
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 mb-4">
+                        <i class="fas fa-shield-alt text-2xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Admin Portal</h2>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Secure Access Only</p>
+                </div>
+
+                <div class="space-y-5">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase mb-2">Email Address</label>
+                        <input type="email" id="login-email" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-900 dark:text-white transition-all" placeholder="admin@example.com">
+                    </div>
+                    
+                    <button id="login-with-face-btn" class="group w-full flex items-center justify-center py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-semibold transition-all duration-300 shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/40 transform hover:scale-[1.01]">
+                        <i class="fas fa-camera mr-2 group-hover:rotate-12 transition-transform"></i> 
+                        Login with Face ID
+                    </button>
+                    
+                    <div class="text-center pt-2">
+                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                            New Administrator? 
+                            <a href="#" id="show-register-link" class="text-emerald-600 dark:text-emerald-400 font-bold hover:underline">Register</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Secret Key View -->
+            <div id="admin-secret-view" class="view-hidden">
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 mb-4">
+                        <i class="fas fa-key text-xl"></i>
+                    </div>
+                    <h2 class="text-xl font-bold text-gray-900 dark:text-white">Verification</h2>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Enter the master secret key</p>
+                </div>
+                
+                <div class="space-y-5">
+                    <input type="password" id="admin-secret-input" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 text-gray-900 dark:text-white text-center tracking-widest text-lg" placeholder="••••••••">
+                    
+                    <button id="submit-secret-btn" class="w-full py-3 px-4 bg-yellow-500 hover:bg-yellow-600 text-white rounded-xl font-semibold transition-colors shadow-lg shadow-yellow-500/30">
+                        Verify Secret
+                    </button>
+                    
+                    <button id="show-login-link-secret" class="w-full text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
+                        Back to Login
+                    </button>
+                </div>
+            </div>
+
+            <!-- Register View -->
+            <div id="register-view" class="view-hidden">
+                <h2 class="text-xl font-bold text-center text-gray-900 dark:text-white mb-6">Create Admin Account</h2>
+                <div class="space-y-3">
+                    <input type="text" id="register-name" placeholder="Full Name" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-900 dark:text-white text-sm">
+                    <input type="email" id="register-email" placeholder="Email Address" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-900 dark:text-white text-sm">
+                    <input type="tel" id="register-phone" placeholder="Phone Number" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-900 dark:text-white text-sm">
+                    <input type="password" id="register-password" placeholder="Password" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-900 dark:text-white text-sm">
+                    
+                    <button id="scan-face-btn" class="w-full border-2 border-dashed border-emerald-300 dark:border-emerald-700 text-emerald-600 dark:text-emerald-400 py-3 rounded-xl font-medium hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors flex items-center justify-center gap-2">
+                        <i class="fas fa-id-card"></i> <span>Scan Face (Required)</span>
+                    </button>
+                    
+                    <p id="scan-feedback" class="text-center text-xs text-emerald-600 font-medium h-4"></p>
+                    
+                    <button id="register-btn" disabled class="w-full py-3 bg-emerald-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-xl font-bold shadow-lg shadow-emerald-500/30 transition-all">
+                        Create Account
+                    </button>
+                    
+                    <button id="show-login-link-register" class="w-full text-xs text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 mt-2">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+
+            <!-- Feedback Toast inside Modal -->
+            <div id="message-box" class="hidden mt-4 p-3 rounded-lg text-center text-white text-sm font-medium animate__animated animate__fadeIn"></div>
         </div>
     </div>
 
-    <!-- Notification Toast Container -->
-    <div id="notificationContainer" class="fixed top-24 right-5 z-50 flex flex-col gap-3 pointer-events-none"></div>
+    <!-- Camera Modal -->
+    <div id="camera-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center bg-black/90 backdrop-blur-sm">
+        <div class="relative w-full max-w-lg p-4">
+            <div class="bg-gray-900 rounded-2xl overflow-hidden shadow-2xl border border-gray-700">
+                <div class="p-4 text-center">
+                    <h3 id="camera-instruction" class="text-white font-medium">Initializing camera...</h3>
+                </div>
+                <div id="video-container">
+                    <video id="video-feed" autoplay muted playsinline></video>
+                    <canvas id="face-canvas"></canvas>
+                </div>
+                <div class="p-4">
+                    <button id="stop-camera-btn" class="w-full py-3 bg-red-500/20 text-red-400 border border-red-500/50 rounded-xl hover:bg-red-500 hover:text-white transition-all font-medium">
+                        Cancel Scan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <!-- Main Content -->
-    <div id="mainContent" class="flex flex-col min-h-screen opacity-0 transition-opacity duration-700 hidden">
-        
+    <!-- Main Dashboard Content -->
+    <div id="mainContent" class="flex flex-col min-h-screen hidden">
         <!-- Header -->
-        <header class="sticky top-0 z-40 glass shadow-sm transition-all duration-300">
-            <div class="container mx-auto px-4 py-3">
-                <div class="flex justify-between items-center">
-                    <!-- Logo Area -->
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-lg flex items-center justify-center text-white font-bold shadow-lg shadow-emerald-500/20">
-                            DE
-                        </div>
-                        <div class="hidden sm:block">
-                            <h1 class="text-lg font-bold leading-tight text-gray-900 dark:text-white" id="headerTitle">DE Education.lk</h1>
-                            <p class="text-[10px] font-medium text-emerald-600 dark:text-emerald-400 uppercase tracking-wide" id="headerSubtitle">Educational Platform</p>
-                        </div>
+        <header class="sticky top-0 z-40 glass shadow-sm border-b border-gray-200 dark:border-gray-800">
+            <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-xl flex items-center justify-center text-white font-bold shadow-lg shadow-emerald-500/20">
+                        A
                     </div>
-
-                    <!-- Desktop Nav -->
-                    <nav class="hidden md:flex items-center space-x-1 bg-gray-100/50 dark:bg-gray-800/50 p-1 rounded-xl border border-gray-200 dark:border-gray-700/50">
-                        <a href="#" class="px-4 py-2 rounded-lg text-sm font-medium text-emerald-700 dark:text-emerald-400 bg-white dark:bg-gray-700 shadow-sm transition-all" data-tab="home">Home</a>
-                        <a href="#" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all" data-tab="papers">Papers</a>
-                        <a href="#" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all" data-tab="results">Results</a>
-                        <a href="#" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all" data-tab="timetables">Timetables</a>
-                        <a href="#" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all" data-tab="notices">Notices</a>
-                    </nav>
-
-                    <!-- Right Actions -->
-                    <div class="flex items-center gap-3">
-                        <!-- Theme Toggle -->
-                        <button id="themeToggle" class="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-yellow-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors focus:outline-none ring-1 ring-gray-200 dark:ring-gray-700">
-                            <i class="fas fa-sun text-sm hidden dark:block"></i>
-                            <i class="fas fa-moon text-sm block dark:hidden"></i>
-                        </button>
-
-                        <!-- Creator Button (Desktop) -->
-                         <a href="https://dilnuka13.github.io/my/" target="_blank" class="hidden md:inline-flex items-center justify-center px-4 py-2 border border-emerald-200 dark:border-emerald-800 rounded-lg text-xs font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition-colors">
-                             Creator
-                         </a>
-
-                        <!-- Mobile Menu Button -->
-                        <button id="mobileMenuButton" class="md:hidden p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-                            </svg>
-                        </button>
+                    <div>
+                        <h1 class="text-lg font-bold text-gray-900 dark:text-white leading-tight">Admin Dashboard</h1>
+                        <p class="text-[10px] font-medium text-emerald-600 dark:text-emerald-400 uppercase tracking-wide">Paper Management</p>
                     </div>
                 </div>
-
-                <!-- Mobile Menu Dropdown -->
-                <div id="mobileMenu" class="md:hidden mt-2 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden">
-                    <div class="flex flex-col p-2 space-y-1">
-                        <a href="#" class="block px-4 py-3 rounded-lg text-sm font-medium bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400" data-tab="home">Home</a>
-                        <a href="#" class="block px-4 py-3 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700" data-tab="papers">Past Papers</a>
-                        <a href="#" class="block px-4 py-3 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700" data-tab="results">Exam Results</a>
-                        <a href="#" class="block px-4 py-3 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700" data-tab="timetables">Time Tables</a>
-                        <a href="#" class="block px-4 py-3 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700" data-tab="notices">Notices</a>
-                        <a href="#" class="block px-4 py-3 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700" data-tab="contact">Contact</a>
-                    </div>
+                
+                <div class="flex items-center gap-3">
+                    <a href="index.html" class="hidden md:flex items-center text-sm text-gray-500 hover:text-emerald-600 transition-colors mr-2">
+                        <i class="fas fa-external-link-alt mr-2"></i> View Site
+                    </a>
+                    <button id="darkModeToggle" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-yellow-400 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-sun text-sm" id="toggleIcon"></i>
+                    </button>
+                    <button id="logout-btn" class="w-10 h-10 rounded-full bg-red-50 dark:bg-red-900/20 text-red-500 flex items-center justify-center hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors">
+                        <i class="fas fa-sign-out-alt text-sm"></i>
+                    </button>
                 </div>
             </div>
         </header>
 
-        <!-- Main Content Container -->
-        <main class="flex-grow container mx-auto px-4 py-8">
-            
-            <!-- HOME TAB -->
-            <div id="home" class="tab-content active">
-                <!-- Hero Section -->
-                <div class="text-center py-10 md:py-16 animate__animated animate__fadeInDown">
-                    <span class="inline-block py-1 px-3 rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 text-xs font-bold uppercase tracking-wider mb-4 border border-emerald-200 dark:border-emerald-800">
-                        Welcome to DE Education
-                    </span>
-                    <h2 class="text-4xl md:text-6xl font-extrabold mb-4 text-gray-900 dark:text-white tracking-tight">
-                        Shape Your <span class="text-gradient">Future</span> Today
-                    </h2>
-                    <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-8 leading-relaxed">
-                        Access past papers, timetables, and exam results in one unified platform designed for Sri Lankan A/L students.
-                    </p>
-
-                    <!-- Search Bar -->
-                    <div class="relative max-w-2xl mx-auto group z-10">
-                        <div class="absolute -inset-1 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
-                        <div class="relative flex items-center bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700">
-                            <i class="fas fa-search text-gray-400 ml-5 text-lg"></i>
-                            <input type="text" id="globalSearch" placeholder="Search for papers, subjects, or notices..." 
-                                class="w-full p-4 pl-4 bg-transparent border-none focus:ring-0 text-gray-800 dark:text-gray-200 placeholder-gray-400 text-base md:text-lg">
-                            <button onclick="globalSearch()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-4 font-semibold transition-colors hidden md:block">
-                                Search
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-               
-
-                <!-- Quick Access Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-                    <!-- Card 1 -->
-                    <div class="glass-card rounded-2xl p-6 text-center hover:-translate-y-2 transition-transform duration-300 cursor-pointer group relative overflow-hidden" onclick="document.querySelector('[data-tab=\'papers\']').click()">
-                        <div class="absolute top-0 right-0 w-20 h-20 bg-blue-500 opacity-5 rounded-bl-full -mr-4 -mt-4 group-hover:scale-110 transition-transform"></div>
-                        <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 mb-4 group-hover:rotate-6 transition-transform">
-                            <i class="fas fa-file-pdf text-2xl"></i>
-                        </div>
-                        <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-2">Past Papers</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Download papers & marking schemes</p>
-                    </div>
-
-                    <!-- Card 2 -->
-                    <div class="glass-card rounded-2xl p-6 text-center hover:-translate-y-2 transition-transform duration-300 cursor-pointer group relative overflow-hidden" onclick="document.querySelector('[data-tab=\'results\']').click()">
-                        <div class="absolute top-0 right-0 w-20 h-20 bg-emerald-500 opacity-5 rounded-bl-full -mr-4 -mt-4 group-hover:scale-110 transition-transform"></div>
-                        <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 mb-4 group-hover:rotate-6 transition-transform">
-                            <i class="fas fa-chart-line text-2xl"></i>
-                        </div>
-                        <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-2">Exam Results</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Check your latest exam scores</p>
-                    </div>
-
-                    <!-- Card 3 -->
-                    <div class="glass-card rounded-2xl p-6 text-center hover:-translate-y-2 transition-transform duration-300 cursor-pointer group relative overflow-hidden" onclick="document.querySelector('[data-tab=\'timetables\']').click()">
-                         <div class="absolute top-0 right-0 w-20 h-20 bg-yellow-500 opacity-5 rounded-bl-full -mr-4 -mt-4 group-hover:scale-110 transition-transform"></div>
-                        <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600 dark:text-yellow-400 mb-4 group-hover:rotate-6 transition-transform">
-                            <i class="fas fa-calendar-alt text-2xl"></i>
-                        </div>
-                        <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-2">Time Tables</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">View upcoming exam schedules</p>
-                    </div>
-
-                    <!-- Card 4 -->
-                    <div class="glass-card rounded-2xl p-6 text-center hover:-translate-y-2 transition-transform duration-300 cursor-pointer group relative overflow-hidden" onclick="document.querySelector('[data-tab=\'notices\']').click()">
-                         <div class="absolute top-0 right-0 w-20 h-20 bg-red-500 opacity-5 rounded-bl-full -mr-4 -mt-4 group-hover:scale-110 transition-transform"></div>
-                        <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 mb-4 group-hover:rotate-6 transition-transform">
-                            <i class="fas fa-bullhorn text-2xl"></i>
-                        </div>
-                        <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-2">Notices</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Important updates & news</p>
-                    </div>
-                </div>
+        <main class="flex-grow max-w-5xl mx-auto w-full px-4 py-8">
+            <!-- Tabs -->
+            <div class="bg-white dark:bg-gray-800 p-1.5 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 mb-8 flex max-w-md mx-auto">
+                <button id="dataEntryTab" class="flex-1 py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-300 tab-active">
+                    <i class="fas fa-plus-circle mr-2"></i> Add New
+                </button>
+                <button id="dataEditTab" class="flex-1 py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-300 text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white">
+                    <i class="fas fa-tasks mr-2"></i> Manage
+                </button>
             </div>
 
-            <!-- PAST PAPERS TAB -->
-            <div id="papers" class="tab-content">
-                <div class="text-center mb-10">
-                    <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-3">Past Papers</h2>
-                    <p class="text-gray-600 dark:text-gray-400">Select your stream to access relevant study materials.</p>
-                </div>
+            <!-- Data Entry Section -->
+            <div id="dataEntrySection" class="glass-card rounded-2xl p-6 md:p-8 section-transition section-visible">
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6" id="formTitle">Add New Past Paper</h2>
                 
-                <!-- Stream Selection Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-                    <!-- Stream Item -->
-                    <div class="stream-card bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-xl hover:border-emerald-500 dark:hover:border-emerald-500 transition-all cursor-pointer group" data-stream="science">
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                                <i class="fas fa-flask text-lg"></i>
-                            </div>
-                            <i class="fas fa-arrow-right text-gray-300 dark:text-gray-600 group-hover:text-blue-500 transition-colors"></i>
+                <form id="paperForm" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">Stream</label>
+                            <select id="stream" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-800 dark:text-white appearance-none">
+                                <option value="">Select Stream</option>
+                                <option value="science">Science</option>
+                                <option value="commerce">Commerce</option>
+                                <option value="arts">Arts</option>
+                                <option value="technology">Technology</option>
+                            </select>
                         </div>
-                        <h4 class="text-lg font-bold text-gray-800 dark:text-white">Science</h4>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Bio, Physics, Chem</p>
-                    </div>
-
-                    <div class="stream-card bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-xl hover:border-emerald-500 dark:hover:border-emerald-500 transition-all cursor-pointer group" data-stream="commerce">
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 flex items-center justify-center group-hover:bg-green-600 group-hover:text-white transition-colors">
-                                <i class="fas fa-chart-pie text-lg"></i>
-                            </div>
-                            <i class="fas fa-arrow-right text-gray-300 dark:text-gray-600 group-hover:text-green-500 transition-colors"></i>
-                        </div>
-                        <h4 class="text-lg font-bold text-gray-800 dark:text-white">Commerce</h4>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Acc, Econ, BS</p>
-                    </div>
-
-                    <div class="stream-card bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-xl hover:border-emerald-500 dark:hover:border-emerald-500 transition-all cursor-pointer group" data-stream="arts">
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="w-12 h-12 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 flex items-center justify-center group-hover:bg-purple-600 group-hover:text-white transition-colors">
-                                <i class="fas fa-palette text-lg"></i>
-                            </div>
-                            <i class="fas fa-arrow-right text-gray-300 dark:text-gray-600 group-hover:text-purple-500 transition-colors"></i>
-                        </div>
-                        <h4 class="text-lg font-bold text-gray-800 dark:text-white">Arts</h4>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">History, Geo, Sinhala</p>
-                    </div>
-
-                    <div class="stream-card bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-xl hover:border-emerald-500 dark:hover:border-emerald-500 transition-all cursor-pointer group" data-stream="technology">
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 flex items-center justify-center group-hover:bg-red-600 group-hover:text-white transition-colors">
-                                <i class="fas fa-microchip text-lg"></i>
-                            </div>
-                            <i class="fas fa-arrow-right text-gray-300 dark:text-gray-600 group-hover:text-red-500 transition-colors"></i>
-                        </div>
-                        <h4 class="text-lg font-bold text-gray-800 dark:text-white">Technology</h4>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">SFT, ET, BST</p>
-                    </div>
-                </div>
-
-                <!-- Subject Selection (Hidden initially) -->
-                <div id="subjectSelection" class="hidden mb-8 animate__animated animate__fadeIn">
-                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 pl-1 border-l-4 border-emerald-500">Select Subject</h3>
-                    <div id="subjectList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <!-- Dynamic Subjects -->
-                    </div>
-                </div>
-
-                <!-- Papers List (Hidden initially) -->
-                <div id="papersDisplay" class="hidden animate__animated animate__fadeInUp">
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700">
-                        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 flex justify-between items-center">
-                            <h3 class="font-bold text-gray-800 dark:text-white" id="subjectTitle">Available Papers</h3>
-                        </div>
-                        <div class="overflow-x-auto">
-                            <table class="w-full">
-                                <thead class="bg-gray-50 dark:bg-gray-700/30 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                    <tr>
-                                        <th class="px-6 py-3">Year</th>
-                                        <th class="px-6 py-3">Question Paper</th>
-                                        <th class="px-6 py-3">Marking Scheme</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="papersList" class="divide-y divide-gray-200 dark:divide-gray-700 text-sm">
-                                    <!-- Dynamic Rows -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TIMETABLES TAB -->
-            <div id="timetables" class="tab-content">
-                 <div class="text-center mb-10">
-                    <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-3">2025 Examination Timetable</h2>
-                    <a href="https://www.doenets.lk/images/resources/NEWS/AL%20Time%20Table%202025_1755235352612.pdf" download class="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-medium transition-colors shadow-lg shadow-emerald-500/30">
-                        <i class="fas fa-download"></i> Download Official PDF
-                    </a>
-                </div>
-
-                <div class="glass-card rounded-2xl p-6 md:p-8">
-                    <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-                        <h3 class="text-xl font-bold text-gray-800 dark:text-white">December 2025</h3>
-                        <div class="flex gap-2 text-xs">
-                            <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-emerald-500"></span> Exam Day</span>
-                            <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-gray-200 dark:bg-gray-600"></span> No Exam</span>
+                        
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">Subject</label>
+                            <select id="subject" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-800 dark:text-white appearance-none disabled:opacity-50" disabled>
+                                <option value="">Select Stream First</option>
+                            </select>
                         </div>
                     </div>
                     
-                    <div id="timetableCalendar" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-3 md:gap-4 text-center">
-                        <!-- Calendar generated by JS -->
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">Year</label>
+                        <input type="number" id="year" min="2000" max="2030" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-800 dark:text-white" placeholder="e.g. 2024">
                     </div>
-
-                    <div id="examDetailsContainer" class="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
-                        <h4 id="timetableDayTitle" class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Select a date to view exams</h4>
-                        <div id="examDetailsList" class="space-y-3"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- RESULTS TAB -->
-            <div id="results" class="tab-content">
-                <div class="max-w-3xl mx-auto">
-                    <div class="text-center mb-10">
-                        <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-3">Examination Results</h2>
-                        <p class="text-gray-600 dark:text-gray-400">Direct links to the Department of Examinations.</p>
-                    </div>
-
-                    <div class="grid gap-4">
-                        <a href="https://www.doenets.lk/examresults" target="_blank" class="group flex items-center justify-between p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl hover:border-blue-500 dark:hover:border-blue-500 transition-all shadow-sm hover:shadow-md">
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center">
-                                    <i class="fas fa-graduation-cap"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-gray-900 dark:text-white">G.C.E. A/L Results</h4>
-                                    <p class="text-sm text-gray-500 dark:text-gray-400">Check your main exam results</p>
-                                </div>
-                            </div>
-                            <i class="fas fa-external-link-alt text-gray-400 group-hover:text-blue-500 transition-colors"></i>
-                        </a>
-
-                        <a href="https://www.results.exams.gov.lk/viewresultsforexam.htm" target="_blank" class="group flex items-center justify-between p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl hover:border-emerald-500 dark:hover:border-emerald-500 transition-all shadow-sm hover:shadow-md">
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
-                                    <i class="fas fa-laptop-code"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-gray-900 dark:text-white">GIT Results</h4>
-                                    <p class="text-sm text-gray-500 dark:text-gray-400">General Information Technology</p>
-                                </div>
-                            </div>
-                            <i class="fas fa-external-link-alt text-gray-400 group-hover:text-emerald-500 transition-colors"></i>
-                        </a>
-                    </div>
-
-                    <div class="mt-8 bg-yellow-50 dark:bg-yellow-900/10 border border-yellow-100 dark:border-yellow-800/30 rounded-xl p-4 flex items-start gap-3">
-                        <i class="fas fa-info-circle text-yellow-600 dark:text-yellow-500 mt-1"></i>
-                        <div>
-                            <h5 class="font-bold text-yellow-800 dark:text-yellow-500 text-sm">Upcoming Release</h5>
-                            <p class="text-sm text-yellow-700 dark:text-yellow-600/80 mt-1">2024 (2025) A/L results are expected to be released in January 2026.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- NOTICES TAB -->
-            <div id="notices" class="tab-content">
-                <div class="max-w-4xl mx-auto">
-                    <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">Announcements</h2>
                     
                     <div class="space-y-4">
-                        <!-- Notice Item -->
-                        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 relative overflow-hidden">
-                            <div class="absolute top-0 left-0 w-1 h-full bg-red-500"></div>
-                            <div class="flex justify-between items-start mb-2">
-                                <h3 class="font-bold text-gray-800 dark:text-white">2025 A/L Application Process</h3>
-                                <span class="px-2 py-1 rounded bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-xs font-bold">Important</span>
-                            </div>
-                            <p class="text-gray-600 dark:text-gray-300 text-sm mb-4">Applications will be accepted from September 15th to October 15th, 2025.</p>
-                            <div class="text-xs text-gray-400 flex items-center gap-2">
-                                <i class="far fa-calendar"></i> 2025-08-01
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">Paper Link</label>
+                            <div class="relative">
+                                <i class="fas fa-link absolute left-4 top-4 text-gray-400"></i>
+                                <input type="url" id="paperLink" class="w-full pl-10 pr-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-800 dark:text-white" placeholder="https://...">
                             </div>
                         </div>
-
-                         <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 relative overflow-hidden">
-                            <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500"></div>
-                            <div class="flex justify-between items-start mb-2">
-                                <h3 class="font-bold text-gray-800 dark:text-white">Scholarships 2025</h3>
-                                <span class="px-2 py-1 rounded bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-xs font-bold">Opportunity</span>
-                            </div>
-                            <p class="text-gray-600 dark:text-gray-300 text-sm mb-4">Government higher education scholarship applications opening soon.</p>
-                            <div class="text-xs text-gray-400 flex items-center gap-2">
-                                <i class="far fa-calendar"></i> 2025-07-15
+                        
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">Marking Scheme (Optional)</label>
+                            <div class="relative">
+                                <i class="fas fa-check-double absolute left-4 top-4 text-gray-400"></i>
+                                <input type="url" id="markingLink" class="w-full pl-10 pr-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-800 dark:text-white" placeholder="https://...">
                             </div>
                         </div>
                     </div>
-                </div>
+                    
+                    <div class="flex gap-4 pt-2">
+                        <button type="submit" id="submitBtn" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-xl font-bold shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/40 transition-all transform hover:-translate-y-0.5">
+                            <span id="submitBtnText">Add Paper</span>
+                            <i id="submitSpinner" class="fas fa-spinner fa-spin ml-2 hidden"></i>
+                        </button>
+                        
+                        <button type="button" id="updateBtn" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3.5 rounded-xl font-bold shadow-lg shadow-blue-500/30 transition-all hidden">
+                            <span id="updateBtnText">Update Paper</span>
+                            <i id="updateSpinner" class="fas fa-spinner fa-spin ml-2 hidden"></i>
+                        </button>
+                        
+                        <button type="button" id="cancelBtn" class="px-6 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-xl font-bold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors hidden">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
             </div>
 
-             <!-- CONTACT TAB -->
-             <div id="contact" class="tab-content">
-                <div class="max-w-4xl mx-auto">
-                     <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">Get in Touch</h2>
-                     <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden grid grid-cols-1 md:grid-cols-2">
-                         <div class="p-8 bg-emerald-600 text-white">
-                             <h3 class="text-xl font-bold mb-4">Contact Information</h3>
-                             <p class="text-emerald-100 mb-8 text-sm">Have questions? We are here to help you with your educational journey.</p>
-                             
-                             <div class="space-y-6">
-                                 <div class="flex items-center gap-4">
-                                     <div class="w-10 h-10 rounded-full bg-emerald-500/50 flex items-center justify-center">
-                                         <i class="fas fa-envelope"></i>
-                                     </div>
-                                     <span class="text-sm">isaradilnuka@gmail.com</span>
-                                 </div>
-                                 <div class="flex items-center gap-4">
-                                     <div class="w-10 h-10 rounded-full bg-emerald-500/50 flex items-center justify-center">
-                                         <i class="fas fa-phone"></i>
-                                     </div>
-                                     <span class="text-sm">+94 76 416 4804</span>
-                                 </div>
-                                 <div class="flex items-center gap-4">
-                                     <div class="w-10 h-10 rounded-full bg-emerald-500/50 flex items-center justify-center">
-                                         <i class="fas fa-map-marker-alt"></i>
-                                     </div>
-                                     <span class="text-sm">Horana, Sri Lanka</span>
-                                 </div>
-                             </div>
-                         </div>
-                         
-                         <div class="p-8">
-                             <form id="contactForm" class="space-y-4">
-                                 <div>
-                                     <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase mb-2">Name</label>
-                                     <input type="text" class="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-800 dark:text-white transition-all" placeholder="John Doe">
-                                 </div>
-                                 <div>
-                                     <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase mb-2">Email</label>
-                                     <input type="email" class="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-800 dark:text-white transition-all" placeholder="john@example.com">
-                                 </div>
-                                 <div>
-                                     <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase mb-2">Message</label>
-                                     <textarea rows="4" class="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-800 dark:text-white transition-all" placeholder="Your message..."></textarea>
-                                 </div>
-                                 <button type="submit" class="w-full bg-gray-900 dark:bg-emerald-600 text-white font-bold py-3 rounded-lg hover:bg-gray-800 dark:hover:bg-emerald-700 transition-colors">Send Message</button>
-                             </form>
-                         </div>
-                     </div>
+            <!-- Data Management Section -->
+            <div id="dataManagementSection" class="glass-card rounded-2xl p-6 md:p-8 section-transition section-hidden">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+                    <h2 class="text-xl font-bold text-gray-800 dark:text-white">Existing Records</h2>
+                    <button onclick="loadPapers()" class="text-sm px-4 py-2 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-lg hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-colors">
+                        <i class="fas fa-sync-alt mr-2"></i> Refresh List
+                    </button>
                 </div>
-             </div>
-
+                
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-6">
+                    <div class="md:col-span-1 relative">
+                        <i class="fas fa-search absolute left-3 top-3.5 text-gray-400 text-sm"></i>
+                        <input type="text" id="searchPapers" placeholder="Search..." class="w-full pl-9 pr-4 py-2.5 rounded-lg bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none dark:text-white">
+                    </div>
+                    <select id="filterStream" class="px-3 py-2.5 rounded-lg bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 text-sm dark:text-white focus:outline-none">
+                        <option value="">All Streams</option>
+                        <option value="science">Science</option>
+                        <option value="commerce">Commerce</option>
+                        <option value="arts">Arts</option>
+                        <option value="technology">Technology</option>
+                    </select>
+                    <select id="filterSubject" class="px-3 py-2.5 rounded-lg bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 text-sm dark:text-white focus:outline-none" disabled>
+                        <option value="">Subject</option>
+                    </select>
+                    <select id="filterYear" class="px-3 py-2.5 rounded-lg bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 text-sm dark:text-white focus:outline-none">
+                        <option value="">Year</option>
+                        <!-- JS populates years -->
+                    </select>
+                </div>
+                
+                <div id="loadingMessage" class="hidden flex flex-col items-center justify-center py-12 text-emerald-600">
+                    <i class="fas fa-circle-notch fa-spin text-3xl mb-3"></i>
+                    <p class="text-sm">Fetching data...</p>
+                </div>
+                
+                <div id="papersList" class="space-y-3">
+                    <!-- Papers injected here -->
+                </div>
+            </div>
         </main>
-
-        <!-- Footer -->
-        <footer class="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 py-8 mt-auto">
-            <div class="container mx-auto px-4 text-center">
-                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                    <div class="text-left">
-                        <h4 class="font-bold text-gray-900 dark:text-white">DE Education.lk</h4>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Empowering A/L students since 2025.</p>
-                    </div>
-                    <div class="flex gap-4">
-                         <a href="#" class="text-gray-400 hover:text-emerald-600 transition-colors"><i class="fab fa-facebook"></i></a>
-                         <a href="#" class="text-gray-400 hover:text-emerald-600 transition-colors"><i class="fab fa-twitter"></i></a>
-                         <a href="#" class="text-gray-400 hover:text-emerald-600 transition-colors"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-                <div class="border-t border-gray-100 dark:border-gray-800 mt-8 pt-8">
-                    <p class="text-xs text-gray-400">
-                        &copy; 2025 DE Education.lk. Designed by 
-                        <a href="https://dilnuka13.github.io/my/" target="_blank" class="text-emerald-600 dark:text-emerald-400 hover:underline">Isara Dilnuka</a>
-                    </p>
-                </div>
-            </div>
-        </footer>
-
-        <!-- Back to Top -->
-        <button id="backToTopBtn" class="fixed bottom-6 right-6 bg-emerald-600 text-white p-3 rounded-full shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 hover:bg-emerald-700 z-40">
-            <i class="fas fa-arrow-up"></i>
-        </button>
-
     </div>
 
-    <script>
-        // --- 1. DARK MODE LOGIC ---
-        const themeToggleBtn = document.getElementById('themeToggle');
-        const html = document.documentElement;
-        
-        // Check Init Theme
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            html.classList.add('dark');
-        } else {
-            html.classList.remove('dark');
-        }
+    <!-- Notification Toast -->
+    <div id="notificationContainer" class="fixed top-24 right-6 z-[100] flex flex-col gap-2 pointer-events-none"></div>
 
-        // Toggle Theme
-        themeToggleBtn.addEventListener('click', () => {
-            html.classList.toggle('dark');
-            if (html.classList.contains('dark')) {
-                localStorage.theme = 'dark';
-            } else {
-                localStorage.theme = 'light';
-            }
-        });
-
-
-        // --- 2. NAVIGATION & TABS ---
-        document.querySelectorAll('a[data-tab]').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const tabId = this.getAttribute('data-tab');
-                
-                // Update Tabs
-                document.querySelectorAll('.tab-content').forEach(tab => {
-                    tab.classList.remove('active');
-                });
-                document.getElementById(tabId).classList.add('active');
-                
-                // Update Visual State of Nav Links
-                document.querySelectorAll('nav a').forEach(navLink => {
-                    if(navLink.getAttribute('data-tab') === tabId) {
-                        navLink.classList.add('bg-white', 'dark:bg-gray-700', 'text-emerald-700', 'dark:text-emerald-400', 'shadow-sm');
-                        navLink.classList.remove('text-gray-600', 'dark:text-gray-300');
-                    } else {
-                        navLink.classList.remove('bg-white', 'dark:bg-gray-700', 'text-emerald-700', 'dark:text-emerald-400', 'shadow-sm');
-                        navLink.classList.add('text-gray-600', 'dark:text-gray-300');
-                    }
-                });
-
-                // Close Mobile Menu
-                document.getElementById('mobileMenu').classList.remove('active');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
-        });
-
-        // Mobile Menu Toggle
-        document.getElementById('mobileMenuButton').addEventListener('click', () => {
-            document.getElementById('mobileMenu').classList.toggle('active');
-        });
-
-
-        // --- 3. WELCOME SCREEN ---
-        function enterSite() {
-            const welcomePage = document.getElementById('welcomePage');
-            const mainContent = document.getElementById('mainContent');
-            
-            welcomePage.style.opacity = '0';
-            setTimeout(() => {
-                welcomePage.style.display = 'none';
-                mainContent.classList.remove('hidden');
-                // Small delay to allow display:block to render before opacity transition
-                setTimeout(() => {
-                    mainContent.classList.remove('opacity-0');
-                }, 50);
-
-                // TRIGGER SYSTEM UPDATE MESSAGE AFTER DELAY (2000ms = 2 seconds)
-                setTimeout(() => {
-                    showSystemNotification();
-                }, 2000);
-
-            }, 500);
-        }
-
-        // --- SYSTEM NOTIFICATION TOAST LOGIC ---
-        function showSystemNotification() {
-            const container = document.getElementById('notificationContainer');
-            const toast = document.createElement('div');
-            
-            toast.className = 'glass-card p-4 rounded-xl shadow-2xl flex items-start gap-3 max-w-sm transform translate-x-full pointer-events-auto toast-enter border-l-4 border-yellow-500 bg-white dark:bg-gray-800';
-            toast.innerHTML = `
-                <div class="flex-shrink-0 text-yellow-500 mt-0.5">
-                    <i class="fas fa-info-circle text-xl"></i>
-                </div>
-                <div class="flex-1">
-                    <h4 class="font-bold text-sm text-gray-900 dark:text-white mb-1">System Update</h4>
-                    <p class="text-xs text-gray-600 dark:text-gray-300 leading-relaxed">
-                        All subjects are not yet added. Next massive update scheduled for 2026.01.05.
-                    </p>
-                </div>
-                <button onclick="this.parentElement.classList.add('toast-exit'); setTimeout(() => this.parentElement.remove(), 500);" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
-                    <i class="fas fa-times"></i>
-                </button>
-            `;
-            
-            container.appendChild(toast);
-            
-            // Auto remove after 8 seconds
-            setTimeout(() => {
-                if(toast.parentElement) {
-                    toast.classList.add('toast-exit');
-                    setTimeout(() => toast.remove(), 500);
-                }
-            }, 8000);
-        }
-
-
-        // --- 5. BACK TO TOP ---
-        const backToTopBtn = document.getElementById('backToTopBtn');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 300) {
-                backToTopBtn.classList.remove('translate-y-20', 'opacity-0');
-            } else {
-                backToTopBtn.classList.add('translate-y-20', 'opacity-0');
-            }
-        });
-        backToTopBtn.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-
-
-        // --- 6. SUPABASE & DATA LOGIC ---
-        // NOTE: Using the original API keys provided in the prompt
+    <!-- Scripts -->
+    <script type="module">
+        // Supabase config
         const supabaseUrl = 'https://hppojrbfhzttzvlvovre.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhwcG9qcmJmaHp0dHp2bHZvdnJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjExODgxNDYsImV4cCI6MjA3Njc2NDE0Nn0.aL2fegb_eRPY0E7P6Mwufhq3TCAeX8-hDCHBo9VeAsA';
         const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-        // Stream Selection
-        document.querySelectorAll('.stream-card').forEach(card => {
-            card.addEventListener('click', function() {
-                // Highlight Logic
-                document.querySelectorAll('.stream-card').forEach(c => {
-                    c.classList.remove('ring-2', 'ring-emerald-500', 'border-emerald-500');
-                });
-                this.classList.add('ring-2', 'ring-emerald-500', 'border-emerald-500');
+        // DOM Elements
+        const body = document.body;
+        const loginModal = document.getElementById('loginModal');
+        const mainContent = document.getElementById('mainContent');
+        const loaderView = document.getElementById('loader-view');
+        
+        // Logic Elements
+        const ADMIN_SECRET = '20050616';
+        let editingPaperId = null;
+        let allPapers = [];
+        let registrationDescriptors = [];
+        let stream;
+        let detectionInterval;
 
-                const stream = this.getAttribute('data-stream');
-                loadSubjects(stream);
+        // --- Theme Logic ---
+        function toggleDarkMode() {
+            body.classList.toggle('dark');
+            const isDark = body.classList.contains('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateThemeIcon(isDark);
+        }
+
+        function updateThemeIcon(isDark) {
+            const icon = document.getElementById('toggleIcon');
+            if(icon) {
+                icon.className = isDark ? 'fas fa-moon text-sm' : 'fas fa-sun text-sm';
+            }
+        }
+
+        function initTheme() {
+            const saved = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            if (saved === 'dark') body.classList.add('dark');
+            updateThemeIcon(saved === 'dark');
+        }
+
+        document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
+
+        // --- Load Face Models ---
+        async function loadModels() {
+            const MODEL_URL = 'https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@0.22.2/weights';
+            try {
+                await Promise.all([
+                    faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
+                    faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
+                    faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL)
+                ]);
+                loaderView.classList.add('opacity-0', 'pointer-events-none');
+                setTimeout(() => {
+                    loginModal.classList.remove('opacity-0', 'pointer-events-none', 'scale-95');
+                    loginModal.classList.add('opacity-100', 'scale-100');
+                }, 500);
+            } catch (error) {
+                console.error("Model Error:", error);
+                alert("Failed to load security models. Please refresh.");
+            }
+        }
+
+        // --- View Switching ---
+        function showView(viewName) {
+            ['login', 'admin-secret', 'register'].forEach(v => {
+                document.getElementById(`${v}-view`).classList.add('view-hidden');
+                document.getElementById(`${v}-view`).classList.remove('view-active');
             });
-        });
+            const target = document.getElementById(`${viewName}-view`);
+            target.classList.remove('view-hidden');
+            target.classList.add('view-active');
+        }
 
-        async function loadSubjects(stream) {
-            const subjectSelection = document.getElementById('subjectSelection');
-            const subjectList = document.getElementById('subjectList');
-            const papersDisplay = document.getElementById('papersDisplay');
-            
-            subjectSelection.classList.remove('hidden');
-            papersDisplay.classList.add('hidden');
-            
-            subjectList.innerHTML = '<div class="col-span-full text-center text-gray-500 py-8"><i class="fas fa-circle-notch fa-spin mr-2"></i>Loading subjects...</div>';
+        document.getElementById('show-register-link').onclick = () => showView('admin-secret');
+        document.getElementById('show-login-link-secret').onclick = () => showView('login');
+        document.getElementById('show-login-link-register').onclick = () => showView('login');
 
+        // --- Secret Check ---
+        document.getElementById('submit-secret-btn').onclick = () => {
+            if (document.getElementById('admin-secret-input').value === ADMIN_SECRET) {
+                showView('register');
+            } else {
+                showToast("Invalid Admin Secret", 'error');
+            }
+        };
+
+        // --- Camera Logic ---
+        async function startCamera() {
             try {
-                const { data: subjects, error } = await supabase
-                    .from('subjects')
-                    .select('code, name')
-                    .eq('stream', stream)
-                    .order('name', { ascending: true });
-
-                if (error) throw error;
-
-                subjectList.innerHTML = '';
-                if (!subjects || subjects.length === 0) {
-                    subjectList.innerHTML = '<div class="col-span-full text-center text-gray-500">No subjects found for this stream.</div>';
-                    return;
-                }
-
-                subjects.forEach(subject => {
-                    const btn = document.createElement('div');
-                    btn.className = 'bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 cursor-pointer hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:border-emerald-200 dark:hover:border-emerald-800 transition-all text-center font-medium text-gray-700 dark:text-gray-200';
-                    btn.textContent = subject.name;
-                    btn.onclick = () => {
-                         // Select effect
-                         Array.from(subjectList.children).forEach(c => c.classList.remove('ring-2', 'ring-emerald-500'));
-                         btn.classList.add('ring-2', 'ring-emerald-500');
-                         loadPapers(stream, subject.code, subject.name);
-                    };
-                    subjectList.appendChild(btn);
-                });
-
-            } catch (error) {
-                console.error('Error:', error);
-                subjectList.innerHTML = '<div class="col-span-full text-center text-red-500">Failed to load subjects.</div>';
+                stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                document.getElementById('video-feed').srcObject = stream;
+                document.getElementById('camera-modal').classList.remove('hidden');
+                return { width: document.getElementById('video-feed').clientWidth, height: document.getElementById('video-feed').clientHeight };
+            } catch (err) {
+                showToast("Camera access denied", 'error');
+                return null;
             }
         }
 
-        async function loadPapers(stream, subjectCode, subjectName) {
-            const papersDisplay = document.getElementById('papersDisplay');
-            const papersList = document.getElementById('papersList');
-            const subjectTitle = document.getElementById('subjectTitle');
+        function stopCamera() {
+            if (stream) stream.getTracks().forEach(t => t.stop());
+            if (detectionInterval) clearInterval(detectionInterval);
+            document.getElementById('camera-modal').classList.add('hidden');
+        }
+        document.getElementById('stop-camera-btn').onclick = stopCamera;
 
-            subjectTitle.textContent = `${subjectName} Papers`;
-            papersDisplay.classList.remove('hidden');
-            papersList.innerHTML = '<tr><td colspan="3" class="text-center py-8 text-gray-500"><i class="fas fa-circle-notch fa-spin mr-2"></i>Fetching papers...</td></tr>';
-            
-            // Scroll to papers
-            papersDisplay.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // --- Login Logic ---
+        document.getElementById('login-with-face-btn').onclick = async () => {
+            const email = document.getElementById('login-email').value;
+            if (!email) return showToast("Enter email first", 'error');
 
             try {
-                const { data, error } = await supabase
-                    .from('past_papers')
-                    .select('*')
-                    .eq('stream', stream)
-                    .eq('subject_code', subjectCode)
-                    .order('year', { ascending: false });
+                const { data, error } = await supabase.from('users').select('*').eq('email', email).single();
+                if (error || !data) return showToast("User not found", 'error');
+                if (!data.email_confirmed_at) return showToast("Account pending approval", 'error');
 
-                if (error) throw error;
-
-                papersList.innerHTML = '';
-                if (!data || data.length === 0) {
-                    papersList.innerHTML = '<tr><td colspan="3" class="text-center py-8 text-gray-500">No papers available yet.</td></tr>';
-                    return;
-                }
-
-                data.forEach(paper => {
-                    const row = document.createElement('tr');
-                    row.className = 'hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors border-b border-gray-100 dark:border-gray-800 last:border-0';
-                    
-                    const paperLink = paper.paper_link 
-                        ? `<a href="${paper.paper_link}" target="_blank" class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:underline"><i class="fas fa-file-alt mr-2"></i> Download</a>`
-                        : '<span class="text-gray-400 text-xs italic">Unavailable</span>';
-                        
-                    const markingLink = paper.marking_scheme_link
-                        ? `<a href="${paper.marking_scheme_link}" target="_blank" class="inline-flex items-center text-emerald-600 dark:text-emerald-400 hover:underline"><i class="fas fa-check-circle mr-2"></i> Scheme</a>`
-                        : '<span class="text-gray-400 text-xs italic">Unavailable</span>';
-
-                    row.innerHTML = `
-                        <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">${paper.year}</td>
-                        <td class="px-6 py-4">${paperLink}</td>
-                        <td class="px-6 py-4">${markingLink}</td>
-                    `;
-                    papersList.appendChild(row);
-                });
-
-            } catch (error) {
-                console.error('Error:', error);
-                papersList.innerHTML = '<tr><td colspan="3" class="text-center py-8 text-red-500">Error loading papers.</td></tr>';
-            }
-        }
-
-
-        // --- 7. TIMETABLE GENERATOR ---
-        function initializeTimetable() {
-            const calendar = document.getElementById('timetableCalendar');
-            // Mock Data
-            const exams = [
-                { date: '2025-12-01', subjects: ['Physics', 'Accounting', 'Sinhala'], type: 'Exam' },
-                { date: '2025-12-02', subjects: ['Chemistry', 'Business Studies'], type: 'Exam' },
-                { date: '2025-12-05', subjects: ['General English'], type: 'General' }
-            ];
-            
-            // Generate December 2025 (31 days)
-            // Starts on Monday (Dec 1, 2025)
-            
-            for (let i = 1; i <= 31; i++) {
-                const dayDiv = document.createElement('div');
-                const dateStr = `2025-12-${i.toString().padStart(2, '0')}`;
-                const examDay = exams.find(e => e.date === dateStr);
-
-                let bgClass = 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700';
-                let textClass = 'text-gray-700 dark:text-gray-300';
+                const descriptors = data.face_descriptors.map(d => new Float32Array(d));
+                const matcher = new faceapi.FaceMatcher(new faceapi.LabeledFaceDescriptors(email, descriptors), 0.5);
                 
-                if (examDay) {
-                    bgClass = 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-500 dark:border-emerald-600 ring-1 ring-emerald-500';
-                    textClass = 'text-emerald-700 dark:text-emerald-400 font-bold';
-                }
+                const dims = await startCamera();
+                if(!dims) return;
 
-                dayDiv.className = `p-2 md:p-3 rounded-xl border flex flex-col items-center justify-center min-h-[80px] cursor-pointer transition-all hover:scale-105 ${bgClass}`;
-                dayDiv.innerHTML = `
-                    <span class="text-xs uppercase text-gray-400 mb-1">Dec</span>
-                    <span class="text-xl md:text-2xl ${textClass}">${i}</span>
-                    ${examDay ? '<div class="w-2 h-2 rounded-full bg-emerald-500 mt-1"></div>' : ''}
-                `;
+                const canvas = document.getElementById('face-canvas');
+                faceapi.matchDimensions(canvas, dims);
 
-                dayDiv.onclick = () => {
-                    const detailsContainer = document.getElementById('examDetailsList');
-                    const title = document.getElementById('timetableDayTitle');
-                    title.textContent = `Exams on December ${i}, 2025`;
-                    
-                    if (examDay) {
-                        detailsContainer.innerHTML = examDay.subjects.map(sub => `
-                            <div class="p-4 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800/50 flex justify-between items-center animate__animated animate__fadeIn">
-                                <span class="font-medium text-gray-800 dark:text-white">${sub}</span>
-                                <span class="text-xs px-2 py-1 rounded bg-emerald-200 dark:bg-emerald-800 text-emerald-800 dark:text-emerald-200">08:30 AM</span>
-                            </div>
-                        `).join('');
-                    } else {
-                        detailsContainer.innerHTML = '<div class="text-gray-500 italic animate__animated animate__fadeIn">No exams scheduled for this date.</div>';
+                document.getElementById('camera-instruction').textContent = "Verifying identity...";
+
+                detectionInterval = setInterval(async () => {
+                    const det = await faceapi.detectSingleFace(document.getElementById('video-feed'), new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptor();
+                    if (det) {
+                        const match = matcher.findBestMatch(det.descriptor);
+                        if (match.label === email) {
+                            stopCamera();
+                            loginModal.classList.add('opacity-0', 'pointer-events-none', 'scale-95');
+                            setTimeout(() => {
+                                loginModal.classList.add('hidden');
+                                mainContent.classList.remove('hidden');
+                                initTheme();
+                            }, 300);
+                            showToast("Welcome back!", 'success');
+                        }
                     }
+                }, 500);
+
+            } catch (e) {
+                showToast("Login failed: " + e.message, 'error');
+            }
+        };
+
+        // --- Register Logic ---
+        document.getElementById('scan-face-btn').onclick = async () => {
+            registrationDescriptors = [];
+            const dims = await startCamera();
+            if(!dims) return;
+            
+            let scans = 0;
+            const feedback = document.getElementById('scan-feedback');
+            const btn = document.getElementById('register-btn');
+            
+            detectionInterval = setInterval(async () => {
+                const det = await faceapi.detectSingleFace(document.getElementById('video-feed'), new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptor();
+                if(det) {
+                    registrationDescriptors.push(det.descriptor);
+                    scans++;
+                    document.getElementById('camera-instruction').textContent = `Scanning: ${scans}/5`;
+                    if(scans >= 5) {
+                        stopCamera();
+                        feedback.textContent = "Face data captured!";
+                        btn.disabled = false;
+                        btn.classList.remove('bg-gray-300', 'cursor-not-allowed');
+                        btn.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
+                    }
+                }
+            }, 800);
+        };
+
+        document.getElementById('register-btn').onclick = async () => {
+            const name = document.getElementById('register-name').value;
+            const email = document.getElementById('register-email').value;
+            const phone = document.getElementById('register-phone').value;
+            const pwd = document.getElementById('register-password').value;
+
+            if(!name || !email || !phone || !pwd) return showToast("Fill all fields", 'error');
+
+            try {
+                const serializable = registrationDescriptors.map(d => Array.from(d));
+                const { error } = await supabase.from('users').insert({
+                    name, email, phone, password: pwd, face_descriptors: serializable
+                });
+                if(error) throw error;
+                showToast("Registered! Wait for approval.", 'success');
+                showView('login');
+            } catch(e) {
+                showToast("Error: " + e.message, 'error');
+            }
+        };
+
+        // --- Dashboard Logic ---
+        const tabs = {
+            entry: { btn: document.getElementById('dataEntryTab'), section: document.getElementById('dataEntrySection') },
+            manage: { btn: document.getElementById('dataEditTab'), section: document.getElementById('dataManagementSection') }
+        };
+
+        function switchTab(target) {
+            Object.values(tabs).forEach(t => {
+                t.btn.classList.remove('tab-active', 'bg-emerald-600', 'text-white');
+                t.btn.classList.add('text-gray-500', 'dark:text-gray-400');
+                t.section.classList.add('section-hidden');
+                t.section.classList.remove('section-visible');
+            });
+            target.btn.classList.add('tab-active', 'bg-emerald-600', 'text-white');
+            target.btn.classList.remove('text-gray-500', 'dark:text-gray-400');
+            target.section.classList.remove('section-hidden');
+            target.section.classList.add('section-visible');
+        }
+
+        tabs.entry.btn.onclick = () => switchTab(tabs.entry);
+        tabs.manage.btn.onclick = () => { switchTab(tabs.manage); loadPapers(); };
+
+        // --- CRUD Operations ---
+        async function loadSubjects(stream, selectorId) {
+            const sel = document.getElementById(selectorId);
+            sel.innerHTML = '<option>Loading...</option>';
+            try {
+                const { data } = await supabase.from('subjects').select('*').eq('stream', stream).order('name');
+                sel.innerHTML = '<option value="">Select Subject</option>';
+                sel.disabled = false;
+                data.forEach(s => {
+                    sel.innerHTML += `<option value="${s.code}">${s.name}</option>`;
+                });
+            } catch(e) { sel.innerHTML = '<option>Error</option>'; }
+        }
+
+        document.getElementById('stream').onchange = (e) => loadSubjects(e.target.value, 'subject');
+        document.getElementById('filterStream').onchange = (e) => {
+            loadSubjects(e.target.value, 'filterSubject');
+            filterPapers();
+        };
+
+        document.getElementById('paperForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = editingPaperId ? document.getElementById('updateBtn') : document.getElementById('submitBtn');
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+            try {
+                const data = {
+                    stream: document.getElementById('stream').value,
+                    subject_code: document.getElementById('subject').value,
+                    subject_name: document.getElementById('subject').options[document.getElementById('subject').selectedIndex].text,
+                    year: parseInt(document.getElementById('year').value),
+                    paper_link: document.getElementById('paperLink').value,
+                    marking_scheme_link: document.getElementById('markingLink').value || null
                 };
 
-                calendar.appendChild(dayDiv);
+                // Multi-stream logic
+                if(['ict', 'agriculture', 'geography'].includes(data.subject_code) && !editingPaperId) {
+                    const inserts = ['science','commerce','arts','technology'].map(s => ({...data, stream: s}));
+                    await supabase.from('past_papers').insert(inserts);
+                } else {
+                    if(editingPaperId) await supabase.from('past_papers').update(data).eq('id', editingPaperId);
+                    else await supabase.from('past_papers').insert(data);
+                }
+
+                showToast(editingPaperId ? "Updated!" : "Added!", 'success');
+                resetForm();
+                if(tabs.manage.btn.classList.contains('tab-active')) loadPapers();
+
+            } catch(err) {
+                showToast(err.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
             }
+        };
+
+        async function loadPapers() {
+            document.getElementById('loadingMessage').classList.remove('hidden');
+            document.getElementById('papersList').innerHTML = '';
+            
+            const { data } = await supabase.from('past_papers').select('*').order('created_at', { ascending: false });
+            allPapers = data || [];
+            filterPapers();
+            document.getElementById('loadingMessage').classList.add('hidden');
         }
 
-        // Run Timetable Init
-        initializeTimetable();
+        function filterPapers() {
+            const q = document.getElementById('searchPapers').value.toLowerCase();
+            const st = document.getElementById('filterStream').value;
+            const yr = document.getElementById('filterYear').value;
+            
+            const filtered = allPapers.filter(p => {
+                return (!st || p.stream === st) &&
+                       (!yr || p.year == yr) &&
+                       (!q || p.subject_name.toLowerCase().includes(q) || p.year.toString().includes(q));
+            });
 
-        // Global Search Alert
-        window.globalSearch = function() {
-            const val = document.getElementById('globalSearch').value;
-            if(val) alert(`Search for "${val}" coming in the next update!`);
-            else alert("Please enter a keyword.");
+            const list = document.getElementById('papersList');
+            list.innerHTML = '';
+            
+            if(filtered.length === 0) {
+                list.innerHTML = `<div class="text-center py-8 text-gray-400">No records found</div>`;
+                return;
+            }
+
+            filtered.forEach(p => {
+                const item = document.createElement('div');
+                item.className = 'group bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 p-4 rounded-xl hover:shadow-md transition-all flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-center animate__animated animate__fadeIn';
+                item.innerHTML = `
+                    <div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">${p.stream}</span>
+                            <span class="text-xs text-gray-400">${p.year}</span>
+                        </div>
+                        <h4 class="font-bold text-gray-800 dark:text-white">${p.subject_name}</h4>
+                        <div class="flex gap-3 mt-2 text-xs">
+                            <a href="${p.paper_link}" target="_blank" class="flex items-center text-blue-600 hover:underline"><i class="fas fa-file-pdf mr-1"></i> Paper</a>
+                            ${p.marking_scheme_link ? `<a href="${p.marking_scheme_link}" target="_blank" class="flex items-center text-green-600 hover:underline"><i class="fas fa-check-circle mr-1"></i> Scheme</a>` : ''}
+                        </div>
+                    </div>
+                    <div class="flex gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button onclick="window.editPaper('${p.id}')" class="p-2 text-yellow-500 hover:bg-yellow-50 dark:hover:bg-yellow-900/20 rounded-lg transition-colors"><i class="fas fa-edit"></i></button>
+                        <button onclick="window.deletePaper('${p.id}')" class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
         }
 
-        // Language Toggle Stub
-        window.toggleLanguage = function() {
-            alert("Language switching logic will be migrated from the original script.");
+        // --- Globals for HTML access ---
+        window.editPaper = async (id) => {
+            editingPaperId = id;
+            const p = allPapers.find(x => x.id === id);
+            document.getElementById('stream').value = p.stream;
+            await loadSubjects(p.stream, 'subject');
+            document.getElementById('subject').value = p.subject_code;
+            document.getElementById('year').value = p.year;
+            document.getElementById('paperLink').value = p.paper_link;
+            document.getElementById('markingLink').value = p.marking_scheme_link || '';
+            
+            document.getElementById('formTitle').textContent = 'Edit Paper';
+            document.getElementById('submitBtn').classList.add('hidden');
+            document.getElementById('updateBtn').classList.remove('hidden');
+            document.getElementById('cancelBtn').classList.remove('hidden');
+            
+            switchTab(tabs.entry);
+        };
+
+        window.deletePaper = async (id) => {
+            if(!confirm("Delete this paper permanently?")) return;
+            try {
+                await supabase.from('past_papers').delete().eq('id', id);
+                showToast("Deleted", 'success');
+                loadPapers();
+            } catch(e) { showToast("Delete failed", 'error'); }
+        };
+
+        function resetForm() {
+            document.getElementById('paperForm').reset();
+            editingPaperId = null;
+            document.getElementById('formTitle').textContent = 'Add New Past Paper';
+            document.getElementById('submitBtn').classList.remove('hidden');
+            document.getElementById('updateBtn').classList.add('hidden');
+            document.getElementById('cancelBtn').classList.add('hidden');
+        }
+        document.getElementById('cancelBtn').onclick = resetForm;
+
+        // --- Toast System ---
+        function showToast(msg, type='info') {
+            const t = document.createElement('div');
+            const colors = type === 'error' ? 'bg-red-500' : type === 'success' ? 'bg-emerald-500' : 'bg-blue-500';
+            t.className = `${colors} text-white px-4 py-3 rounded-xl shadow-lg text-sm font-medium animate__animated animate__fadeInRight pointer-events-auto`;
+            t.innerHTML = msg;
+            document.getElementById('notificationContainer').appendChild(t);
+            setTimeout(() => {
+                t.classList.replace('animate__fadeInRight', 'animate__fadeOutRight');
+                setTimeout(() => t.remove(), 500);
+            }, 3000);
         }
 
+        // Populate Years Filter
+        const ySelect = document.getElementById('filterYear');
+        for(let i=2025; i>=2010; i--) ySelect.innerHTML += `<option value="${i}">${i}</option>`;
+
+        // Listeners
+        ['searchPapers', 'filterStream', 'filterYear'].forEach(id => {
+            document.getElementById(id).addEventListener('input', filterPapers);
+        });
+
+        // Logout
+        document.getElementById('logout-btn').onclick = () => {
+            mainContent.classList.add('hidden');
+            loginModal.classList.remove('hidden', 'opacity-0', 'pointer-events-none', 'scale-95');
+            showView('login');
+        };
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            loadModels();
+            initTheme();
+        });
     </script>
 </body>
 </html>
