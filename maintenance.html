@@ -7,8 +7,11 @@
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sinhala:wght@400;700&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Added Animations Library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     
     <style>
         body { 
@@ -23,8 +26,8 @@
             justify-content: center; 
             align-items: center; 
             margin: 0; 
+            overflow: hidden; /* Prevent scrollbars during animation */
         }
-        .sinhala { font-family: 'Noto Sinhala', sans-serif; }
         
         .maintenance-card { 
             background: #151F32; 
@@ -37,7 +40,12 @@
             text-align: center; 
             position: relative;
             overflow: hidden;
+            z-index: 10;
         }
+
+        /* Float Animation from Home Page */
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
+        .animate-float { animation: float 6s ease-in-out infinite; }
 
         .spinner { 
             border: 4px solid rgba(16, 185, 129, 0.1); 
@@ -82,32 +90,50 @@
             font-size: 0.9rem;
             color: #94a3b8;
         }
+
+        /* Optional: Background Glow Effect similar to Home Page search bar */
+        .bg-glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(16,185,129,0.15) 0%, rgba(0,0,0,0) 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
-    <button id="langToggle" class="fixed top-5 right-5 bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-700 px-4 py-2 rounded-lg transition-colors text-sm font-bold">
-        සිංහල
-    </button>
 
-    <div class="maintenance-card">
-        <div class="mb-6">
-            <i class="fas fa-tools text-5xl text-emerald-500 opacity-80"></i>
+    <!-- Background Glow -->
+    <div class="bg-glow animate-pulse"></div>
+
+    <!-- Main Card with Animations -->
+    <div class="maintenance-card animate__animated animate__zoomIn">
+        <div class="mb-6 animate-float">
+            <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-emerald-500/10 mb-4 ring-1 ring-emerald-500/20">
+                <i class="fas fa-tools text-4xl text-emerald-500"></i>
+            </div>
         </div>
         
-        <h1 class="text-3xl font-bold text-white mb-4 sinhala" id="maintenanceTitle">පද්ධති යාවත්කාලීනයකින් පවතී</h1>
-        <p class="text-gray-400 mb-6 leading-relaxed sinhala" id="maintenanceMessage">අපගේ වෙබ් අඩවිය යාවත්කාලීන කිරීමකින් පවතින අතර, ඉක්මනින් ඔබ වෙත ආපසු පැමිණිමු!</p>
+        <h1 class="text-3xl font-bold text-white mb-4 animate__animated animate__fadeInUp animate__delay-1s">System Under Maintenance</h1>
+        <p class="text-gray-400 mb-6 leading-relaxed animate__animated animate__fadeInUp animate__delay-1s">We're currently performing scheduled maintenance to improve your experience. We'll be back online shortly!</p>
         
-        <div class="spinner"></div>
+        <div class="spinner animate__animated animate__fadeIn animate__delay-2s"></div>
         
-        <h3 class="text-sm font-bold text-emerald-500 uppercase tracking-widest mb-4 sinhala" id="countdownTitle">ආපසු එන්නේ</h3>
-        <div class="countdown-timer">
-            <div class="countdown-item"><span id="days" class="countdown-val">00</span><span id="daysText" class="countdown-label">දින</span></div>
-            <div class="countdown-item"><span id="hours" class="countdown-val">00</span><span id="hoursText" class="countdown-label">පැය</span></div>
-            <div class="countdown-item"><span id="minutes" class="countdown-val">00</span><span id="minutesText" class="countdown-label">විනාඩි</span></div>
-            <div class="countdown-item"><span id="seconds" class="countdown-val">00</span><span id="secondsText" class="countdown-label">තත්පර</span></div>
+        <div class="animate__animated animate__fadeInUp animate__delay-2s">
+            <h3 class="text-sm font-bold text-emerald-500 uppercase tracking-widest mb-4">Estimated Return</h3>
+            <div class="countdown-timer">
+                <div class="countdown-item"><span id="days" class="countdown-val">00</span><span class="countdown-label">Days</span></div>
+                <div class="countdown-item"><span id="hours" class="countdown-val">00</span><span class="countdown-label">Hours</span></div>
+                <div class="countdown-item"><span id="minutes" class="countdown-val">00</span><span class="countdown-label">Minutes</span></div>
+                <div class="countdown-item"><span id="seconds" class="countdown-val">00</span><span class="countdown-label">Seconds</span></div>
+            </div>
         </div>
 
-        <div class="contact-info">
+        <div class="contact-info animate__animated animate__fadeIn animate__delay-3s">
             <p class="mb-2"><i class="fas fa-envelope text-emerald-500 mr-2"></i> isaradilnuka@gmail.com</p>
             <p>
                 <i class="fas fa-user-circle text-emerald-500 mr-2"></i>
@@ -121,36 +147,7 @@
         const sbKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhwcG9qcmJmaHp0dHp2bHZvdnJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjExODgxNDYsImV4cCI6MjA3Njc2NDE0Nn0.aL2fegb_eRPY0E7P6Mwufhq3TCAeX8-hDCHBo9VeAsA';
         const supabase = window.supabase.createClient(sbUrl, sbKey);
 
-        const translations = {
-            en: { 
-                maintenanceTitle: "System Under Maintenance", 
-                maintenanceMessage: "We're currently performing scheduled maintenance to improve your experience. We'll be back online shortly!", 
-                countdownTitle: "Estimated Return", 
-                daysText: "Days", hoursText: "Hours", minutesText: "Minutes", secondsText: "Seconds" 
-            },
-            si: { 
-                maintenanceTitle: "පද්ධති යාවත්කාලීනයකින් පවතී", 
-                maintenanceMessage: "අපගේ වෙබ් අඩවිය යාවත්කාලීන කිරීමකින් පවතින අතර, ඉක්මනින් ඔබ වෙත ආපසු පැමිණිමු!", 
-                countdownTitle: "ආපසු එන්නේ", 
-                daysText: "දින", hoursText: "පැය", minutesText: "විනාඩි", secondsText: "තත්පර" 
-            }
-        };
-
-        let currentLang = 'si'; 
         let countdownInterval;
-
-        function toggleLanguage() {
-            currentLang = currentLang === 'en' ? 'si' : 'en';
-            document.getElementById('langToggle').textContent = currentLang === 'en' ? 'සිංහල' : 'English';
-            const t = translations[currentLang];
-            document.getElementById('maintenanceTitle').textContent = t.maintenanceTitle;
-            document.getElementById('maintenanceMessage').textContent = t.maintenanceMessage;
-            document.getElementById('countdownTitle').textContent = t.countdownTitle;
-            document.getElementById('daysText').textContent = t.daysText;
-            document.getElementById('hoursText').textContent = t.hoursText;
-            document.getElementById('minutesText').textContent = t.minutesText;
-            document.getElementById('secondsText').textContent = t.secondsText;
-        }
 
         async function initMaintenance() {
             let maintenanceEnd = new Date().getTime() + 86400000; // Default 1 day
@@ -177,7 +174,6 @@
             }, 1000);
         }
 
-        document.getElementById('langToggle').addEventListener('click', toggleLanguage);
         document.addEventListener('DOMContentLoaded', initMaintenance);
     </script>
 </body>

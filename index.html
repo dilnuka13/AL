@@ -33,9 +33,9 @@
                     },
                     colors: {
                         brand: {
-                            dark: '#0B1120', // Dark Blue/Black background
-                            card: '#151F32', // Slightly lighter card bg
-                            accent: '#10B981', // Emerald Green
+                            dark: '#0B1120',
+                            card: '#151F32',
+                            accent: '#10B981',
                             text: '#E2E8F0'
                         }
                     },
@@ -91,9 +91,15 @@
         
         .feature-card:hover {
             transform: translateY(-5px);
-            border-color: rgba(16, 185, 129, 0.3);
-            box-shadow: 0 10px 40px -10px rgba(16, 185, 129, 0.1);
+            border-color: var(--card-hover-color, rgba(16, 185, 129, 0.3));
+            box-shadow: 0 10px 40px -10px var(--card-shadow-color, rgba(16, 185, 129, 0.1));
         }
+
+        /* Stream Card Colors */
+        .card-science { --card-hover-color: rgba(59, 130, 246, 0.5); --card-shadow-color: rgba(59, 130, 246, 0.2); }
+        .card-commerce { --card-hover-color: rgba(16, 185, 129, 0.5); --card-shadow-color: rgba(16, 185, 129, 0.2); }
+        .card-arts { --card-hover-color: rgba(245, 158, 11, 0.5); --card-shadow-color: rgba(245, 158, 11, 0.2); }
+        .card-tech { --card-hover-color: rgba(139, 92, 246, 0.5); --card-shadow-color: rgba(139, 92, 246, 0.2); }
 
         .search-input {
             background: rgba(30, 41, 59, 0.6);
@@ -106,15 +112,21 @@
             background: rgba(30, 41, 59, 0.8);
         }
 
+        /* View Options Styles */
+        .view-option.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
         /* Animations */
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
         .animate-float { animation: float 6s ease-in-out infinite; }
         
         .tab-content { display: none; animation: fadeIn 0.5s ease; }
         .tab-content.active { display: block; }
-
-        /* Custom selection color */
-        ::selection { background: #10B981; color: #fff; }
+        
+        .paper-card-enter { animation: fadeInUp 0.4s ease forwards; opacity: 0; transform: translateY(20px); }
     </style>
 
     <!-- MAINTENANCE CHECKER -->
@@ -161,10 +173,7 @@
 
                 <!-- Right Actions -->
                 <div class="flex items-center gap-3">
-                    <!-- Admin Link (Hidden/Icon) -->
-                    <a href="admin.html" class="w-9 h-9 flex items-center justify-center rounded-full bg-gray-800 text-gray-400 hover:text-yellow-400 hover:bg-gray-700 transition-all border border-gray-700">
-                        <i class="fas fa-cog"></i>
-                    </a>
+                   
                     
                     <!-- Creator Button -->
                     <a href="https://dilnuka13.github.io/my" target="_blank" class="hidden sm:flex items-center gap-2 px-4 py-2 rounded-lg border border-emerald-500/30 text-emerald-400 text-sm font-bold hover:bg-emerald-500/10 transition-all">
@@ -197,13 +206,11 @@
         <div id="home" class="tab-content active">
             <!-- Hero Section -->
             <div class="text-center py-12 md:py-20 relative">
-                <!-- Decorative Badge -->
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-900/30 border border-emerald-500/30 text-emerald-400 text-xs font-bold uppercase tracking-wider mb-6 animate__animated animate__fadeInDown">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                     Welcome to DE Education
                 </div>
 
-                <!-- Main Heading -->
                 <h1 class="text-5xl md:text-7xl font-extrabold mb-6 tracking-tight animate__animated animate__zoomIn">
                     Shape Your <span class="accent-text-gradient">Future</span> Today
                 </h1>
@@ -212,20 +219,8 @@
                     Access G.C.E. A/L past papers, timetables, and exam results in one unified, modern platform designed for Sri Lankan students.
                 </p>
 
-                <!-- Search Bar -->
-                <div class="max-w-2xl mx-auto mb-16 relative group animate__animated animate__fadeInUp animate__delay-1s">
-                    <div class="absolute inset-0 bg-emerald-500 opacity-20 blur-xl group-hover:opacity-30 transition-opacity duration-500 rounded-2xl"></div>
-                    <div class="relative flex items-center">
-                        <i class="fas fa-search absolute left-5 text-gray-500 text-lg"></i>
-                        <input type="text" id="mainSearch" placeholder="Search for papers, subjects, or notices..." 
-                            class="w-full pl-14 pr-32 py-4 rounded-2xl text-white search-input outline-none placeholder-gray-500">
-                        <button class="absolute right-2 top-2 bottom-2 px-6 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-emerald-900/50">
-                            Search
-                        </button>
-                    </div>
-                </div>
+                
 
-                <!-- System Update Banner (Dynamic) -->
                 <div id="system-update-banner" class="hidden max-w-4xl mx-auto mb-16 animate__animated animate__fadeIn">
                     <div class="bg-yellow-900/10 border border-yellow-500/20 rounded-xl p-4 flex items-start gap-4">
                         <i class="fas fa-info-circle text-yellow-500 mt-1"></i>
@@ -236,9 +231,7 @@
                     </div>
                 </div>
 
-                <!-- Feature Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 animate__animated animate__fadeInUp animate__delay-2s">
-                    <!-- Papers Card -->
                     <div onclick="switchTab('papers')" class="feature-card rounded-2xl p-8 text-center cursor-pointer group h-full flex flex-col items-center justify-center relative overflow-hidden">
                         <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                         <div class="w-16 h-16 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-400 mb-6 group-hover:scale-110 transition-transform duration-300 border border-blue-500/20">
@@ -248,7 +241,6 @@
                         <p class="text-sm text-gray-500">Download papers & marking schemes</p>
                     </div>
 
-                    <!-- Results Card -->
                     <div onclick="switchTab('results')" class="feature-card rounded-2xl p-8 text-center cursor-pointer group h-full flex flex-col items-center justify-center relative overflow-hidden">
                         <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                         <div class="w-16 h-16 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 mb-6 group-hover:scale-110 transition-transform duration-300 border border-emerald-500/20">
@@ -258,7 +250,6 @@
                         <p class="text-sm text-gray-500">Check your latest exam scores</p>
                     </div>
 
-                    <!-- Timetables Card -->
                     <div onclick="switchTab('timetables')" class="feature-card rounded-2xl p-8 text-center cursor-pointer group h-full flex flex-col items-center justify-center relative overflow-hidden">
                         <div class="absolute inset-0 bg-gradient-to-br from-yellow-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                         <div class="w-16 h-16 rounded-2xl bg-yellow-500/10 flex items-center justify-center text-yellow-400 mb-6 group-hover:scale-110 transition-transform duration-300 border border-yellow-500/20">
@@ -268,7 +259,6 @@
                         <p class="text-sm text-gray-500">View upcoming exam schedules</p>
                     </div>
 
-                    <!-- Notices Card -->
                     <div onclick="switchTab('notices')" class="feature-card rounded-2xl p-8 text-center cursor-pointer group h-full flex flex-col items-center justify-center relative overflow-hidden">
                         <div class="absolute inset-0 bg-gradient-to-br from-red-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                         <div class="w-16 h-16 rounded-2xl bg-red-500/10 flex items-center justify-center text-red-400 mb-6 group-hover:scale-110 transition-transform duration-300 border border-red-500/20">
@@ -288,46 +278,127 @@
                 <p class="text-gray-400">Select your stream to access relevant study materials.</p>
             </div>
             
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-                <!-- Stream Cards -->
-                <div class="feature-card p-6 rounded-2xl cursor-pointer group" onclick="loadSubjects('science')">
-                    <div class="h-2 w-10 bg-blue-500 rounded-full mb-4"></div>
-                    <h4 class="text-xl font-bold text-white mb-2">Science</h4>
-                    <p class="text-xs text-gray-500">Bio, Maths, Physics, Chemistry</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12 px-4 md:px-0">
+                <!-- Science Card -->
+                <div class="feature-card card-science p-6 rounded-2xl cursor-pointer group relative overflow-hidden" onclick="loadSubjects('science')">
+                    <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-all duration-500 group-hover:scale-125">
+                        <i class="fas fa-microscope text-6xl text-blue-500"></i>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center mb-4 group-hover:bg-blue-500 transition-colors duration-300">
+                        <i class="fas fa-flask text-blue-400 group-hover:text-white text-xl"></i>
+                    </div>
+                    <h4 class="text-2xl font-bold text-white mb-2">Science</h4>
+                    <p class="text-sm text-gray-400 mb-4">Bio, Maths, Physics, Chemistry</p>
+                    <div class="h-1 w-full bg-gray-700 rounded-full overflow-hidden">
+                        <div class="h-full bg-blue-500 w-0 group-hover:w-full transition-all duration-700 ease-out"></div>
+                    </div>
                 </div>
-                <div class="feature-card p-6 rounded-2xl cursor-pointer group" onclick="loadSubjects('commerce')">
-                    <div class="h-2 w-10 bg-emerald-500 rounded-full mb-4"></div>
-                    <h4 class="text-xl font-bold text-white mb-2">Commerce</h4>
-                    <p class="text-xs text-gray-500">Accounting, Business, Econ</p>
+
+                <!-- Commerce Card -->
+                <div class="feature-card card-commerce p-6 rounded-2xl cursor-pointer group relative overflow-hidden" onclick="loadSubjects('commerce')">
+                    <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-all duration-500 group-hover:scale-125">
+                        <i class="fas fa-chart-pie text-6xl text-emerald-500"></i>
+                    </div>
+                    <div class="w-12 h-12 bg-emerald-500/20 rounded-xl flex items-center justify-center mb-4 group-hover:bg-emerald-500 transition-colors duration-300">
+                        <i class="fas fa-briefcase text-emerald-400 group-hover:text-white text-xl"></i>
+                    </div>
+                    <h4 class="text-2xl font-bold text-white mb-2">Commerce</h4>
+                    <p class="text-sm text-gray-400 mb-4">Accounting, Business, Econ</p>
+                    <div class="h-1 w-full bg-gray-700 rounded-full overflow-hidden">
+                        <div class="h-full bg-emerald-500 w-0 group-hover:w-full transition-all duration-700 ease-out"></div>
+                    </div>
                 </div>
-                <div class="feature-card p-6 rounded-2xl cursor-pointer group" onclick="loadSubjects('arts')">
-                    <div class="h-2 w-10 bg-yellow-500 rounded-full mb-4"></div>
-                    <h4 class="text-xl font-bold text-white mb-2">Arts</h4>
-                    <p class="text-xs text-gray-500">Sinhala, History, Logic</p>
+
+                <!-- Arts Card -->
+                <div class="feature-card card-arts p-6 rounded-2xl cursor-pointer group relative overflow-hidden" onclick="loadSubjects('arts')">
+                    <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-all duration-500 group-hover:scale-125">
+                        <i class="fas fa-palette text-6xl text-amber-500"></i>
+                    </div>
+                    <div class="w-12 h-12 bg-amber-500/20 rounded-xl flex items-center justify-center mb-4 group-hover:bg-amber-500 transition-colors duration-300">
+                        <i class="fas fa-feather-alt text-amber-400 group-hover:text-white text-xl"></i>
+                    </div>
+                    <h4 class="text-2xl font-bold text-white mb-2">Arts</h4>
+                    <p class="text-sm text-gray-400 mb-4">Sinhala, History, Logic</p>
+                    <div class="h-1 w-full bg-gray-700 rounded-full overflow-hidden">
+                        <div class="h-full bg-amber-500 w-0 group-hover:w-full transition-all duration-700 ease-out"></div>
+                    </div>
                 </div>
-                <div class="feature-card p-6 rounded-2xl cursor-pointer group" onclick="loadSubjects('technology')">
-                    <div class="h-2 w-10 bg-purple-500 rounded-full mb-4"></div>
-                    <h4 class="text-xl font-bold text-white mb-2">Technology</h4>
-                    <p class="text-xs text-gray-500">SFT, ET, BST, ICT</p>
+
+                <!-- Tech Card -->
+                <div class="feature-card card-tech p-6 rounded-2xl cursor-pointer group relative overflow-hidden" onclick="loadSubjects('technology')">
+                    <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-all duration-500 group-hover:scale-125">
+                        <i class="fas fa-microchip text-6xl text-violet-500"></i>
+                    </div>
+                    <div class="w-12 h-12 bg-violet-500/20 rounded-xl flex items-center justify-center mb-4 group-hover:bg-violet-500 transition-colors duration-300">
+                        <i class="fas fa-robot text-violet-400 group-hover:text-white text-xl"></i>
+                    </div>
+                    <h4 class="text-2xl font-bold text-white mb-2">Technology</h4>
+                    <p class="text-sm text-gray-400 mb-4">SFT, ET, BST, ICT</p>
+                    <div class="h-1 w-full bg-gray-700 rounded-full overflow-hidden">
+                        <div class="h-full bg-violet-500 w-0 group-hover:w-full transition-all duration-700 ease-out"></div>
+                    </div>
                 </div>
             </div>
 
             <!-- Subject List Area -->
             <div id="subjectSelection" class="hidden mb-12 animate__animated animate__fadeIn">
                 <div class="flex items-center gap-3 mb-6">
-                    <button onclick="hideSubjects()" class="text-gray-400 hover:text-white"><i class="fas fa-arrow-left"></i> Back</button>
+                    <button onclick="hideSubjects()" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white transition-all border border-gray-700">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
                     <h3 class="text-xl font-bold text-white">Select Subject</h3>
                 </div>
                 <div id="subjectList" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
             </div>
 
-            <!-- Papers List Area -->
+            <!-- Papers List Area with Enhanced UI -->
             <div id="papersDisplay" class="hidden animate__animated animate__fadeIn">
-                <div class="flex items-center gap-3 mb-6">
-                    <button onclick="document.getElementById('papersDisplay').classList.add('hidden'); document.getElementById('subjectSelection').classList.remove('hidden');" class="text-gray-400 hover:text-white"><i class="fas fa-arrow-left"></i> Back</button>
-                    <h3 class="text-xl font-bold text-white" id="subjectTitle">Papers</h3>
+                <!-- Controls Bar -->
+                <div class="bg-[#151F32] rounded-2xl p-4 border border-gray-800 mb-8 sticky top-24 z-40 shadow-2xl">
+                    <div class="flex flex-col lg:flex-row gap-4 justify-between items-start lg:items-center">
+                        
+                        <div class="flex items-center gap-3 w-full lg:w-auto">
+                            <button onclick="document.getElementById('papersDisplay').classList.add('hidden'); document.getElementById('subjectSelection').classList.remove('hidden');" class="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white transition-all border border-gray-700 shrink-0">
+                                <i class="fas fa-arrow-left"></i>
+                            </button>
+                            <h3 class="text-xl font-bold text-white truncate" id="subjectTitle">Papers</h3>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+                            <!-- Search -->
+                            <div class="relative flex-grow sm:w-64">
+                                <i class="fas fa-search absolute left-3 top-3 text-gray-500"></i>
+                                <input type="text" id="paperSearch" placeholder="Search papers..." 
+                                    class="w-full pl-10 pr-4 py-2.5 bg-gray-900/50 border border-gray-700 rounded-lg text-sm text-white focus:border-emerald-500 outline-none transition-colors">
+                            </div>
+                            
+                            <!-- Year Filter -->
+                            <select id="paperYearFilter" class="px-4 py-2.5 bg-gray-900/50 border border-gray-700 rounded-lg text-sm text-white focus:border-emerald-500 outline-none cursor-pointer transition-colors">
+                                <option value="all">All Years</option>
+                                <!-- Options populated by JS -->
+                            </select>
+
+                            <!-- View Options -->
+                            <div class="flex items-center bg-gray-900/50 border border-gray-700 rounded-lg p-1">
+                                <button onclick="setPaperView('large')" class="view-option p-2 rounded hover:text-emerald-400 text-gray-400 transition-all" title="Large">
+                                    <i class="fas fa-square"></i>
+                                </button>
+                                <button onclick="setPaperView('medium')" class="view-option p-2 rounded hover:text-emerald-400 text-gray-400 transition-all" title="Medium">
+                                    <i class="fas fa-th-large"></i>
+                                </button>
+                                <button onclick="setPaperView('list')" class="view-option p-2 rounded hover:text-emerald-400 text-gray-400 transition-all" title="List">
+                                    <i class="fas fa-list"></i>
+                                </button>
+                                <button onclick="setPaperView('mini')" class="view-option p-2 rounded hover:text-emerald-400 text-gray-400 transition-all" title="Mini">
+                                    <i class="fas fa-align-justify"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div id="papersList" class="space-y-3"></div>
+
+                <!-- Papers Grid/List Container -->
+                <div id="papersList" class="w-full"></div>
             </div>
         </div>
 
@@ -419,13 +490,16 @@
     <script>
         const supabase = window.supabase.createClient(sbUrl, sbKey);
 
+        // State Variables
+        let currentPapers = [];
+        let currentStreamColor = 'emerald';
+        let currentViewMode = 'medium'; // default
+
         // --- UI Functions ---
         function switchTab(tabId) {
-            // Update Content
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             
-            // Update Nav Pills (Desktop)
             document.querySelectorAll('.nav-pill a').forEach(link => {
                 if(link.getAttribute('data-tab') === tabId) {
                     link.classList.remove('text-gray-400', 'hover:text-white');
@@ -436,25 +510,11 @@
                 }
             });
 
-            // Update Mobile Menu (Simple styling)
-            document.querySelectorAll('#mobileMenu a').forEach(link => {
-                if(link.getAttribute('data-tab') === tabId) {
-                    link.classList.add('text-white', 'bg-emerald-500/10', 'border-emerald-500');
-                    link.classList.remove('text-gray-400', 'border-transparent');
-                } else {
-                    link.classList.remove('text-white', 'bg-emerald-500/10', 'border-emerald-500');
-                    link.classList.add('text-gray-400', 'border-transparent');
-                }
-            });
-
             // Close Mobile Menu if open
             document.getElementById('mobileMenu').classList.add('hidden');
-            
-            // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Attach Click Listeners
         document.querySelectorAll('a[data-tab]').forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -466,17 +526,213 @@
             document.getElementById('mobileMenu').classList.toggle('hidden');
         });
 
-        // --- Data Loading Functions ---
+        // --- Paper Management Functions ---
+
+        // Set Stream Color Scheme
+        function getStreamColor(stream) {
+            const colors = {
+                'science': 'blue',
+                'commerce': 'emerald',
+                'arts': 'amber',
+                'technology': 'violet'
+            };
+            return colors[stream] || 'emerald';
+        }
+
+        window.loadSubjects = async (stream) => {
+            currentStreamColor = getStreamColor(stream);
+            document.getElementById('subjectSelection').classList.remove('hidden');
+            window.scrollTo({top: document.getElementById('papers').offsetTop, behavior: 'smooth'});
+            
+            const list = document.getElementById('subjectList');
+            list.innerHTML = '<div class="col-span-full text-center text-gray-500"><i class="fas fa-spinner fa-spin"></i> Loading Subjects...</div>';
+            
+            const { data } = await supabase.from('subjects').select('*').eq('stream', stream);
+            list.innerHTML = '';
+            
+            if(data && data.length > 0) {
+                data.forEach((s, index) => {
+                    const btn = document.createElement('button');
+                    btn.className = `feature-card p-5 rounded-xl text-left font-medium text-gray-200 hover:text-${currentStreamColor}-400 flex justify-between items-center group border-l-4 border-transparent hover:border-${currentStreamColor}-500 animate__animated animate__fadeInUp`;
+                    btn.style.animationDelay = `${index * 0.1}s`;
+                    btn.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            <span class="w-2 h-2 rounded-full bg-gray-700 group-hover:bg-${currentStreamColor}-500 transition-colors"></span>
+                            <span>${s.name}</span>
+                        </div>
+                        <i class="fas fa-chevron-right text-xs text-gray-600 group-hover:text-${currentStreamColor}-500 transition-colors"></i>
+                    `;
+                    btn.onclick = () => loadPapers(stream, s.code, s.name);
+                    list.appendChild(btn);
+                });
+            } else {
+                list.innerHTML = '<div class="col-span-full text-center text-gray-500">No subjects found for this stream.</div>';
+            }
+        }
+
+        window.hideSubjects = () => {
+            document.getElementById('subjectSelection').classList.add('hidden');
+        }
+
+        async function loadPapers(stream, code, name) {
+            document.getElementById('papersDisplay').classList.remove('hidden');
+            document.getElementById('subjectSelection').classList.add('hidden');
+            document.getElementById('subjectTitle').textContent = name;
+            
+            const list = document.getElementById('papersList');
+            list.innerHTML = '<div class="text-center text-gray-500 py-12"><i class="fas fa-circle-notch fa-spin text-3xl mb-4"></i><br>Fetching resources...</div>';
+            
+            // Reset filters
+            document.getElementById('paperSearch').value = '';
+            document.getElementById('paperYearFilter').innerHTML = '<option value="all">All Years</option>';
+
+            const { data } = await supabase.from('past_papers').select('*').eq('stream', stream).eq('subject_code', code).order('year', {ascending: false});
+            
+            if(data && data.length > 0) {
+                currentPapers = data;
+                
+                // Populate Year Filter
+                const years = [...new Set(data.map(p => p.year))].sort().reverse();
+                const yearSelect = document.getElementById('paperYearFilter');
+                years.forEach(year => {
+                    const opt = document.createElement('option');
+                    opt.value = year;
+                    opt.textContent = year;
+                    yearSelect.appendChild(opt);
+                });
+
+                // Render Initial View
+                renderPapers();
+            } else {
+                currentPapers = [];
+                list.innerHTML = '<div class="text-gray-500 text-sm text-center py-12 bg-[#151F32] rounded-2xl border border-gray-800">No papers available yet for this subject.</div>';
+            }
+        }
+
+        // Paper Rendering Logic
+        function renderPapers() {
+            const list = document.getElementById('papersList');
+            const searchTerm = document.getElementById('paperSearch').value.toLowerCase();
+            const filterYear = document.getElementById('paperYearFilter').value;
+            const viewMode = currentViewMode;
+
+            // Filter Data
+            const filtered = currentPapers.filter(p => {
+                const matchesSearch = (p.year.toString().includes(searchTerm) || (p.type && p.type.toLowerCase().includes(searchTerm)));
+                const matchesYear = filterYear === 'all' || p.year.toString() === filterYear;
+                return matchesSearch && matchesYear;
+            });
+
+            list.innerHTML = '';
+
+            // Configure Grid Class based on View Mode
+            let gridClass = '';
+            if(viewMode === 'large') gridClass = 'grid grid-cols-1 md:grid-cols-2 gap-6';
+            else if(viewMode === 'medium') gridClass = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4';
+            else if(viewMode === 'list') gridClass = 'flex flex-col gap-3';
+            else if(viewMode === 'mini') gridClass = 'flex flex-col gap-2';
+            
+            list.className = gridClass;
+
+            if(filtered.length === 0) {
+                list.innerHTML = '<div class="col-span-full text-center text-gray-500 py-8">No matches found.</div>';
+                return;
+            }
+
+            filtered.forEach((p, index) => {
+                const card = document.createElement('div');
+                card.className = 'paper-card-enter';
+                card.style.animationDelay = `${index * 0.05}s`;
+
+                const color = currentStreamColor; 
+
+                if (viewMode === 'large') {
+                    card.innerHTML = `
+                        <div class="bg-[#151F32] border border-gray-800 rounded-2xl p-6 hover:border-${color}-500/50 transition-all group relative overflow-hidden shadow-lg">
+                            <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                                <span class="text-6xl font-bold stroke-text">${p.year}</span>
+                            </div>
+                            <div class="flex items-start justify-between mb-4">
+                                <div>
+                                    <span class="inline-block px-3 py-1 rounded-lg bg-${color}-500/10 text-${color}-400 text-sm font-bold mb-2 border border-${color}-500/20">${p.year} A/L</span>
+                                    <h4 class="text-xl font-bold text-white">Paper & Marking</h4>
+                                </div>
+                                <div class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center group-hover:bg-${color}-500 group-hover:text-white transition-colors">
+                                    <i class="fas fa-file-alt"></i>
+                                </div>
+                            </div>
+                            <div class="flex gap-3 mt-4">
+                                ${p.paper_link ? `<a href="${p.paper_link}" target="_blank" class="flex-1 text-center py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold shadow-lg shadow-blue-900/20 transition-all hover:-translate-y-1"><i class="fas fa-download mr-2"></i>Paper</a>` : ''}
+                                ${p.marking_scheme_link ? `<a href="${p.marking_scheme_link}" target="_blank" class="flex-1 text-center py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold shadow-lg shadow-emerald-900/20 transition-all hover:-translate-y-1"><i class="fas fa-check-circle mr-2"></i>Marking</a>` : ''}
+                            </div>
+                        </div>
+                    `;
+                } else if (viewMode === 'medium') {
+                    card.innerHTML = `
+                        <div class="bg-[#151F32] border border-gray-800 rounded-xl p-5 hover:border-${color}-500/40 transition-all group hover:-translate-y-1 hover:shadow-lg hover:shadow-${color}-900/10">
+                            <div class="flex justify-between items-center mb-3">
+                                <h4 class="font-bold text-lg text-gray-200">${p.year} Paper</h4>
+                                <span class="text-xs font-bold text-${color}-400 bg-${color}-500/10 px-2 py-1 rounded border border-${color}-500/20">A/L</span>
+                            </div>
+                            <div class="flex gap-2">
+                                ${p.paper_link ? `<a href="${p.paper_link}" target="_blank" class="flex-1 py-2 rounded-lg bg-gray-800 hover:bg-blue-600 text-gray-300 hover:text-white text-xs font-bold text-center transition-colors border border-gray-700 hover:border-blue-500">Paper</a>` : ''}
+                                ${p.marking_scheme_link ? `<a href="${p.marking_scheme_link}" target="_blank" class="flex-1 py-2 rounded-lg bg-gray-800 hover:bg-emerald-600 text-gray-300 hover:text-white text-xs font-bold text-center transition-colors border border-gray-700 hover:border-emerald-500">Marking</a>` : ''}
+                            </div>
+                        </div>
+                    `;
+                } else if (viewMode === 'list') {
+                    card.innerHTML = `
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-[#151F32] rounded-xl border border-gray-800 hover:border-${color}-500/30 transition-all group">
+                            <div class="flex items-center gap-4 mb-3 sm:mb-0">
+                                <div class="w-10 h-10 rounded-lg bg-gray-800 flex items-center justify-center font-bold text-${color}-400 border border-gray-700">${p.year}</div>
+                                <div>
+                                    <h4 class="font-bold text-gray-200">Advanced Level Examination ${p.year}</h4>
+                                    <p class="text-xs text-gray-500">Full Paper & Marking Scheme</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-3">
+                                ${p.paper_link ? `<a href="${p.paper_link}" target="_blank" class="px-4 py-2 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500 hover:text-white text-sm font-medium transition-all"><i class="fas fa-file-pdf mr-1"></i> Paper</a>` : ''}
+                                ${p.marking_scheme_link ? `<a href="${p.marking_scheme_link}" target="_blank" class="px-4 py-2 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500 hover:text-white text-sm font-medium transition-all"><i class="fas fa-check mr-1"></i> Marking</a>` : ''}
+                            </div>
+                        </div>
+                    `;
+                } else if (viewMode === 'mini') {
+                    card.innerHTML = `
+                        <div class="flex items-center justify-between p-2.5 bg-[#151F32] rounded-lg border border-gray-800 hover:border-${color}-500/30 transition-all">
+                            <span class="font-mono font-bold text-${color}-400 ml-2">${p.year}</span>
+                            <div class="flex gap-2">
+                                ${p.paper_link ? `<a href="${p.paper_link}" target="_blank" class="w-8 h-8 flex items-center justify-center rounded bg-gray-800 hover:bg-blue-600 text-gray-400 hover:text-white transition-colors" title="Paper"><i class="fas fa-file-pdf text-xs"></i></a>` : ''}
+                                ${p.marking_scheme_link ? `<a href="${p.marking_scheme_link}" target="_blank" class="w-8 h-8 flex items-center justify-center rounded bg-gray-800 hover:bg-emerald-600 text-gray-400 hover:text-white transition-colors" title="Marking"><i class="fas fa-check text-xs"></i></a>` : ''}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                list.appendChild(card);
+            });
+        }
+
+        // View Mode Switcher
+        window.setPaperView = (mode) => {
+            currentViewMode = mode;
+            document.querySelectorAll('.view-option').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.view-option[onclick="setPaperView('${mode}')"]`).classList.add('active');
+            renderPapers();
+        }
+
+        // Event Listeners for Search/Filter
+        document.getElementById('paperSearch').addEventListener('input', renderPapers);
+        document.getElementById('paperYearFilter').addEventListener('change', renderPapers);
+
+        // --- Other Logic ---
 
         async function loadSystemSettings() {
-            // Update Banner
             const { data: updateData } = await supabase.from('system_settings').select('value').eq('key', 'system_update').single();
             if(updateData && updateData.value.active) {
                 document.getElementById('system-update-banner').classList.remove('hidden');
                 document.getElementById('system-update-text').textContent = updateData.value.message;
             }
 
-            // Timetable PDF
             const { data: ttData } = await supabase.from('system_settings').select('value').eq('key', 'timetable_pdf').single();
             if(ttData && ttData.value.link) {
                 const link = document.getElementById('timetable-pdf-link');
@@ -485,7 +741,6 @@
                 document.getElementById('timetable-year').textContent = ttData.value.year;
             }
 
-            // Results Message
             const { data: resData } = await supabase.from('system_settings').select('value').eq('key', 'results_msg').single();
             if(resData && resData.value.title) {
                 document.getElementById('results-message-box').classList.remove('hidden');
@@ -552,73 +807,8 @@
         }
         loadExamDates();
 
-        // Paper Logic
-        window.loadSubjects = async (stream) => {
-            document.getElementById('subjectSelection').classList.remove('hidden');
-            window.scrollTo({top: document.getElementById('papers').offsetTop, behavior: 'smooth'});
-            
-            const list = document.getElementById('subjectList');
-            list.innerHTML = '<div class="col-span-full text-center text-gray-500"><i class="fas fa-spinner fa-spin"></i> Loading Subjects...</div>';
-            
-            const { data } = await supabase.from('subjects').select('*').eq('stream', stream);
-            list.innerHTML = '';
-            
-            if(data && data.length > 0) {
-                data.forEach(s => {
-                    const btn = document.createElement('button');
-                    btn.className = 'feature-card p-5 rounded-xl text-left font-medium text-gray-200 hover:text-emerald-400 flex justify-between items-center group';
-                    btn.innerHTML = `
-                        <span>${s.name}</span>
-                        <i class="fas fa-chevron-right text-xs text-gray-600 group-hover:text-emerald-500 transition-colors"></i>
-                    `;
-                    btn.onclick = () => loadPapers(stream, s.code, s.name);
-                    list.appendChild(btn);
-                });
-            } else {
-                list.innerHTML = '<div class="col-span-full text-center text-gray-500">No subjects found for this stream.</div>';
-            }
-        }
-
-        window.hideSubjects = () => {
-            document.getElementById('subjectSelection').classList.add('hidden');
-        }
-
-        async function loadPapers(stream, code, name) {
-            document.getElementById('papersDisplay').classList.remove('hidden');
-            document.getElementById('subjectSelection').classList.add('hidden');
-            document.getElementById('subjectTitle').textContent = name;
-            
-            const list = document.getElementById('papersList');
-            list.innerHTML = '<div class="text-center text-gray-500">Fetching resources...</div>';
-            
-            const { data } = await supabase.from('past_papers').select('*').eq('stream', stream).eq('subject_code', code).order('year', {ascending: false});
-            list.innerHTML = '';
-            
-            if(data && data.length > 0) {
-                data.forEach(p => {
-                    const div = document.createElement('div');
-                    div.className = 'flex justify-between items-center p-4 bg-[#0B1120] rounded-xl border border-gray-800 hover:border-emerald-500/30 transition-all';
-                    div.innerHTML = `
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-lg bg-gray-800 flex items-center justify-center text-xs font-bold text-gray-400">${p.year}</div>
-                        </div>
-                        <div class="flex gap-2 text-sm">
-                            ${p.paper_link ? `<a href="${p.paper_link}" target="_blank" class="px-3 py-1.5 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 transition text-xs font-bold">Paper</a>` : ''}
-                            ${p.marking_scheme_link ? `<a href="${p.marking_scheme_link}" target="_blank" class="px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition text-xs font-bold">Marking</a>` : ''}
-                        </div>
-                    `;
-                    list.appendChild(div);
-                });
-            } else {
-                list.innerHTML = '<div class="text-gray-500 text-sm text-center py-4">No papers available yet.</div>';
-            }
-        }
-
-        // Search Functionality
-        document.getElementById('mainSearch').addEventListener('input', (e) => {
-            // Simple placeholder logic for now
-            // Can be expanded to filter existing DOM elements or query Supabase
-        });
+        // Set default view mode highlight
+        setPaperView('medium');
     </script>
 </body>
 </html>
