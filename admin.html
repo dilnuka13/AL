@@ -15,7 +15,7 @@
     
     <!-- Icons & Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sinhala:wght@400;500;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Noto+Sinhala:wght@400;500;700&display=swap" rel="stylesheet">
     
     <!-- Animations -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
@@ -26,23 +26,23 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
+                        sans: ['Outfit', 'sans-serif'],
                         sinhala: ['Noto Sinhala', 'sans-serif'],
                     },
                     colors: {
                         emerald: {
-                            50: '#ecfdf5',
-                            100: '#d1fae5',
-                            200: '#a7f3d0',
-                            300: '#6ee7b7',
-                            400: '#34d399',
-                            500: '#10b981',
-                            600: '#059669',
-                            700: '#047857',
-                            800: '#065f46',
-                            900: '#064e3b',
-                            950: '#022c22',
+                            50: '#ecfdf5', 100: '#d1fae5', 200: '#a7f3d0', 300: '#6ee7b7', 400: '#34d399',
+                            500: '#10b981', 600: '#059669', 700: '#047857', 800: '#065f46', 900: '#064e3b', 950: '#022c22',
+                        },
+                        dark: {
+                            bg: '#0f172a',
+                            card: '#1e293b',
+                            border: '#334155'
                         }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 3s ease-in-out infinite',
                     }
                 }
             }
@@ -50,395 +50,567 @@
     </script>
 
     <style>
-        /* --- Shared Styles from Index.html --- */
-        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 10px; }
         .dark ::-webkit-scrollbar-thumb { background: #475569; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-        .glass {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
         }
-        .dark .glass {
-            background: rgba(17, 24, 39, 0.7);
+        .dark .glass-panel {
+            background: rgba(30, 41, 59, 0.9);
             border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
         }
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        .tech-grid {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(16, 185, 129, 0.05) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(16, 185, 129, 0.05) 1px, transparent 1px);
         }
-        .dark .glass-card {
-            background: rgba(30, 41, 59, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        .dark .tech-grid {
+            background-image: linear-gradient(to right, rgba(16, 185, 129, 0.03) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(16, 185, 129, 0.03) 1px, transparent 1px);
         }
 
-        .hero-pattern {
-            background-color: #f0fdf4;
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23059669' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        .nav-link { position: relative; overflow: hidden; }
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0; width: 4px;
+            background: #10b981;
+            border-radius: 0 4px 4px 0;
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
         }
-        .dark .hero-pattern {
-            background-color: #0f172a;
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2334d399' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-        }
+        .nav-link.active::before { transform: scaleY(1); }
+        .nav-link.active { background: rgba(16, 185, 129, 0.1); color: #10b981; }
 
-        /* --- Admin Specific Styles --- */
-        .loading { opacity: 0.6; pointer-events: none; }
+        .scan-line {
+            width: 100%;
+            height: 2px;
+            background: #10b981;
+            position: absolute;
+            animation: scan 1.5s linear infinite;
+            box-shadow: 0 0 10px #10b981;
+        }
+        @keyframes scan { 0% { top: 0%; opacity: 0; } 50% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
         
-        .tab-active {
-            background-color: #059669;
-            color: white;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-        .dark .tab-active {
-            background-color: #059669;
+        .custom-checkbox input:checked + div {
+            background-color: #10b981;
+            border-color: #10b981;
             color: white;
         }
-
-        .section-transition { transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; }
-        .section-hidden { opacity: 0; transform: translateY(10px); pointer-events: none; position: absolute; width: 100%; visibility: hidden; }
-        .section-visible { opacity: 1; transform: translateY(0); pointer-events: auto; position: relative; visibility: visible; }
-
-        #face-loader {
-            border: 4px solid rgba(16, 185, 129, 0.1);
-            border-top: 4px solid #10b981;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        .view-active { display: block !important; animation: fadeIn 0.4s ease-out; }
-        .view-hidden { display: none !important; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Camera Feed */
-        #video-container { position: relative; width: 100%; aspect-ratio: 4/3; border-radius: 12px; overflow: hidden; background: black; }
-        #video-feed, #face-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
     </style>
 </head>
-<body class="min-h-screen bg-gray-50 dark:bg-slate-900 text-gray-800 dark:text-gray-200 transition-colors duration-300 selection:bg-emerald-500 selection:text-white hero-pattern font-sans">
+<body class="min-h-screen bg-gray-50 dark:bg-dark-bg text-gray-800 dark:text-gray-200 transition-colors duration-300 font-sans tech-grid overflow-hidden flex flex-col">
     
-    <!-- Loading Overlay -->
-    <div id="loader-view" class="fixed inset-0 bg-white/80 dark:bg-slate-900/90 backdrop-blur-md flex flex-col items-center justify-center z-[100] transition-opacity duration-500">
-        <div id="face-loader" class="mx-auto mb-4"></div>
-        <h3 class="text-lg font-bold text-emerald-800 dark:text-emerald-400">Initializing Security</h3>
-        <p class="text-sm text-gray-500 dark:text-gray-400">Loading AI recognition models...</p>
+    <!-- INITIAL LOADER -->
+    <div id="loader-view" class="fixed inset-0 z-[100] bg-white dark:bg-dark-bg flex flex-col items-center justify-center">
+        <div class="relative w-24 h-24 mb-4">
+            <div class="absolute inset-0 border-4 border-gray-200 dark:border-gray-700 rounded-full"></div>
+            <div class="absolute inset-0 border-4 border-emerald-500 rounded-full border-t-transparent animate-spin"></div>
+            <div class="absolute inset-0 flex items-center justify-center">
+                <i class="fas fa-shield-alt text-3xl text-emerald-500 animate-pulse"></i>
+            </div>
+        </div>
+        <h2 class="text-xl font-bold tracking-widest text-gray-800 dark:text-white uppercase">Initializing</h2>
+        <p class="text-xs text-gray-400 mt-2 font-mono">Loading Neural Models...</p>
     </div>
 
-    <!-- Login Modal -->
-    <div id="loginModal" class="fixed inset-0 flex items-center justify-center z-50 transition-all duration-500 opacity-0 pointer-events-none scale-95">
-        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div> 
-        
-        <div id="login-modal-content" class="glass-card rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4 relative z-10 border border-gray-200 dark:border-gray-700">
+    <!-- LOGIN MODAL -->
+    <div id="loginModal" class="fixed inset-0 z-50 flex items-center justify-center transition-all duration-500 opacity-0 pointer-events-none scale-95">
+        <div class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+        <div class="glass-panel w-full max-w-md p-8 rounded-3xl relative z-10 shadow-2xl border-t border-emerald-500/30 transform transition-all hover:scale-[1.01]">
             
-            <!-- Login View -->
-            <div id="login-view" class="view-active">
+            <!-- 1. Login View -->
+            <div id="view-login" class="animate__animated animate__fadeIn">
                 <div class="text-center mb-8">
-                    <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 mb-4">
-                        <i class="fas fa-shield-alt text-2xl"></i>
+                    <div class="w-16 h-16 bg-gradient-to-br from-emerald-400 to-emerald-700 rounded-2xl mx-auto flex items-center justify-center shadow-lg shadow-emerald-500/30 mb-4 animate-float">
+                        <i class="fas fa-fingerprint text-3xl text-white"></i>
                     </div>
-                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Admin Portal</h2>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Secure Access Only</p>
+                    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Admin Portal</h1>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">Secure Biometric Access</p>
                 </div>
 
                 <div class="space-y-5">
-                    <div>
-                        <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase mb-2">Email Address</label>
-                        <input type="email" id="login-email" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-900 dark:text-white transition-all" placeholder="admin@example.com">
+                    <div class="group">
+                        <label class="text-xs font-bold text-gray-500 uppercase ml-1 mb-1 block group-focus-within:text-emerald-500 transition-colors">Admin Email</label>
+                        <div class="relative">
+                            <i class="fas fa-envelope absolute left-4 top-3.5 text-gray-400 group-focus-within:text-emerald-500 transition-colors"></i>
+                            <input type="email" id="login-email" class="w-full pl-11 pr-4 py-3 rounded-xl bg-gray-50 dark:bg-dark-card border border-gray-200 dark:border-dark-border focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all dark:text-white" placeholder="admin@deeducation.lk">
+                        </div>
                     </div>
                     
-                    <button id="login-with-face-btn" class="group w-full flex items-center justify-center py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-semibold transition-all duration-300 shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/40 transform hover:scale-[1.01]">
-                        <i class="fas fa-camera mr-2 group-hover:rotate-12 transition-transform"></i> 
-                        Login with Face ID
+                    <button id="login-btn" class="w-full py-3.5 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white rounded-xl font-bold shadow-lg shadow-emerald-500/30 transition-all transform active:scale-95 flex items-center justify-center gap-2 group">
+                        <i class="fas fa-camera group-hover:animate-pulse"></i> 
+                        <span>Authenticate with Face ID</span>
                     </button>
                     
-                    <div class="text-center pt-2">
-                        <p class="text-xs text-gray-500 dark:text-gray-400">
-                            New Administrator? 
-                            <a href="#" id="show-register-link" class="text-emerald-600 dark:text-emerald-400 font-bold hover:underline">Register</a>
-                        </p>
+                    <div class="text-center pt-4 border-t border-gray-100 dark:border-gray-700">
+                        <p class="text-xs text-gray-500">New Administrator? <a href="#" onclick="switchView('secret')" class="text-emerald-500 hover:underline font-bold">Register Here</a></p>
                     </div>
+                    
+                    <div id="login-msg" class="h-6 text-center text-xs font-mono text-red-500 font-bold mt-2"></div>
                 </div>
             </div>
 
-            <!-- Secret Key View -->
-            <div id="admin-secret-view" class="view-hidden">
+            <!-- 2. Secret Verification View -->
+            <div id="view-secret" class="hidden animate__animated animate__fadeIn">
                 <div class="text-center mb-8">
-                    <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 mb-4">
-                        <i class="fas fa-key text-xl"></i>
+                    <div class="w-16 h-16 bg-yellow-100 dark:bg-yellow-900/30 rounded-2xl mx-auto flex items-center justify-center mb-4">
+                        <i class="fas fa-key text-3xl text-yellow-600 dark:text-yellow-400"></i>
                     </div>
-                    <h2 class="text-xl font-bold text-gray-900 dark:text-white">Verification</h2>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Enter the master secret key</p>
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Security Check</h2>
+                    <p class="text-sm text-gray-500">Enter the master secret key to proceed.</p>
                 </div>
-                
-                <div class="space-y-5">
-                    <input type="password" id="admin-secret-input" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 text-gray-900 dark:text-white text-center tracking-widest text-lg" placeholder="••••••••">
-                    
-                    <button id="submit-secret-btn" class="w-full py-3 px-4 bg-yellow-500 hover:bg-yellow-600 text-white rounded-xl font-semibold transition-colors shadow-lg shadow-yellow-500/30">
-                        Verify Secret
-                    </button>
-                    
-                    <button id="show-login-link-secret" class="w-full text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
-                        Back to Login
-                    </button>
+                <div class="space-y-4">
+                    <input type="password" id="admin-secret-input" class="w-full px-4 py-3 text-center tracking-[0.5em] text-xl font-bold rounded-xl bg-gray-50 dark:bg-dark-card border border-gray-200 dark:border-dark-border focus:ring-2 focus:ring-yellow-500 outline-none dark:text-white" placeholder="••••••••">
+                    <button onclick="verifySecret()" class="w-full py-3 bg-yellow-500 hover:bg-yellow-600 text-white rounded-xl font-bold shadow-lg transition-all">Verify Access</button>
+                    <button onclick="switchView('login')" class="w-full py-2 text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">Back to Login</button>
                 </div>
             </div>
 
-            <!-- Register View -->
-            <div id="register-view" class="view-hidden">
-                <h2 class="text-xl font-bold text-center text-gray-900 dark:text-white mb-6">Create Admin Account</h2>
+            <!-- 3. Registration View -->
+            <div id="view-register" class="hidden animate__animated animate__fadeIn">
+                <div class="text-center mb-6">
+                    <h2 class="text-xl font-bold text-gray-900 dark:text-white">Create Account</h2>
+                    <p class="text-xs text-gray-500">All fields are required for approval.</p>
+                </div>
                 <div class="space-y-3">
-                    <input type="text" id="register-name" placeholder="Full Name" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-900 dark:text-white text-sm">
-                    <input type="email" id="register-email" placeholder="Email Address" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-900 dark:text-white text-sm">
-                    <input type="tel" id="register-phone" placeholder="Phone Number" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-900 dark:text-white text-sm">
-                    <input type="password" id="register-password" placeholder="Password" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-900 dark:text-white text-sm">
+                    <input type="text" id="reg-name" placeholder="Full Name" class="w-full px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-dark-card border border-gray-200 dark:border-dark-border text-sm dark:text-white outline-none focus:ring-2 focus:ring-emerald-500">
+                    <input type="email" id="reg-email" placeholder="Email Address" class="w-full px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-dark-card border border-gray-200 dark:border-dark-border text-sm dark:text-white outline-none focus:ring-2 focus:ring-emerald-500">
+                    <input type="tel" id="reg-phone" placeholder="Phone Number" class="w-full px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-dark-card border border-gray-200 dark:border-dark-border text-sm dark:text-white outline-none focus:ring-2 focus:ring-emerald-500">
+                    <input type="password" id="reg-pass" placeholder="Password" class="w-full px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-dark-card border border-gray-200 dark:border-dark-border text-sm dark:text-white outline-none focus:ring-2 focus:ring-emerald-500">
                     
-                    <button id="scan-face-btn" class="w-full border-2 border-dashed border-emerald-300 dark:border-emerald-700 text-emerald-600 dark:text-emerald-400 py-3 rounded-xl font-medium hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors flex items-center justify-center gap-2">
-                        <i class="fas fa-id-card"></i> <span>Scan Face (Required)</span>
+                    <button id="reg-scan-btn" class="w-full py-2.5 border-2 border-dashed border-emerald-500/50 text-emerald-600 dark:text-emerald-400 rounded-xl font-bold hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors flex items-center justify-center gap-2">
+                        <i class="fas fa-expand"></i> Scan Face Data
                     </button>
                     
-                    <p id="scan-feedback" class="text-center text-xs text-emerald-600 font-medium h-4"></p>
-                    
-                    <button id="register-btn" disabled class="w-full py-3 bg-emerald-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-xl font-bold shadow-lg shadow-emerald-500/30 transition-all">
-                        Create Account
-                    </button>
-                    
-                    <button id="show-login-link-register" class="w-full text-xs text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 mt-2">
-                        Cancel
-                    </button>
+                    <p id="reg-status" class="text-xs text-center text-emerald-600 font-bold h-4"></p>
+
+                    <button id="reg-submit-btn" disabled class="w-full py-3 bg-gray-300 dark:bg-gray-700 text-gray-500 cursor-not-allowed rounded-xl font-bold transition-all">Register Admin</button>
+                    <button onclick="switchView('login')" class="w-full py-1 text-xs text-gray-400 hover:text-gray-600">Cancel</button>
                 </div>
             </div>
 
-            <!-- Feedback Toast inside Modal -->
-            <div id="message-box" class="hidden mt-4 p-3 rounded-lg text-center text-white text-sm font-medium animate__animated animate__fadeIn"></div>
         </div>
     </div>
 
-    <!-- Camera Modal -->
-    <div id="camera-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center bg-black/90 backdrop-blur-sm">
-        <div class="relative w-full max-w-lg p-4">
-            <div class="bg-gray-900 rounded-2xl overflow-hidden shadow-2xl border border-gray-700">
-                <div class="p-4 text-center">
-                    <h3 id="camera-instruction" class="text-white font-medium">Initializing camera...</h3>
-                </div>
-                <div id="video-container">
-                    <video id="video-feed" autoplay muted playsinline></video>
-                    <canvas id="face-canvas"></canvas>
-                </div>
-                <div class="p-4">
-                    <button id="stop-camera-btn" class="w-full py-3 bg-red-500/20 text-red-400 border border-red-500/50 rounded-xl hover:bg-red-500 hover:text-white transition-all font-medium">
-                        Cancel Scan
-                    </button>
-                </div>
+    <!-- CAMERA OVERLAY -->
+    <div id="camera-modal" class="hidden fixed inset-0 z-[60] bg-black/95 flex flex-col items-center justify-center">
+        <div class="relative w-full max-w-lg aspect-[4/3] bg-black rounded-3xl overflow-hidden border-2 border-emerald-500/50 shadow-2xl shadow-emerald-500/20">
+            <video id="video-feed" autoplay muted playsinline class="w-full h-full object-cover transform scale-x-[-1]"></video>
+            <canvas id="face-canvas" class="absolute inset-0 w-full h-full transform scale-x-[-1]"></canvas>
+            <div class="scan-line"></div>
+            <div class="absolute top-4 left-0 w-full text-center">
+                <span class="bg-black/50 text-white px-3 py-1 rounded-full text-xs font-mono border border-white/20 backdrop-blur-md" id="camera-status-text">
+                    <i class="fas fa-record-vinyl text-red-500 animate-pulse mr-2"></i>Scanning...
+                </span>
             </div>
         </div>
+        <button onclick="stopCamera()" class="mt-6 px-8 py-3 bg-gray-800 text-white rounded-full font-bold hover:bg-gray-700 transition-all">Cancel</button>
     </div>
 
-    <!-- Main Dashboard Content -->
-    <div id="mainContent" class="flex flex-col min-h-screen hidden">
-        <!-- Header -->
-        <header class="sticky top-0 z-40 glass shadow-sm border-b border-gray-200 dark:border-gray-800">
-            <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-xl flex items-center justify-center text-white font-bold shadow-lg shadow-emerald-500/20">
-                        A
-                    </div>
+    <!-- MAIN DASHBOARD -->
+    <div id="mainContent" class="flex h-screen hidden overflow-hidden">
+        <!-- SIDEBAR -->
+        <aside class="w-72 bg-white dark:bg-dark-card border-r border-gray-200 dark:border-dark-border hidden lg:flex flex-col z-20">
+            <div class="p-6">
+                <div class="flex items-center gap-3 mb-8">
+                    <div class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-emerald-500/20">DE</div>
                     <div>
-                        <h1 class="text-lg font-bold text-gray-900 dark:text-white leading-tight">Admin Dashboard</h1>
-                        <p class="text-[10px] font-medium text-emerald-600 dark:text-emerald-400 uppercase tracking-wide">Paper Management</p>
+                        <h2 class="font-bold text-lg dark:text-white leading-tight">DE Admin</h2>
+                        <span class="text-[10px] bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded font-bold uppercase tracking-wider">Pro</span>
                     </div>
                 </div>
-                
-                <div class="flex items-center gap-3">
-                    <a href="index.html" class="hidden md:flex items-center text-sm text-gray-500 hover:text-emerald-600 transition-colors mr-2">
-                        <i class="fas fa-external-link-alt mr-2"></i> View Site
+
+                <div class="space-y-1">
+                    <p class="px-4 text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 mt-4">Modules</p>
+                    <a onclick="showSection('papers')" id="nav-papers" class="nav-link active flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all cursor-pointer">
+                        <i class="fas fa-layer-group w-5"></i> Past Papers
                     </a>
-                    <button id="darkModeToggle" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-yellow-400 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
-                        <i class="fas fa-sun text-sm" id="toggleIcon"></i>
-                    </button>
-                    <button id="logout-btn" class="w-10 h-10 rounded-full bg-red-50 dark:bg-red-900/20 text-red-500 flex items-center justify-center hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors">
-                        <i class="fas fa-sign-out-alt text-sm"></i>
-                    </button>
+                    <a onclick="showSection('timetables')" id="nav-timetables" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all cursor-pointer">
+                        <i class="fas fa-calendar-alt w-5"></i> Timetables
+                    </a>
+                    <a onclick="showSection('notices')" id="nav-notices" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all cursor-pointer">
+                        <i class="fas fa-bell w-5"></i> Notices
+                    </a>
+                    
+                    <p class="px-4 text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 mt-8">System</p>
+                    <a onclick="showSection('settings')" id="nav-settings" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all cursor-pointer">
+                        <i class="fas fa-sliders-h w-5"></i> Settings
+                    </a>
+                    <a onclick="showSection('users')" id="nav-users" class="nav-link hidden flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all cursor-pointer">
+                        <i class="fas fa-users-cog w-5"></i> User Access
+                    </a>
                 </div>
             </div>
-        </header>
 
-        <main class="flex-grow max-w-5xl mx-auto w-full px-4 py-8">
-            <!-- Tabs -->
-            <div class="bg-white dark:bg-gray-800 p-1.5 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 mb-8 flex max-w-md mx-auto">
-                <button id="dataEntryTab" class="flex-1 py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-300 tab-active">
-                    <i class="fas fa-plus-circle mr-2"></i> Add New
-                </button>
-                <button id="dataEditTab" class="flex-1 py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-300 text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white">
-                    <i class="fas fa-tasks mr-2"></i> Manage
-                </button>
+            <div class="mt-auto p-4 border-t border-gray-100 dark:border-dark-border">
+                <div class="flex items-center gap-3 p-3 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700">
+                    <img id="user-avatar" src="" alt="Admin" class="w-10 h-10 rounded-full object-cover border-2 border-emerald-500">
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-bold text-gray-900 dark:text-white truncate" id="user-name-display">Loading...</p>
+                        <p class="text-xs text-emerald-600 truncate" id="user-role-display">...</p>
+                    </div>
+                    <button onclick="location.reload()" class="text-gray-400 hover:text-red-500 transition-colors"><i class="fas fa-sign-out-alt"></i></button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="flex-1 overflow-y-auto p-4 lg:p-8 relative">
+            
+            <!-- Mobile Toggle -->
+            <div class="lg:hidden flex justify-between items-center mb-6 bg-white dark:bg-dark-card p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+                <span class="font-bold dark:text-white flex items-center gap-2"><div class="w-6 h-6 bg-emerald-500 rounded text-white flex items-center justify-center text-xs">DE</div> Admin</span>
+                <button class="text-gray-600 dark:text-gray-300"><i class="fas fa-bars"></i></button>
             </div>
 
-            <!-- Data Entry Section -->
-            <div id="dataEntrySection" class="glass-card rounded-2xl p-6 md:p-8 section-transition section-visible">
-                <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6" id="formTitle">Add New Past Paper</h2>
-                
-                <form id="paperForm" class="space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">Stream</label>
-                            <select id="stream" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-800 dark:text-white appearance-none">
-                                <option value="">Select Stream</option>
+            <!-- 1. PAPERS SECTION -->
+            <section id="papers-section" class="admin-section active animate__animated animate__fadeIn">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Past Paper Library</h1>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Manage exam resources and marking schemes.</p>
+                    </div>
+                    <button onclick="togglePaperForm()" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold shadow-lg shadow-emerald-500/20 transition-all flex items-center gap-2">
+                        <i class="fas fa-cloud-upload-alt"></i> Upload New
+                    </button>
+                </div>
+
+                <!-- Filters Toolbar -->
+                <div class="glass-panel p-4 rounded-2xl mb-6 flex flex-col xl:flex-row gap-4 items-center justify-between sticky top-0 z-10 shadow-sm">
+                    <div class="flex flex-col md:flex-row gap-3 w-full xl:w-auto flex-wrap">
+                        <!-- Stream Filter -->
+                        <div class="relative w-full md:w-auto">
+                            <select id="filter-stream" class="w-full md:w-40 py-2.5 pl-4 pr-8 rounded-xl bg-gray-50 dark:bg-dark-bg border border-gray-200 dark:border-dark-border text-sm dark:text-white outline-none focus:ring-2 focus:ring-emerald-500 appearance-none">
+                                <option value="all">All Streams</option>
                                 <option value="science">Science</option>
                                 <option value="commerce">Commerce</option>
                                 <option value="arts">Arts</option>
                                 <option value="technology">Technology</option>
                             </select>
+                            <i class="fas fa-chevron-down absolute right-3 top-3.5 text-xs text-gray-400 pointer-events-none"></i>
+                        </div>
+
+                        <!-- Subject Filter -->
+                        <div class="relative w-full md:w-auto">
+                             <select id="filter-subject" class="w-full md:w-48 py-2.5 pl-4 pr-8 rounded-xl bg-gray-50 dark:bg-dark-bg border border-gray-200 dark:border-dark-border text-sm dark:text-white outline-none focus:ring-2 focus:ring-emerald-500 appearance-none disabled:opacity-50">
+                                <option value="all">All Subjects</option>
+                                <!-- JS Populates this -->
+                            </select>
+                            <i class="fas fa-chevron-down absolute right-3 top-3.5 text-xs text-gray-400 pointer-events-none"></i>
+                        </div>
+
+                        <!-- Year Filter -->
+                        <div class="relative w-full md:w-auto">
+                            <select id="filter-year" class="w-full md:w-32 py-2.5 pl-4 pr-8 rounded-xl bg-gray-50 dark:bg-dark-bg border border-gray-200 dark:border-dark-border text-sm dark:text-white outline-none focus:ring-2 focus:ring-emerald-500 appearance-none">
+                                <option value="all">All Years</option>
+                                <!-- JS Populates this -->
+                            </select>
+                            <i class="fas fa-chevron-down absolute right-3 top-3.5 text-xs text-gray-400 pointer-events-none"></i>
+                        </div>
+
+                        <!-- Search Box -->
+                        <div class="relative w-full md:w-auto flex-1">
+                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                            <input type="text" id="paper-search" placeholder="Search by name/code..." class="w-full md:w-60 pl-10 pr-4 py-2.5 rounded-xl bg-gray-50 dark:bg-dark-bg border border-gray-200 dark:border-dark-border focus:ring-2 focus:ring-emerald-500 outline-none text-sm dark:text-white">
+                        </div>
+                    </div>
+                    
+                    <div class="flex bg-gray-100 dark:bg-dark-bg p-1 rounded-lg border border-gray-200 dark:border-dark-border w-full md:w-auto justify-center">
+                        <button onclick="setPaperView('list')" class="view-btn p-2 rounded-md text-gray-500 hover:text-emerald-500 hover:bg-white dark:hover:bg-dark-card transition-all active" id="btn-list"><i class="fas fa-list"></i></button>
+                        <button onclick="setPaperView('grid')" class="view-btn p-2 rounded-md text-gray-500 hover:text-emerald-500 hover:bg-white dark:hover:bg-dark-card transition-all" id="btn-grid"><i class="fas fa-th-large"></i></button>
+                        <button onclick="setPaperView('large')" class="view-btn p-2 rounded-md text-gray-500 hover:text-emerald-500 hover:bg-white dark:hover:bg-dark-card transition-all" id="btn-large"><i class="fas fa-square"></i></button>
+                    </div>
+                </div>
+
+                <!-- Add/Edit Form (Collapsible) -->
+                <div id="paper-form-container" class="hidden mb-8 bg-white dark:bg-dark-card p-6 rounded-2xl shadow-xl border border-emerald-500/20 animate__animated animate__fadeInDown relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500"></div>
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="font-bold text-lg dark:text-white flex items-center gap-2"><i class="fas fa-edit text-emerald-500"></i> Add/Edit Paper</h3>
+                        <button onclick="togglePaperForm()" class="text-gray-400 hover:text-red-500"><i class="fas fa-times"></i></button>
+                    </div>
+                    
+                    <form id="paperForm" class="space-y-4">
+                        <input type="hidden" id="paperId">
+                        
+                        <!-- Quick Subject Selector -->
+                        <div class="p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl border border-emerald-200 dark:border-emerald-800 mb-6">
+                            <label class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase mb-2 block">Step 1: Quick Subject Select</label>
+                            <select id="subject-selector" class="w-full p-3 rounded-lg bg-white dark:bg-dark-bg border border-emerald-300 dark:border-emerald-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none">
+                                <option value="">Loading Subjects...</option>
+                            </select>
+                            <p class="text-[10px] text-emerald-600/70 dark:text-emerald-400/70 mt-1">* Selecting a subject will auto-fill details below.</p>
+                        </div>
+
+                        <!-- Stream Selection (Multi-select Logic) -->
+                        <div class="p-4 bg-gray-50 dark:bg-dark-bg/50 rounded-xl border border-gray-100 dark:border-gray-700">
+                            <label class="text-xs font-bold text-gray-500 uppercase mb-3 block">Step 2: Target Streams (Auto-checked)</label>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                <label class="custom-checkbox cursor-pointer relative">
+                                    <input type="checkbox" name="stream_target" value="science" class="sr-only">
+                                    <div class="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm text-center dark:text-gray-300 hover:border-emerald-500 transition-all select-none">Science</div>
+                                </label>
+                                <label class="custom-checkbox cursor-pointer relative">
+                                    <input type="checkbox" name="stream_target" value="commerce" class="sr-only">
+                                    <div class="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm text-center dark:text-gray-300 hover:border-emerald-500 transition-all select-none">Commerce</div>
+                                </label>
+                                <label class="custom-checkbox cursor-pointer relative">
+                                    <input type="checkbox" name="stream_target" value="arts" class="sr-only">
+                                    <div class="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm text-center dark:text-gray-300 hover:border-emerald-500 transition-all select-none">Arts</div>
+                                </label>
+                                <label class="custom-checkbox cursor-pointer relative">
+                                    <input type="checkbox" name="stream_target" value="technology" class="sr-only">
+                                    <div class="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm text-center dark:text-gray-300 hover:border-emerald-500 transition-all select-none">Technology</div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <label class="text-xs font-bold text-gray-500 uppercase block mt-4">Step 3: Paper Details</label>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="md:col-span-2">
+                                <input type="text" id="subject_name" placeholder="Subject Name (e.g., General English)" class="w-full p-3 rounded-lg bg-gray-50 dark:bg-dark-bg border border-gray-200 dark:border-dark-border dark:text-white outline-none focus:ring-2 focus:ring-emerald-500">
+                            </div>
+                            <input type="number" id="year" placeholder="Year (e.g., 2025)" class="w-full p-3 rounded-lg bg-gray-50 dark:bg-dark-bg border border-gray-200 dark:border-dark-border dark:text-white outline-none focus:ring-2 focus:ring-emerald-500">
                         </div>
                         
-                        <div>
-                            <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">Subject</label>
-                            <select id="subject" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-800 dark:text-white appearance-none disabled:opacity-50" disabled>
-                                <option value="">Select Stream First</option>
+                        <input type="text" id="subject_code" placeholder="Subject Code (Optional, e.g. ENG-01)" class="w-full p-3 rounded-lg bg-gray-50 dark:bg-dark-bg border border-gray-200 dark:border-dark-border dark:text-white outline-none focus:ring-2 focus:ring-emerald-500">
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                             <input type="url" id="paper_link" placeholder="Question Paper PDF URL" class="w-full p-3 rounded-lg bg-gray-50 dark:bg-dark-bg border border-gray-200 dark:border-dark-border dark:text-white outline-none focus:ring-2 focus:ring-emerald-500">
+                             <input type="url" id="marking_link" placeholder="Marking Scheme URL" class="w-full p-3 rounded-lg bg-gray-50 dark:bg-dark-bg border border-gray-200 dark:border-dark-border dark:text-white outline-none focus:ring-2 focus:ring-emerald-500">
+                        </div>
+                        
+                        <div class="flex gap-3 justify-end pt-2 border-t border-gray-100 dark:border-gray-700 mt-4">
+                            <button type="button" onclick="togglePaperForm()" class="px-5 py-2 text-gray-500 hover:text-gray-700 font-medium transition">Cancel</button>
+                            <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-xl font-bold transition-all shadow-md">Save Resource</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Results Container -->
+                <div id="papers-list-container" class="grid gap-4 transition-all duration-300 grid-cols-1">
+                    <!-- Dynamic Content -->
+                </div>
+            </section>
+
+            <!-- 2. SETTINGS SECTION (Maintenance Mode) -->
+            <section id="settings-section" class="admin-section hidden animate__animated animate__fadeIn">
+                <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-8">System Configuration</h1>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    
+                    <!-- Maintenance Mode Controller -->
+                    <div class="glass-panel p-6 rounded-2xl border-l-4 border-red-500 relative overflow-hidden group">
+                        <div class="absolute -right-6 -top-6 text-9xl text-red-500 opacity-5 group-hover:opacity-10 transition-opacity rotate-12 pointer-events-none">
+                            <i class="fas fa-traffic-light"></i>
+                        </div>
+                        
+                        <div class="flex justify-between items-start mb-6">
+                            <div>
+                                <h3 class="font-bold text-xl text-gray-900 dark:text-white flex items-center gap-2">
+                                    <i class="fas fa-tools text-red-500"></i> Maintenance Mode
+                                </h3>
+                                <p class="text-xs text-gray-500 mt-1 max-w-xs">When active, all visitors will be redirected to the maintenance page.</p>
+                            </div>
+                            <div class="flex items-center">
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" id="maintenance-toggle" class="sr-only peer">
+                                    <div class="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 dark:peer-focus:ring-red-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-red-500"></div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="bg-red-50 dark:bg-red-900/20 p-4 rounded-xl border border-red-100 dark:border-red-900/50 mb-4 transition-all opacity-50 pointer-events-none" id="maintenance-details">
+                            <label class="block text-xs font-bold text-red-700 dark:text-red-300 uppercase mb-2">Estimated End Time</label>
+                            <input type="datetime-local" id="maintenance-end" class="w-full p-3 rounded-lg bg-white dark:bg-dark-bg border border-red-200 dark:border-red-800 dark:text-white outline-none focus:ring-2 focus:ring-red-500 text-sm">
+                        </div>
+
+                        <button onclick="saveMaintenanceSettings()" class="w-full py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-xl font-bold hover:opacity-90 transition-opacity">
+                            Apply Changes
+                        </button>
+                    </div>
+
+                    <!-- System Update Notification -->
+                    <div class="glass-panel p-6 rounded-2xl border-l-4 border-yellow-500">
+                         <h3 class="font-bold text-xl mb-4 text-gray-900 dark:text-white flex items-center gap-2">
+                            <i class="fas fa-bullhorn text-yellow-500"></i> Homepage Alert
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-3 bg-gray-50 dark:bg-dark-bg p-3 rounded-xl border border-gray-100 dark:border-dark-border">
+                                <input type="checkbox" id="sys-update-active" class="w-5 h-5 text-emerald-600 rounded focus:ring-emerald-500 border-gray-300">
+                                <label for="sys-update-active" class="font-bold text-sm dark:text-gray-300 cursor-pointer select-none">Show Notification Bar</label>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Target Date</label>
+                                <input type="date" id="sys-update-date" class="w-full p-3 rounded-lg bg-gray-50 dark:bg-dark-bg border border-gray-200 dark:border-dark-border dark:text-white outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Message</label>
+                                <textarea id="sys-update-msg" rows="2" class="w-full p-3 rounded-lg bg-gray-50 dark:bg-dark-bg border border-gray-200 dark:border-dark-border dark:text-white outline-none focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="Next update scheduled for..."></textarea>
+                            </div>
+                            <button onclick="saveSystemUpdate()" class="w-full py-3 bg-yellow-500 text-white rounded-xl font-bold hover:bg-yellow-600 transition-colors">Save Notification</button>
+                        </div>
+                    </div>
+
+                    <!-- Results Info -->
+                    <div class="glass-panel p-6 rounded-2xl border-l-4 border-blue-500">
+                        <h3 class="font-bold text-xl mb-4 text-gray-900 dark:text-white flex items-center gap-2">
+                            <i class="fas fa-poll text-blue-500"></i> Results Panel
+                        </h3>
+                         <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Title</label>
+                                <input type="text" id="res-title" class="w-full p-3 rounded-lg bg-gray-50 dark:bg-dark-bg border border-gray-200 dark:border-dark-border dark:text-white outline-none focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="Upcoming Release">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Details</label>
+                                <textarea id="res-msg" rows="2" class="w-full p-3 rounded-lg bg-gray-50 dark:bg-dark-bg border border-gray-200 dark:border-dark-border dark:text-white outline-none focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="Expected date..."></textarea>
+                            </div>
+                            <button onclick="saveResultsMsg()" class="w-full py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors">Update Info</button>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 3. TIMETABLES SECTION -->
+            <section id="timetables-section" class="admin-section hidden animate__animated animate__fadeIn">
+                <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-8">Exam Schedules</h1>
+                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Main PDF Upload -->
+                    <div class="glass-panel p-6 rounded-2xl">
+                        <h3 class="font-bold text-lg mb-4 dark:text-white flex items-center gap-2">
+                            <i class="fas fa-file-pdf text-red-500"></i> Main Timetable
+                        </h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Year Label</label>
+                                <input type="text" id="tt-year" class="w-full p-3 rounded-lg bg-gray-50 dark:bg-dark-bg border border-gray-200 dark:border-dark-border dark:text-white outline-none focus:ring-2 focus:ring-emerald-500" placeholder="2025 A/L">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">PDF URL</label>
+                                <input type="url" id="tt-pdf-link" class="w-full p-3 rounded-lg bg-gray-50 dark:bg-dark-bg border border-gray-200 dark:border-dark-border dark:text-white outline-none focus:ring-2 focus:ring-emerald-500" placeholder="https://...">
+                            </div>
+                            <button onclick="updateTimetablePDF()" class="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold hover:bg-emerald-700 transition">Save PDF Link</button>
+                        </div>
+                    </div>
+
+                    <!-- Exam Dates -->
+                     <div class="glass-panel p-6 rounded-2xl">
+                        <h3 class="font-bold text-lg mb-4 dark:text-white flex items-center gap-2">
+                            <i class="fas fa-calendar-day text-blue-500"></i> Important Dates
+                        </h3>
+                        <form id="examDateForm" class="flex gap-2 mb-4">
+                            <input type="date" id="exam-date" class="p-2 rounded-lg bg-gray-50 dark:bg-dark-bg border border-gray-200 dark:border-dark-border dark:text-white text-xs w-1/3">
+                            <input type="text" id="exam-details" placeholder="Event" class="p-2 rounded-lg bg-gray-50 dark:bg-dark-bg border border-gray-200 dark:border-dark-border dark:text-white text-xs w-1/3">
+                            <select id="exam-type" class="p-2 rounded-lg bg-gray-50 dark:bg-dark-bg border border-gray-200 dark:border-dark-border dark:text-white text-xs flex-1">
+                                <option value="Exam">Exam</option>
+                                <option value="Holiday">Off</option>
+                            </select>
+                            <button type="submit" class="bg-emerald-600 text-white p-2 rounded-lg"><i class="fas fa-plus"></i></button>
+                        </form>
+                        <div id="exam-dates-list" class="max-h-60 overflow-y-auto space-y-2 pr-1 custom-scroll">
+                            <!-- Dynamic -->
+                        </div>
+                     </div>
+                 </div>
+            </section>
+
+             <!-- 4. NOTICES SECTION -->
+            <section id="notices-section" class="admin-section hidden animate__animated animate__fadeIn">
+                <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-8">Announcements</h1>
+                <div class="glass-panel p-6 rounded-2xl mb-8 relative overflow-hidden">
+                    <div class="absolute right-0 top-0 p-10 opacity-5 pointer-events-none">
+                        <i class="fas fa-bullhorn text-9xl"></i>
+                    </div>
+                    <form id="noticeForm" class="space-y-4 relative z-10">
+                        <input type="hidden" id="notice-id">
+                        <div class="flex flex-col md:flex-row gap-4">
+                            <input type="text" id="notice-title" placeholder="Notice Title" class="flex-1 p-3 rounded-lg bg-gray-50 dark:bg-dark-bg border border-gray-200 dark:border-dark-border dark:text-white outline-none focus:ring-2 focus:ring-emerald-500" required>
+                            <select id="notice-type" class="w-full md:w-48 p-3 rounded-lg bg-gray-50 dark:bg-dark-bg border border-gray-200 dark:border-dark-border dark:text-white outline-none focus:ring-2 focus:ring-emerald-500">
+                                <option value="normal">Default (Blue)</option>
+                                <option value="important">Important (Red)</option>
+                                <option value="opportunity">Good News (Green)</option>
                             </select>
                         </div>
-                    </div>
-                    
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">Year</label>
-                        <input type="number" id="year" min="2000" max="2030" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-800 dark:text-white" placeholder="e.g. 2024">
-                    </div>
-                    
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">Paper Link</label>
-                            <div class="relative">
-                                <i class="fas fa-link absolute left-4 top-4 text-gray-400"></i>
-                                <input type="url" id="paperLink" class="w-full pl-10 pr-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-800 dark:text-white" placeholder="https://...">
-                            </div>
+                        <textarea id="notice-body" rows="3" placeholder="Notice content..." class="w-full p-3 rounded-lg bg-gray-50 dark:bg-dark-bg border border-gray-200 dark:border-dark-border dark:text-white outline-none focus:ring-2 focus:ring-emerald-500" required></textarea>
+                        
+                        <!-- Form Actions -->
+                        <div class="flex justify-between items-center">
+                            <button type="button" onclick="resetNoticeForm()" class="text-xs text-gray-400 hover:text-gray-600 underline">Clear</button>
+                            <button type="submit" id="notice-submit-btn" class="bg-emerald-600 text-white px-8 py-2.5 rounded-xl font-bold hover:bg-emerald-700 transition shadow-lg shadow-emerald-500/20">Publish Notice</button>
                         </div>
-                        
-                        <div>
-                            <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">Marking Scheme (Optional)</label>
-                            <div class="relative">
-                                <i class="fas fa-check-double absolute left-4 top-4 text-gray-400"></i>
-                                <input type="url" id="markingLink" class="w-full pl-10 pr-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-800 dark:text-white" placeholder="https://...">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="flex gap-4 pt-2">
-                        <button type="submit" id="submitBtn" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-xl font-bold shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/40 transition-all transform hover:-translate-y-0.5">
-                            <span id="submitBtnText">Add Paper</span>
-                            <i id="submitSpinner" class="fas fa-spinner fa-spin ml-2 hidden"></i>
-                        </button>
-                        
-                        <button type="button" id="updateBtn" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3.5 rounded-xl font-bold shadow-lg shadow-blue-500/30 transition-all hidden">
-                            <span id="updateBtnText">Update Paper</span>
-                            <i id="updateSpinner" class="fas fa-spinner fa-spin ml-2 hidden"></i>
-                        </button>
-                        
-                        <button type="button" id="cancelBtn" class="px-6 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-xl font-bold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors hidden">
-                            Cancel
-                        </button>
-                    </div>
-                </form>
-            </div>
+                    </form>
+                </div>
+                <div id="notices-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+            </section>
 
-            <!-- Data Management Section -->
-            <div id="dataManagementSection" class="glass-card rounded-2xl p-6 md:p-8 section-transition section-hidden">
-                <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-                    <h2 class="text-xl font-bold text-gray-800 dark:text-white">Existing Records</h2>
-                    <button onclick="loadPapers()" class="text-sm px-4 py-2 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-lg hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-colors">
-                        <i class="fas fa-sync-alt mr-2"></i> Refresh List
-                    </button>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-6">
-                    <div class="md:col-span-1 relative">
-                        <i class="fas fa-search absolute left-3 top-3.5 text-gray-400 text-sm"></i>
-                        <input type="text" id="searchPapers" placeholder="Search..." class="w-full pl-9 pr-4 py-2.5 rounded-lg bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none dark:text-white">
-                    </div>
-                    <select id="filterStream" class="px-3 py-2.5 rounded-lg bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 text-sm dark:text-white focus:outline-none">
-                        <option value="">All Streams</option>
-                        <option value="science">Science</option>
-                        <option value="commerce">Commerce</option>
-                        <option value="arts">Arts</option>
-                        <option value="technology">Technology</option>
-                    </select>
-                    <select id="filterSubject" class="px-3 py-2.5 rounded-lg bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 text-sm dark:text-white focus:outline-none" disabled>
-                        <option value="">Subject</option>
-                    </select>
-                    <select id="filterYear" class="px-3 py-2.5 rounded-lg bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 text-sm dark:text-white focus:outline-none">
-                        <option value="">Year</option>
-                        <!-- JS populates years -->
-                    </select>
-                </div>
-                
-                <div id="loadingMessage" class="hidden flex flex-col items-center justify-center py-12 text-emerald-600">
-                    <i class="fas fa-circle-notch fa-spin text-3xl mb-3"></i>
-                    <p class="text-sm">Fetching data...</p>
-                </div>
-                
-                <div id="papersList" class="space-y-3">
-                    <!-- Papers injected here -->
-                </div>
-            </div>
+            <!-- 5. USERS SECTION -->
+            <section id="users-section" class="admin-section hidden animate__animated animate__fadeIn">
+                 <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-8">Access Control</h1>
+                 <div class="glass-panel rounded-2xl overflow-hidden">
+                    <table class="w-full text-left">
+                        <thead class="bg-gray-50 dark:bg-dark-card border-b border-gray-200 dark:border-gray-700">
+                            <tr>
+                                <th class="p-4 text-xs font-bold text-gray-500 uppercase">User</th>
+                                <th class="p-4 text-xs font-bold text-gray-500 uppercase">Email</th>
+                                <th class="p-4 text-xs font-bold text-gray-500 uppercase">Status</th>
+                                <th class="p-4 text-right text-xs font-bold text-gray-500 uppercase">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-list-body" class="divide-y divide-gray-100 dark:divide-gray-800 text-sm dark:text-white"></tbody>
+                    </table>
+                 </div>
+            </section>
+
         </main>
     </div>
 
-    <!-- Notification Toast -->
-    <div id="notificationContainer" class="fixed top-24 right-6 z-[100] flex flex-col gap-2 pointer-events-none"></div>
+    <!-- TOAST CONTAINER -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-[200] space-y-2 pointer-events-none"></div>
 
-    <!-- Scripts -->
     <script type="module">
-        // Supabase config
+        // --- CONFIG & SUPABASE ---
+        const SUPER_ADMIN_EMAIL = 'isaradilnuka2005@gmail.com';
+        const SUPER_ADMIN_IMG = 'https://dilnuka13.github.io/my/isara-profile.jpg';
+        const ADMIN_SECRET = '20050616';
+        
         const supabaseUrl = 'https://hppojrbfhzttzvlvovre.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhwcG9qcmJmaHp0dHp2bHZvdnJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjExODgxNDYsImV4cCI6MjA3Njc2NDE0Nn0.aL2fegb_eRPY0E7P6Mwufhq3TCAeX8-hDCHBo9VeAsA';
         const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-        // DOM Elements
-        const body = document.body;
-        const loginModal = document.getElementById('loginModal');
-        const mainContent = document.getElementById('mainContent');
-        const loaderView = document.getElementById('loader-view');
-        
-        // Logic Elements
-        const ADMIN_SECRET = '20050616';
-        let editingPaperId = null;
+        let currentUser = null;
         let allPapers = [];
-        let registrationDescriptors = [];
+        let allNotices = [];
+        let allSubjects = [];
+        let currentPaperView = 'list';
         let stream;
         let detectionInterval;
+        let registrationDescriptors = [];
 
-        // --- Theme Logic ---
-        function toggleDarkMode() {
-            body.classList.toggle('dark');
-            const isDark = body.classList.contains('dark');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-            updateThemeIcon(isDark);
-        }
-
-        function updateThemeIcon(isDark) {
-            const icon = document.getElementById('toggleIcon');
-            if(icon) {
-                icon.className = isDark ? 'fas fa-moon text-sm' : 'fas fa-sun text-sm';
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', async () => {
+            if(localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
             }
-        }
+            await loadModels();
+            const ySelect = document.getElementById('filter-year');
+            for(let i=2030; i>=2010; i--) {
+                const opt = document.createElement('option');
+                opt.value = i; opt.text = i;
+                ySelect.appendChild(opt);
+            }
+        });
 
-        function initTheme() {
-            const saved = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-            if (saved === 'dark') body.classList.add('dark');
-            updateThemeIcon(saved === 'dark');
-        }
-
-        document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
-
-        // --- Load Face Models ---
         async function loadModels() {
             const MODEL_URL = 'https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@0.22.2/weights';
             try {
@@ -447,357 +619,682 @@
                     faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
                     faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL)
                 ]);
-                loaderView.classList.add('opacity-0', 'pointer-events-none');
-                setTimeout(() => {
-                    loginModal.classList.remove('opacity-0', 'pointer-events-none', 'scale-95');
-                    loginModal.classList.add('opacity-100', 'scale-100');
-                }, 500);
-            } catch (error) {
-                console.error("Model Error:", error);
-                alert("Failed to load security models. Please refresh.");
-            }
+                document.getElementById('loader-view').style.display = 'none';
+                document.getElementById('loginModal').classList.remove('opacity-0', 'pointer-events-none', 'scale-95');
+                document.getElementById('loginModal').classList.add('opacity-100', 'scale-100');
+            } catch (error) { alert("Models Failed"); }
         }
 
-        // --- View Switching ---
-        function showView(viewName) {
-            ['login', 'admin-secret', 'register'].forEach(v => {
-                document.getElementById(`${v}-view`).classList.add('view-hidden');
-                document.getElementById(`${v}-view`).classList.remove('view-active');
+        // --- VIEW SWITCHING ---
+        window.switchView = (viewId) => {
+            ['login', 'secret', 'register'].forEach(v => {
+                document.getElementById(`view-${v}`).classList.add('hidden');
             });
-            const target = document.getElementById(`${viewName}-view`);
-            target.classList.remove('view-hidden');
-            target.classList.add('view-active');
-        }
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+        };
 
-        document.getElementById('show-register-link').onclick = () => showView('admin-secret');
-        document.getElementById('show-login-link-secret').onclick = () => showView('login');
-        document.getElementById('show-login-link-register').onclick = () => showView('login');
-
-        // --- Secret Check ---
-        document.getElementById('submit-secret-btn').onclick = () => {
-            if (document.getElementById('admin-secret-input').value === ADMIN_SECRET) {
-                showView('register');
+        // --- SECRET VERIFICATION ---
+        window.verifySecret = () => {
+            const input = document.getElementById('admin-secret-input').value;
+            if(input === ADMIN_SECRET) {
+                switchView('register');
+                document.getElementById('admin-secret-input').value = ''; 
             } else {
-                showToast("Invalid Admin Secret", 'error');
+                showToast("Invalid Secret Code", "error");
             }
         };
 
-        // --- Camera Logic ---
-        async function startCamera() {
-            try {
-                stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                document.getElementById('video-feed').srcObject = stream;
-                document.getElementById('camera-modal').classList.remove('hidden');
-                return { width: document.getElementById('video-feed').clientWidth, height: document.getElementById('video-feed').clientHeight };
-            } catch (err) {
-                showToast("Camera access denied", 'error');
-                return null;
-            }
-        }
-
-        function stopCamera() {
-            if (stream) stream.getTracks().forEach(t => t.stop());
-            if (detectionInterval) clearInterval(detectionInterval);
-            document.getElementById('camera-modal').classList.add('hidden');
-        }
-        document.getElementById('stop-camera-btn').onclick = stopCamera;
-
-        // --- Login Logic ---
-        document.getElementById('login-with-face-btn').onclick = async () => {
-            const email = document.getElementById('login-email').value;
-            if (!email) return showToast("Enter email first", 'error');
-
-            try {
-                const { data, error } = await supabase.from('users').select('*').eq('email', email).single();
-                if (error || !data) return showToast("User not found", 'error');
-                if (!data.email_confirmed_at) return showToast("Account pending approval", 'error');
-
-                const descriptors = data.face_descriptors.map(d => new Float32Array(d));
-                const matcher = new faceapi.FaceMatcher(new faceapi.LabeledFaceDescriptors(email, descriptors), 0.5);
-                
-                const dims = await startCamera();
-                if(!dims) return;
-
-                const canvas = document.getElementById('face-canvas');
-                faceapi.matchDimensions(canvas, dims);
-
-                document.getElementById('camera-instruction').textContent = "Verifying identity...";
-
-                detectionInterval = setInterval(async () => {
-                    const det = await faceapi.detectSingleFace(document.getElementById('video-feed'), new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptor();
-                    if (det) {
-                        const match = matcher.findBestMatch(det.descriptor);
-                        if (match.label === email) {
-                            stopCamera();
-                            loginModal.classList.add('opacity-0', 'pointer-events-none', 'scale-95');
-                            setTimeout(() => {
-                                loginModal.classList.add('hidden');
-                                mainContent.classList.remove('hidden');
-                                initTheme();
-                            }, 300);
-                            showToast("Welcome back!", 'success');
-                        }
-                    }
-                }, 500);
-
-            } catch (e) {
-                showToast("Login failed: " + e.message, 'error');
-            }
-        };
-
-        // --- Register Logic ---
-        document.getElementById('scan-face-btn').onclick = async () => {
+        // --- REGISTRATION LOGIC ---
+        document.getElementById('reg-scan-btn').onclick = async () => {
             registrationDescriptors = [];
-            const dims = await startCamera();
-            if(!dims) return;
+            document.getElementById('camera-modal').classList.remove('hidden');
             
-            let scans = 0;
-            const feedback = document.getElementById('scan-feedback');
-            const btn = document.getElementById('register-btn');
-            
-            detectionInterval = setInterval(async () => {
-                const det = await faceapi.detectSingleFace(document.getElementById('video-feed'), new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptor();
-                if(det) {
-                    registrationDescriptors.push(det.descriptor);
-                    scans++;
-                    document.getElementById('camera-instruction').textContent = `Scanning: ${scans}/5`;
-                    if(scans >= 5) {
-                        stopCamera();
-                        feedback.textContent = "Face data captured!";
-                        btn.disabled = false;
-                        btn.classList.remove('bg-gray-300', 'cursor-not-allowed');
-                        btn.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
-                    }
-                }
-            }, 800);
-        };
-
-        document.getElementById('register-btn').onclick = async () => {
-            const name = document.getElementById('register-name').value;
-            const email = document.getElementById('register-email').value;
-            const phone = document.getElementById('register-phone').value;
-            const pwd = document.getElementById('register-password').value;
-
-            if(!name || !email || !phone || !pwd) return showToast("Fill all fields", 'error');
-
             try {
-                const serializable = registrationDescriptors.map(d => Array.from(d));
-                const { error } = await supabase.from('users').insert({
-                    name, email, phone, password: pwd, face_descriptors: serializable
-                });
-                if(error) throw error;
-                showToast("Registered! Wait for approval.", 'success');
-                showView('login');
-            } catch(e) {
-                showToast("Error: " + e.message, 'error');
-            }
-        };
-
-        // --- Dashboard Logic ---
-        const tabs = {
-            entry: { btn: document.getElementById('dataEntryTab'), section: document.getElementById('dataEntrySection') },
-            manage: { btn: document.getElementById('dataEditTab'), section: document.getElementById('dataManagementSection') }
-        };
-
-        function switchTab(target) {
-            Object.values(tabs).forEach(t => {
-                t.btn.classList.remove('tab-active', 'bg-emerald-600', 'text-white');
-                t.btn.classList.add('text-gray-500', 'dark:text-gray-400');
-                t.section.classList.add('section-hidden');
-                t.section.classList.remove('section-visible');
-            });
-            target.btn.classList.add('tab-active', 'bg-emerald-600', 'text-white');
-            target.btn.classList.remove('text-gray-500', 'dark:text-gray-400');
-            target.section.classList.remove('section-hidden');
-            target.section.classList.add('section-visible');
-        }
-
-        tabs.entry.btn.onclick = () => switchTab(tabs.entry);
-        tabs.manage.btn.onclick = () => { switchTab(tabs.manage); loadPapers(); };
-
-        // --- CRUD Operations ---
-        async function loadSubjects(stream, selectorId) {
-            const sel = document.getElementById(selectorId);
-            sel.innerHTML = '<option>Loading...</option>';
-            try {
-                const { data } = await supabase.from('subjects').select('*').eq('stream', stream).order('name');
-                sel.innerHTML = '<option value="">Select Subject</option>';
-                sel.disabled = false;
-                data.forEach(s => {
-                    sel.innerHTML += `<option value="${s.code}">${s.name}</option>`;
-                });
-            } catch(e) { sel.innerHTML = '<option>Error</option>'; }
-        }
-
-        document.getElementById('stream').onchange = (e) => loadSubjects(e.target.value, 'subject');
-        document.getElementById('filterStream').onchange = (e) => {
-            loadSubjects(e.target.value, 'filterSubject');
-            filterPapers();
-        };
-
-        document.getElementById('paperForm').onsubmit = async (e) => {
-            e.preventDefault();
-            const btn = editingPaperId ? document.getElementById('updateBtn') : document.getElementById('submitBtn');
-            const originalText = btn.innerHTML;
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-
-            try {
-                const data = {
-                    stream: document.getElementById('stream').value,
-                    subject_code: document.getElementById('subject').value,
-                    subject_name: document.getElementById('subject').options[document.getElementById('subject').selectedIndex].text,
-                    year: parseInt(document.getElementById('year').value),
-                    paper_link: document.getElementById('paperLink').value,
-                    marking_scheme_link: document.getElementById('markingLink').value || null
+                stream = await navigator.mediaDevices.getUserMedia({ video: {} });
+                const video = document.getElementById('video-feed');
+                video.srcObject = stream;
+                
+                let scans = 0;
+                const statusText = document.getElementById('camera-status-text');
+                
+                video.onloadedmetadata = () => {
+                    const canvas = document.getElementById('face-canvas');
+                    faceapi.matchDimensions(canvas, {width: video.videoWidth, height: video.videoHeight});
+                    
+                    detectionInterval = setInterval(async () => {
+                        const det = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptor();
+                        if(det) {
+                            registrationDescriptors.push(det.descriptor);
+                            scans++;
+                            statusText.innerHTML = `<i class="fas fa-check-circle text-emerald-500"></i> Scanning: ${scans}/5`;
+                            
+                            if(scans >= 5) {
+                                stopCamera();
+                                document.getElementById('reg-status').textContent = "Face Data Captured Successfully!";
+                                document.getElementById('reg-status').classList.remove('text-red-500');
+                                document.getElementById('reg-status').classList.add('text-emerald-600');
+                                const btn = document.getElementById('reg-submit-btn');
+                                btn.disabled = false;
+                                btn.classList.remove('bg-gray-300', 'dark:bg-gray-700', 'cursor-not-allowed', 'text-gray-500');
+                                btn.classList.add('bg-emerald-600', 'text-white', 'hover:bg-emerald-700', 'shadow-lg');
+                            }
+                        }
+                    }, 800);
                 };
-
-                // Multi-stream logic
-                if(['ict', 'agriculture', 'geography'].includes(data.subject_code) && !editingPaperId) {
-                    const inserts = ['science','commerce','arts','technology'].map(s => ({...data, stream: s}));
-                    await supabase.from('past_papers').insert(inserts);
-                } else {
-                    if(editingPaperId) await supabase.from('past_papers').update(data).eq('id', editingPaperId);
-                    else await supabase.from('past_papers').insert(data);
-                }
-
-                showToast(editingPaperId ? "Updated!" : "Added!", 'success');
-                resetForm();
-                if(tabs.manage.btn.classList.contains('tab-active')) loadPapers();
-
-            } catch(err) {
-                showToast(err.message, 'error');
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = originalText;
+            } catch(e) { 
+                alert("Camera Error"); 
+                document.getElementById('camera-modal').classList.add('hidden'); 
             }
         };
 
-        async function loadPapers() {
-            document.getElementById('loadingMessage').classList.remove('hidden');
-            document.getElementById('papersList').innerHTML = '';
+        document.getElementById('reg-submit-btn').onclick = async () => {
+            const name = document.getElementById('reg-name').value;
+            const email = document.getElementById('reg-email').value;
+            const phone = document.getElementById('reg-phone').value;
+            const password = document.getElementById('reg-pass').value;
+
+            if(!name || !email || !phone || !password) return showToast("All fields required", "error");
+
+            try {
+                // Convert Float32Array to regular array for JSON storage
+                const serializableDescriptors = registrationDescriptors.map(d => Array.from(d));
+                
+                const { error } = await supabase.from('users').insert({
+                    name, email, phone, password,
+                    face_descriptors: serializableDescriptors,
+                    approved: false // Needs super admin approval
+                });
+
+                if(error) throw error;
+
+                showToast("Registration Successful! Wait for approval.", "success");
+                switchView('login');
+                
+                // Reset form
+                document.getElementById('reg-name').value = '';
+                document.getElementById('reg-email').value = '';
+                document.getElementById('reg-phone').value = '';
+                document.getElementById('reg-pass').value = '';
+                document.getElementById('reg-status').textContent = '';
+                const btn = document.getElementById('reg-submit-btn');
+                btn.disabled = true;
+                btn.className = "w-full py-3 bg-gray-300 dark:bg-gray-700 text-gray-500 cursor-not-allowed rounded-xl font-bold transition-all";
+
+            } catch(e) {
+                showToast("Error: " + e.message, "error");
+            }
+        };
+
+        // --- LOGIN & CAMERA ---
+        document.getElementById('login-btn').onclick = async () => {
+            const email = document.getElementById('login-email').value;
+            if(!email) return showToast("Enter email", 'error');
+            document.getElementById('login-msg').textContent = "Authenticating...";
             
-            const { data } = await supabase.from('past_papers').select('*').order('created_at', { ascending: false });
-            allPapers = data || [];
-            filterPapers();
-            document.getElementById('loadingMessage').classList.add('hidden');
+            try {
+                const { data: user } = await supabase.from('users').select('*').eq('email', email).single();
+                if(!user) throw new Error("User not found");
+                if(!user.approved && user.email !== SUPER_ADMIN_EMAIL) throw new Error("Approval Pending");
+
+                const descriptors = user.face_descriptors.map(d => new Float32Array(d));
+                const matcher = new faceapi.FaceMatcher(new faceapi.LabeledFaceDescriptors(user.email, descriptors), 0.5);
+                startCameraFlow(matcher, user);
+            } catch(e) {
+                document.getElementById('login-msg').textContent = e.message;
+            }
+        };
+
+        async function startCameraFlow(matcher, user) {
+            document.getElementById('camera-modal').classList.remove('hidden');
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: {} });
+                const video = document.getElementById('video-feed');
+                video.srcObject = stream;
+                
+                const statusText = document.getElementById('camera-status-text');
+                statusText.innerHTML = `<i class="fas fa-record-vinyl text-red-500 animate-pulse mr-2"></i>Scanning...`;
+
+                video.onloadedmetadata = () => {
+                    const canvas = document.getElementById('face-canvas');
+                    faceapi.matchDimensions(canvas, {width: video.videoWidth, height: video.videoHeight});
+                    detectionInterval = setInterval(async () => {
+                        const det = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptor();
+                        if(det) {
+                            const match = matcher.findBestMatch(det.descriptor);
+                            if(match.label === user.email) completeLogin(user);
+                        }
+                    }, 500);
+                };
+            } catch(e) { alert("Camera Error"); document.getElementById('camera-modal').classList.add('hidden'); }
         }
 
-        function filterPapers() {
-            const q = document.getElementById('searchPapers').value.toLowerCase();
-            const st = document.getElementById('filterStream').value;
-            const yr = document.getElementById('filterYear').value;
+        window.stopCamera = () => {
+            if(stream) stream.getTracks().forEach(t => t.stop());
+            clearInterval(detectionInterval);
+            document.getElementById('camera-modal').classList.add('hidden');
+        };
+
+        function completeLogin(user) {
+            stopCamera();
+            currentUser = user;
+            document.getElementById('loginModal').classList.add('hidden');
+            document.getElementById('mainContent').classList.remove('hidden');
             
+            // Set User Info
+            document.getElementById('user-name-display').textContent = user.name;
+            const role = (user.email === SUPER_ADMIN_EMAIL) ? 'Super Admin' : 'Admin';
+            document.getElementById('user-role-display').textContent = role;
+            
+            // Set Avatar
+            const avatarUrl = (user.email === SUPER_ADMIN_EMAIL) ? SUPER_ADMIN_IMG : `https://ui-avatars.com/api/?name=${user.name}&background=10b981&color=fff`;
+            document.getElementById('user-avatar').src = avatarUrl;
+
+            // Show Restricted Menu
+            if(user.email === SUPER_ADMIN_EMAIL) document.getElementById('nav-users').classList.remove('hidden');
+
+            loadPapers(); // Load Initial View
+            loadSubjects(); // Load Subjects for dropdown
+        }
+
+        // --- NAVIGATION ---
+        window.showSection = (id) => {
+            document.querySelectorAll('.admin-section').forEach(el => el.classList.add('hidden'));
+            document.getElementById(id+'-section').classList.remove('hidden');
+            document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
+            document.getElementById('nav-'+id).classList.add('active');
+
+            if(id === 'papers') renderPapers(); 
+            if(id === 'settings') loadSettings();
+            if(id === 'timetables') loadTimetables();
+            if(id === 'notices') loadNotices();
+            if(id === 'users' && currentUser.email === SUPER_ADMIN_EMAIL) loadUsers();
+        };
+
+        // --- SUBJECT SELECTOR LOGIC ---
+        async function loadSubjects() {
+            const { data } = await supabase.from('subjects').select('*').order('name');
+            allSubjects = data || [];
+            populateSubjectSelector();
+        }
+
+        function populateSubjectSelector() {
+            const sel = document.getElementById('subject-selector');
+            sel.innerHTML = '<option value="">Select Existing Subject...</option>';
+            
+            const streams = ['science', 'commerce', 'arts', 'technology'];
+            
+            streams.forEach(stream => {
+                const group = document.createElement('optgroup');
+                group.label = stream.charAt(0).toUpperCase() + stream.slice(1);
+                group.className = "font-bold text-gray-600 dark:text-gray-400";
+                
+                const streamSubjects = allSubjects.filter(s => s.stream === stream);
+                streamSubjects.forEach(s => {
+                    const opt = document.createElement('option');
+                    // Store data in value
+                    opt.value = JSON.stringify(s);
+                    opt.textContent = `${s.name} (${s.code})`;
+                    opt.className = "font-normal text-gray-800 dark:text-white";
+                    group.appendChild(opt);
+                });
+                
+                if(streamSubjects.length > 0) sel.appendChild(group);
+            });
+        }
+
+        document.getElementById('subject-selector').addEventListener('change', (e) => {
+            if(!e.target.value) return;
+            const s = JSON.parse(e.target.value);
+            
+            // Autofill fields
+            document.getElementById('subject_name').value = s.name;
+            document.getElementById('subject_code').value = s.code;
+            
+            // Handle Checkboxes
+            document.querySelectorAll('input[name="stream_target"]').forEach(cb => cb.checked = false);
+            const targetCb = document.querySelector(`input[name="stream_target"][value="${s.stream}"]`);
+            if(targetCb) targetCb.checked = true;
+        });
+
+        // --- PAPERS LOGIC ---
+        async function loadPapers() {
+            const { data } = await supabase.from('past_papers').select('*').order('created_at', {ascending: false});
+            allPapers = data || [];
+            updateSubjectFilter();
+            renderPapers();
+        }
+
+        // Populate Subject Filter based on Stream Filter
+        function updateSubjectFilter() {
+            const stream = document.getElementById('filter-stream').value;
+            const subSelect = document.getElementById('filter-subject');
+            subSelect.innerHTML = '<option value="all">All Subjects</option>';
+            
+            const relevantPapers = stream === 'all' ? allPapers : allPapers.filter(p => p.stream === stream);
+            // Extract Unique Subjects
+            const uniqueSubs = [...new Set(relevantPapers.map(p => p.subject_name))].sort();
+            
+            uniqueSubs.forEach(sub => {
+                const opt = document.createElement('option');
+                opt.value = sub; opt.text = sub;
+                subSelect.appendChild(opt);
+            });
+        }
+
+        document.getElementById('filter-stream').addEventListener('change', () => {
+            updateSubjectFilter();
+            renderPapers();
+        });
+
+        function renderPapers() {
+            const search = document.getElementById('paper-search').value.toLowerCase();
+            const stream = document.getElementById('filter-stream').value;
+            const subject = document.getElementById('filter-subject').value;
+            const year = document.getElementById('filter-year').value;
+            const container = document.getElementById('papers-list-container');
+
+            // Set grid columns based on view
+            if(currentPaperView === 'list') container.className = 'grid gap-2 grid-cols-1';
+            else if(currentPaperView === 'grid') container.className = 'grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3';
+            else container.className = 'grid gap-6 grid-cols-1 md:grid-cols-2';
+
+            container.innerHTML = '';
+
             const filtered = allPapers.filter(p => {
-                return (!st || p.stream === st) &&
-                       (!yr || p.year == yr) &&
-                       (!q || p.subject_name.toLowerCase().includes(q) || p.year.toString().includes(q));
+                return (stream === 'all' || p.stream === stream) &&
+                       (subject === 'all' || p.subject_name === subject) &&
+                       (year === 'all' || p.year == year) &&
+                       (p.subject_name.toLowerCase().includes(search) || p.subject_code.toLowerCase().includes(search));
             });
 
-            const list = document.getElementById('papersList');
-            list.innerHTML = '';
-            
             if(filtered.length === 0) {
-                list.innerHTML = `<div class="text-center py-8 text-gray-400">No records found</div>`;
+                container.innerHTML = `<div class="p-8 text-center text-gray-400 col-span-full">No papers found.</div>`;
                 return;
             }
 
             filtered.forEach(p => {
-                const item = document.createElement('div');
-                item.className = 'group bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 p-4 rounded-xl hover:shadow-md transition-all flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-center animate__animated animate__fadeIn';
-                item.innerHTML = `
-                    <div>
-                        <div class="flex items-center gap-2 mb-1">
-                            <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">${p.stream}</span>
-                            <span class="text-xs text-gray-400">${p.year}</span>
+                const card = document.createElement('div');
+                card.className = `bg-white dark:bg-dark-card border border-gray-100 dark:border-dark-border rounded-xl p-4 transition-all hover:shadow-lg hover:border-emerald-500/30 group animate__animated animate__fadeIn`;
+                
+                // Logic for Views
+                if(currentPaperView === 'list') {
+                    card.innerHTML = `
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-4">
+                                <span class="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 font-bold px-2 py-1 rounded text-xs uppercase w-12 text-center">${p.stream.substring(0,3)}</span>
+                                <div>
+                                    <h4 class="font-bold text-sm text-gray-800 dark:text-white">${p.subject_name}</h4>
+                                    <p class="text-xs text-gray-500">${p.year} • ${p.subject_code}</p>
+                                </div>
+                            </div>
+                            <button onclick="deletePaper('${p.id}')" class="text-gray-400 hover:text-red-500 p-2"><i class="fas fa-trash"></i></button>
                         </div>
-                        <h4 class="font-bold text-gray-800 dark:text-white">${p.subject_name}</h4>
-                        <div class="flex gap-3 mt-2 text-xs">
-                            <a href="${p.paper_link}" target="_blank" class="flex items-center text-blue-600 hover:underline"><i class="fas fa-file-pdf mr-1"></i> Paper</a>
-                            ${p.marking_scheme_link ? `<a href="${p.marking_scheme_link}" target="_blank" class="flex items-center text-green-600 hover:underline"><i class="fas fa-check-circle mr-1"></i> Scheme</a>` : ''}
+                    `;
+                } else {
+                    const iconSize = currentPaperView === 'large' ? 'text-4xl' : 'text-2xl';
+                    card.innerHTML = `
+                        <div class="flex justify-between items-start mb-3">
+                            <div class="w-10 h-10 rounded-lg bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+                                <i class="fas fa-book ${iconSize}"></i>
+                            </div>
+                            <span class="text-[10px] uppercase font-bold text-gray-400 border border-gray-200 dark:border-gray-700 px-2 py-0.5 rounded">${p.stream}</span>
                         </div>
-                    </div>
-                    <div class="flex gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button onclick="window.editPaper('${p.id}')" class="p-2 text-yellow-500 hover:bg-yellow-50 dark:hover:bg-yellow-900/20 rounded-lg transition-colors"><i class="fas fa-edit"></i></button>
-                        <button onclick="window.deletePaper('${p.id}')" class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"><i class="fas fa-trash"></i></button>
-                    </div>
-                `;
-                list.appendChild(item);
+                        <h4 class="font-bold text-gray-800 dark:text-white mb-1 ${currentPaperView === 'large' ? 'text-xl' : 'text-base'}">${p.subject_name}</h4>
+                        <div class="flex items-center gap-2 text-xs text-gray-500 mb-4">
+                            <i class="far fa-calendar"></i> ${p.year}
+                            <span class="w-1 h-1 bg-gray-300 rounded-full"></span>
+                            <span>${p.subject_code}</span>
+                        </div>
+                        <div class="flex gap-2 pt-2 border-t border-gray-50 dark:border-gray-700">
+                            ${p.paper_link ? `<a href="${p.paper_link}" target="_blank" class="flex-1 text-center py-1.5 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-600 text-xs font-bold hover:bg-blue-100">Paper</a>` : ''}
+                            ${p.marking_scheme_link ? `<a href="${p.marking_scheme_link}" target="_blank" class="flex-1 text-center py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 text-xs font-bold hover:bg-emerald-100">Scheme</a>` : ''}
+                            <button onclick="deletePaper('${p.id}')" class="px-3 py-1.5 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-500 hover:bg-red-100"><i class="fas fa-trash"></i></button>
+                        </div>
+                    `;
+                }
+                container.appendChild(card);
             });
         }
 
-        // --- Globals for HTML access ---
-        window.editPaper = async (id) => {
-            editingPaperId = id;
-            const p = allPapers.find(x => x.id === id);
-            document.getElementById('stream').value = p.stream;
-            await loadSubjects(p.stream, 'subject');
-            document.getElementById('subject').value = p.subject_code;
-            document.getElementById('year').value = p.year;
-            document.getElementById('paperLink').value = p.paper_link;
-            document.getElementById('markingLink').value = p.marking_scheme_link || '';
-            
-            document.getElementById('formTitle').textContent = 'Edit Paper';
-            document.getElementById('submitBtn').classList.add('hidden');
-            document.getElementById('updateBtn').classList.remove('hidden');
-            document.getElementById('cancelBtn').classList.remove('hidden');
-            
-            switchTab(tabs.entry);
+        window.setPaperView = (view) => {
+            currentPaperView = view;
+            // Update buttons
+            ['list', 'grid', 'large'].forEach(v => {
+                const btn = document.getElementById(`btn-${v}`);
+                if(v === view) btn.classList.add('active', 'text-emerald-500', 'bg-white', 'dark:bg-dark-card', 'shadow-sm');
+                else btn.classList.remove('active', 'text-emerald-500', 'bg-white', 'dark:bg-dark-card', 'shadow-sm');
+            });
+            renderPapers();
         };
 
-        window.deletePaper = async (id) => {
-            if(!confirm("Delete this paper permanently?")) return;
-            try {
-                await supabase.from('past_papers').delete().eq('id', id);
-                showToast("Deleted", 'success');
+        // Listeners for filters
+        ['paper-search', 'filter-subject', 'filter-year'].forEach(id => {
+            document.getElementById(id).addEventListener('input', renderPapers);
+        });
+
+        window.togglePaperForm = () => document.getElementById('paper-form-container').classList.toggle('hidden');
+
+        document.getElementById('paperForm').onsubmit = async (e) => {
+            e.preventDefault();
+            
+            // Get Selected Streams (Multiple)
+            const checkboxes = document.querySelectorAll('input[name="stream_target"]:checked');
+            if(checkboxes.length === 0) return showToast("Select at least one Stream", "error");
+            
+            const selectedStreams = Array.from(checkboxes).map(cb => cb.value);
+            const baseData = {
+                year: document.getElementById('year').value,
+                subject_code: document.getElementById('subject_code').value,
+                subject_name: document.getElementById('subject_name').value,
+                paper_link: document.getElementById('paper_link').value,
+                marking_scheme_link: document.getElementById('marking_link').value
+            };
+
+            // Prepare Batch Insert
+            const inserts = selectedStreams.map(s => ({
+                ...baseData,
+                stream: s
+            }));
+
+            const { error } = await supabase.from('past_papers').insert(inserts);
+            
+            if(error) {
+                console.error("Insert Error:", error);
+                showToast("Error adding papers: " + error.message, "error");
+            } else {
+                showToast(`Paper added to ${selectedStreams.length} stream(s)!`, "success");
                 loadPapers();
-            } catch(e) { showToast("Delete failed", 'error'); }
+                togglePaperForm();
+                document.getElementById('paperForm').reset();
+            }
         };
 
-        function resetForm() {
-            document.getElementById('paperForm').reset();
-            editingPaperId = null;
-            document.getElementById('formTitle').textContent = 'Add New Past Paper';
-            document.getElementById('submitBtn').classList.remove('hidden');
-            document.getElementById('updateBtn').classList.add('hidden');
-            document.getElementById('cancelBtn').classList.add('hidden');
-        }
-        document.getElementById('cancelBtn').onclick = resetForm;
+        window.deletePaper = async(id) => {
+            if(confirm("Are you sure you want to delete this paper and marking scheme?")) {
+                const { error } = await supabase.from('past_papers').delete().eq('id', id);
+                
+                if (error) {
+                    console.error("Delete Error:", error);
+                    showToast("Delete failed: " + error.message, "error");
+                } else {
+                    showToast("Resource deleted successfully", "success");
+                    loadPapers();
+                }
+            }
+        };
 
-        // --- Toast System ---
+        // --- SETTINGS (MAINTENANCE) ---
+        async function loadSettings() {
+            // Maintenance
+            const { data: maint } = await supabase.from('system_settings').select('value').eq('key', 'maintenance').single();
+            const toggle = document.getElementById('maintenance-toggle');
+            const details = document.getElementById('maintenance-details');
+            
+            if(maint && maint.value) {
+                toggle.checked = maint.value.isActive;
+                document.getElementById('maintenance-end').value = maint.value.endTime || '';
+                
+                if(maint.value.isActive) {
+                    details.classList.remove('opacity-50', 'pointer-events-none');
+                }
+            }
+
+            toggle.onchange = () => {
+                if(toggle.checked) details.classList.remove('opacity-50', 'pointer-events-none');
+                else details.classList.add('opacity-50', 'pointer-events-none');
+            };
+
+            // Notifications
+            const { data: sysUp } = await supabase.from('system_settings').select('value').eq('key', 'system_update').single();
+            if(sysUp) {
+                document.getElementById('sys-update-active').checked = sysUp.value.active;
+                document.getElementById('sys-update-date').value = sysUp.value.date;
+                document.getElementById('sys-update-msg').value = sysUp.value.message;
+            }
+
+             const { data: resMsg } = await supabase.from('system_settings').select('value').eq('key', 'results_msg').single();
+            if(resMsg) {
+                document.getElementById('res-title').value = resMsg.value.title;
+                document.getElementById('res-msg').value = resMsg.value.message;
+            }
+        }
+
+        window.saveMaintenanceSettings = async () => {
+            const isActive = document.getElementById('maintenance-toggle').checked;
+            const endTime = document.getElementById('maintenance-end').value;
+            
+            await supabase.from('system_settings').upsert({
+                key: 'maintenance',
+                value: { isActive, endTime }
+            });
+            showToast(`Maintenance Mode ${isActive ? 'ACTIVATED' : 'DISABLED'}`, isActive ? 'error' : 'success');
+        };
+
+         window.saveSystemUpdate = async () => {
+            const payload = {
+                active: document.getElementById('sys-update-active').checked,
+                date: document.getElementById('sys-update-date').value,
+                message: document.getElementById('sys-update-msg').value
+            };
+            await supabase.from('system_settings').upsert({ key: 'system_update', value: payload });
+            showToast('Homepage Notification Saved', 'success');
+        }
+
+        window.saveResultsMsg = async () => {
+             const payload = {
+                title: document.getElementById('res-title').value,
+                message: document.getElementById('res-msg').value
+            };
+            await supabase.from('system_settings').upsert({ key: 'results_msg', value: payload });
+            showToast('Results Info Saved', 'success');
+        }
+
+
+        // --- NOTICES (EDIT & DELETE) ---
+        async function loadNotices() {
+            const container = document.getElementById('notices-list');
+            const { data } = await supabase.from('notices').select('*').order('created_at', {ascending:false});
+            allNotices = data || [];
+            container.innerHTML = '';
+            
+            if(!allNotices.length) {
+                container.innerHTML = '<div class="text-gray-400 col-span-2 text-center">No notices found.</div>';
+                return;
+            }
+
+            allNotices.forEach(n => {
+                const colors = n.type === 'important' ? 'border-red-500 text-red-500 bg-red-50 dark:bg-red-900/10' : 
+                               n.type === 'opportunity' ? 'border-emerald-500 text-emerald-500 bg-emerald-50 dark:bg-emerald-900/10' : 
+                               'border-blue-500 text-blue-500 bg-blue-50 dark:bg-blue-900/10';
+                
+                const item = document.createElement('div');
+                item.className = `p-5 rounded-xl border-l-4 shadow-sm bg-white dark:bg-dark-card relative group ${colors.split(' ')[0]}`;
+                item.innerHTML = `
+                    <div class="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button onclick="editNotice('${n.id}')" class="text-gray-400 hover:text-blue-500"><i class="fas fa-edit"></i></button>
+                        <button onclick="deleteNotice('${n.id}')" class="text-gray-400 hover:text-red-500"><i class="fas fa-trash"></i></button>
+                    </div>
+                    <h4 class="font-bold text-gray-800 dark:text-white text-lg mb-1">${n.title}</h4>
+                    <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-white/50 dark:bg-black/20 ${colors.split(' ')[1]}">${n.type}</span>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mt-3 leading-relaxed">${n.body}</p>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        window.editNotice = (id) => {
+            const notice = allNotices.find(n => n.id === id);
+            if(!notice) return;
+            
+            document.getElementById('notice-id').value = notice.id;
+            document.getElementById('notice-title').value = notice.title;
+            document.getElementById('notice-type').value = notice.type;
+            document.getElementById('notice-body').value = notice.body;
+            document.getElementById('notice-submit-btn').textContent = "Update Notice";
+            
+            // Scroll to form
+            document.getElementById('noticeForm').scrollIntoView({behavior:'smooth'});
+        };
+
+        window.resetNoticeForm = () => {
+            document.getElementById('noticeForm').reset();
+            document.getElementById('notice-id').value = '';
+            document.getElementById('notice-submit-btn').textContent = "Publish Notice";
+        }
+
+        document.getElementById('noticeForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('notice-id').value;
+            const payload = {
+                title: document.getElementById('notice-title').value,
+                type: document.getElementById('notice-type').value,
+                body: document.getElementById('notice-body').value
+            };
+
+            let error;
+            if(id) {
+                // Update
+                const res = await supabase.from('notices').update(payload).eq('id', id);
+                error = res.error;
+            } else {
+                // Insert
+                const res = await supabase.from('notices').insert(payload);
+                error = res.error;
+            }
+
+            if(error) {
+                console.error("Notice Error:", error);
+                showToast("Error: " + error.message, "error");
+            } else {
+                showToast(id ? "Notice Updated" : "Notice Published", "success");
+                resetNoticeForm();
+                loadNotices();
+            }
+        };
+
+        window.deleteNotice = async(id) => {
+            if(confirm("Delete this notice?")) {
+                const { error } = await supabase.from('notices').delete().eq('id', id);
+                if(error) {
+                    showToast("Delete failed: " + error.message, "error");
+                } else {
+                    showToast("Notice deleted", "success");
+                    loadNotices();
+                }
+            }
+        };
+
+        // --- TIMETABLES ---
+        async function loadTimetables() {
+             const { data: setting } = await supabase.from('system_settings').select('value').eq('key', 'timetable_pdf').single();
+            if(setting) {
+                document.getElementById('tt-year').value = setting.value.year || '';
+                document.getElementById('tt-pdf-link').value = setting.value.link || '';
+            }
+
+            const { data: dates } = await supabase.from('exam_dates').select('*').order('date', {ascending: true});
+            const list = document.getElementById('exam-dates-list');
+            list.innerHTML = '';
+            
+            if(dates) {
+                dates.forEach(d => {
+                    const row = document.createElement('div');
+                    row.className = 'flex justify-between items-center p-3 rounded-lg bg-gray-50 dark:bg-dark-bg border border-gray-100 dark:border-gray-700 animate__animated animate__fadeInLeft';
+                    row.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg ${d.type === 'Exam' ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600'} flex items-center justify-center font-bold text-xs">
+                                ${new Date(d.date).getDate()}
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold dark:text-white">${d.details}</p>
+                                <p class="text-[10px] text-gray-400">${d.date}</p>
+                            </div>
+                        </div>
+                        <button onclick="deleteExamDate('${d.id}')" class="text-gray-400 hover:text-red-500"><i class="fas fa-trash"></i></button>
+                    `;
+                    list.appendChild(row);
+                });
+            }
+        }
+
+        window.updateTimetablePDF = async () => {
+            await supabase.from('system_settings').upsert({
+                key: 'timetable_pdf',
+                value: { year: document.getElementById('tt-year').value, link: document.getElementById('tt-pdf-link').value }
+            });
+            showToast('Main Timetable Updated', 'success');
+        };
+
+        document.getElementById('examDateForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const { error } = await supabase.from('exam_dates').insert({
+                date: document.getElementById('exam-date').value,
+                details: document.getElementById('exam-details').value,
+                type: document.getElementById('exam-type').value
+            });
+            
+            if(error) {
+                showToast("Error: " + error.message, "error");
+            } else {
+                document.getElementById('exam-details').value = '';
+                loadTimetables();
+                showToast("Date added", "success");
+            }
+        };
+        
+        window.deleteExamDate = async(id) => {
+            const { error } = await supabase.from('exam_dates').delete().eq('id', id);
+            if(error) {
+                showToast("Delete failed: " + error.message, "error");
+            } else {
+                loadTimetables();
+                showToast("Date removed", "success");
+            }
+        };
+
+        // --- USERS ---
+        async function loadUsers() {
+            const { data } = await supabase.from('users').select('*').eq('approved', false);
+            const tbody = document.getElementById('users-list-body');
+            tbody.innerHTML = '';
+            if(!data || !data.length) {
+                tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-gray-400 text-xs">No pending approvals.</td></tr>';
+                return;
+            }
+            data.forEach(u => {
+                const tr = document.createElement('tr');
+                tr.className = 'border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50';
+                tr.innerHTML = `
+                    <td class="p-4 font-bold">${u.name}</td>
+                    <td class="p-4 text-gray-500">${u.email}</td>
+                    <td class="p-4"><span class="bg-yellow-100 text-yellow-800 text-[10px] font-bold px-2 py-1 rounded uppercase">Pending</span></td>
+                    <td class="p-4 text-right">
+                        <button onclick="approveUser('${u.id}')" class="bg-emerald-600 text-white px-3 py-1 rounded-lg text-xs font-bold hover:bg-emerald-700 shadow-lg shadow-emerald-500/20">Authorize</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        window.approveUser = async(id) => {
+            await supabase.from('users').update({approved:true}).eq('id', id);
+            loadUsers();
+            showToast('User Approved', 'success');
+        };
+
+        // --- UTILS ---
         function showToast(msg, type='info') {
             const t = document.createElement('div');
-            const colors = type === 'error' ? 'bg-red-500' : type === 'success' ? 'bg-emerald-500' : 'bg-blue-500';
-            t.className = `${colors} text-white px-4 py-3 rounded-xl shadow-lg text-sm font-medium animate__animated animate__fadeInRight pointer-events-auto`;
-            t.innerHTML = msg;
-            document.getElementById('notificationContainer').appendChild(t);
+            const colors = type === 'error' ? 'bg-red-500' : 'bg-gray-900 dark:bg-emerald-600';
+            t.className = `${colors} text-white px-6 py-3 rounded-xl shadow-2xl text-sm font-bold animate__animated animate__slideInRight flex items-center gap-3`;
+            t.innerHTML = `<i class="fas fa-info-circle"></i> ${msg}`;
+            document.getElementById('toast-container').appendChild(t);
             setTimeout(() => {
-                t.classList.replace('animate__fadeInRight', 'animate__fadeOutRight');
+                t.classList.remove('animate__slideInRight');
+                t.classList.add('animate__slideOutRight');
                 setTimeout(() => t.remove(), 500);
             }, 3000);
         }
-
-        // Populate Years Filter
-        const ySelect = document.getElementById('filterYear');
-        for(let i=2025; i>=2010; i--) ySelect.innerHTML += `<option value="${i}">${i}</option>`;
-
-        // Listeners
-        ['searchPapers', 'filterStream', 'filterYear'].forEach(id => {
-            document.getElementById(id).addEventListener('input', filterPapers);
-        });
-
-        // Logout
-        document.getElementById('logout-btn').onclick = () => {
-            mainContent.classList.add('hidden');
-            loginModal.classList.remove('hidden', 'opacity-0', 'pointer-events-none', 'scale-95');
-            showView('login');
-        };
-
-        // Init
-        document.addEventListener('DOMContentLoaded', () => {
-            loadModels();
-            initTheme();
-        });
     </script>
 </body>
 </html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">DE Edu | Under Maintenance</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sinhala:wght@400;700&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            background-color: #0B1120;
+            background-image: radial-gradient(#1e293b 1px, transparent 1px);
+            background-size: 40px 40px;
+            color: #E2E8F0;
+            display: flex; 
+            flex-direction: column; 
+            min-height: 100vh; 
+            justify-content: center; 
+            align-items: center; 
+            margin: 0; 
+        }
+        .sinhala { font-family: 'Noto Sinhala', sans-serif; }
+        
+        .maintenance-card { 
+            background: #151F32; 
+            padding: 3rem; 
+            border-radius: 1.5rem; 
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); 
+            max-width: 600px; 
+            width: 90%; 
+            text-align: center; 
+            position: relative;
+            overflow: hidden;
+        }
+
+        .spinner { 
+            border: 4px solid rgba(16, 185, 129, 0.1); 
+            border-top: 4px solid #10B981; 
+            border-radius: 50%; 
+            width: 50px; 
+            height: 50px; 
+            animation: spin 1s linear infinite; 
+            margin: 2rem auto; 
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .countdown-timer { 
+            display: flex; 
+            justify-content: center; 
+            gap: 1.5rem; 
+            margin-top: 2rem; 
+        }
+        .countdown-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .countdown-val {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #10B981;
+            line-height: 1;
+        }
+        .countdown-label {
+            font-size: 0.75rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 0.5rem;
+        }
+
+        .contact-info {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+    <button id="langToggle" class="fixed top-5 right-5 bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-700 px-4 py-2 rounded-lg transition-colors text-sm font-bold">
+        සිංහල
+    </button>
+
+    <div class="maintenance-card">
+        <div class="mb-6">
+            <i class="fas fa-tools text-5xl text-emerald-500 opacity-80"></i>
+        </div>
+        
+        <h1 class="text-3xl font-bold text-white mb-4 sinhala" id="maintenanceTitle">පද්ධති යාවත්කාලීනයකින් පවතී</h1>
+        <p class="text-gray-400 mb-6 leading-relaxed sinhala" id="maintenanceMessage">අපගේ වෙබ් අඩවිය යාවත්කාලීන කිරීමකින් පවතින අතර, ඉක්මනින් ඔබ වෙත ආපසු පැමිණිමු!</p>
+        
+        <div class="spinner"></div>
+        
+        <h3 class="text-sm font-bold text-emerald-500 uppercase tracking-widest mb-4 sinhala" id="countdownTitle">ආපසු එන්නේ</h3>
+        <div class="countdown-timer">
+            <div class="countdown-item"><span id="days" class="countdown-val">00</span><span id="daysText" class="countdown-label">දින</span></div>
+            <div class="countdown-item"><span id="hours" class="countdown-val">00</span><span id="hoursText" class="countdown-label">පැය</span></div>
+            <div class="countdown-item"><span id="minutes" class="countdown-val">00</span><span id="minutesText" class="countdown-label">විනාඩි</span></div>
+            <div class="countdown-item"><span id="seconds" class="countdown-val">00</span><span id="secondsText" class="countdown-label">තත්පර</span></div>
+        </div>
+
+        <div class="contact-info">
+            <p class="mb-2"><i class="fas fa-envelope text-emerald-500 mr-2"></i> isaradilnuka@gmail.com</p>
+            <p>
+                <i class="fas fa-user-circle text-emerald-500 mr-2"></i>
+                <a href="https://dilnuka13.github.io/my/" target="_blank" class="text-emerald-500 hover:underline">Contact Creator</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const sbUrl = 'https://hppojrbfhzttzvlvovre.supabase.co';
+        const sbKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhwcG9qcmJmaHp0dHp2bHZvdnJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjExODgxNDYsImV4cCI6MjA3Njc2NDE0Nn0.aL2fegb_eRPY0E7P6Mwufhq3TCAeX8-hDCHBo9VeAsA';
+        const supabase = window.supabase.createClient(sbUrl, sbKey);
+
+        const translations = {
+            en: { 
+                maintenanceTitle: "System Under Maintenance", 
+                maintenanceMessage: "We're currently performing scheduled maintenance to improve your experience. We'll be back online shortly!", 
+                countdownTitle: "Estimated Return", 
+                daysText: "Days", hoursText: "Hours", minutesText: "Minutes", secondsText: "Seconds" 
+            },
+            si: { 
+                maintenanceTitle: "පද්ධති යාවත්කාලීනයකින් පවතී", 
+                maintenanceMessage: "අපගේ වෙබ් අඩවිය යාවත්කාලීන කිරීමකින් පවතින අතර, ඉක්මනින් ඔබ වෙත ආපසු පැමිණිමු!", 
+                countdownTitle: "ආපසු එන්නේ", 
+                daysText: "දින", hoursText: "පැය", minutesText: "විනාඩි", secondsText: "තත්පර" 
+            }
+        };
+
+        let currentLang = 'si'; 
+        let countdownInterval;
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'si' : 'en';
+            document.getElementById('langToggle').textContent = currentLang === 'en' ? 'සිංහල' : 'English';
+            const t = translations[currentLang];
+            document.getElementById('maintenanceTitle').textContent = t.maintenanceTitle;
+            document.getElementById('maintenanceMessage').textContent = t.maintenanceMessage;
+            document.getElementById('countdownTitle').textContent = t.countdownTitle;
+            document.getElementById('daysText').textContent = t.daysText;
+            document.getElementById('hoursText').textContent = t.hoursText;
+            document.getElementById('minutesText').textContent = t.minutesText;
+            document.getElementById('secondsText').textContent = t.secondsText;
+        }
+
+        async function initMaintenance() {
+            let maintenanceEnd = new Date().getTime() + 86400000; // Default 1 day
+            try {
+                const { data } = await supabase.from('system_settings').select('value').eq('key', 'maintenance').single();
+                if (data && data.value) {
+                    if (data.value.isActive === false) { window.location.href = 'index.html'; return; }
+                    if (data.value.endTime) maintenanceEnd = new Date(data.value.endTime).getTime();
+                }
+            } catch (e) {}
+            
+            countdownInterval = setInterval(function() {
+                const now = new Date().getTime();
+                const distance = maintenanceEnd - now;
+                if (distance < 0) {
+                    clearInterval(countdownInterval);
+                    document.querySelector('.countdown-timer').innerHTML = "<div class='text-emerald-500 font-bold'>Starting Soon...</div>";
+                    return;
+                }
+                document.getElementById("days").textContent = String(Math.floor(distance / (1000 * 60 * 60 * 24))).padStart(2, '0');
+                document.getElementById("hours").textContent = String(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
+                document.getElementById("minutes").textContent = String(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+                document.getElementById("seconds").textContent = String(Math.floor((distance % (1000 * 60)) / 1000)).padStart(2, '0');
+            }, 1000);
+        }
+
+        document.getElementById('langToggle').addEventListener('click', toggleLanguage);
+        document.addEventListener('DOMContentLoaded', initMaintenance);
+    </script>
+</body>
+</html>

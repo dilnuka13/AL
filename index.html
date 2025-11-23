@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="scroll-smooth dark">
 <head>
     <meta name="google-site-verification" content="lEJqM5jKwoWplwhVu_EZRgJ_wvvVjM_1pUyMZK-zO48" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DE Education | Modern Learning Platform</title>
+    <title>DE Education | Shape Your Future</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sinhala:wght@400;500;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Noto+Sinhala:wght@400;500;700&display=swap" rel="stylesheet">
     
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -19,37 +19,28 @@
     <!-- Animations -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     
-    <!-- Supabase & Other Libs -->
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-    <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+    <!-- Supabase Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <!-- Tailwind Config for Custom Colors/Fonts -->
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
+                        sans: ['Outfit', 'sans-serif'],
                         sinhala: ['Noto Sinhala', 'sans-serif'],
                     },
                     colors: {
-                        emerald: {
-                            50: '#ecfdf5',
-                            100: '#d1fae5',
-                            200: '#a7f3d0',
-                            300: '#6ee7b7',
-                            400: '#34d399',
-                            500: '#10b981',
-                            600: '#059669',
-                            700: '#047857',
-                            800: '#065f46',
-                            900: '#064e3b',
-                            950: '#022c22',
+                        brand: {
+                            dark: '#0B1120', // Dark Blue/Black background
+                            card: '#151F32', // Slightly lighter card bg
+                            accent: '#10B981', // Emerald Green
+                            text: '#E2E8F0'
                         }
+                    },
+                    backgroundImage: {
+                        'grid-pattern': "url(\"data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20h1v1h-1z' fill='%231e293b' fill-opacity='0.4' fill-rule='evenodd'/%3E%3C/svg%3E\")",
                     }
                 }
             }
@@ -57,900 +48,577 @@
     </script>
 
     <style>
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
+        body {
+            background-color: #0B1120;
+            background-image: radial-gradient(#1e293b 1px, transparent 1px);
+            background-size: 40px 40px;
         }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
-        }
-        .dark ::-webkit-scrollbar-thumb {
-            background: #475569;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
+        
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0B1120; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #10B981; }
 
-        /* Glassmorphism Utilities */
-        .glass {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-        }
-        .dark .glass {
-            background: rgba(17, 24, 39, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .glass-card {
-            background: rgba(255, 255, 255, 0.8);
+        .glass-nav {
+            background: rgba(11, 17, 32, 0.85);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-        }
-        .dark .glass-card {
-            background: rgba(30, 41, 59, 0.7); /* Slate-800 with opacity */
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        /* Gradient Text */
-        .text-gradient {
-            background-clip: text;
+        .nav-pill {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(8px);
+        }
+
+        .hero-text-gradient {
+            background: linear-gradient(to right, #ffffff, #94a3b8);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-image: linear-gradient(to right, #059669, #34d399);
         }
-        .dark .text-gradient {
-            background-image: linear-gradient(to right, #34d399, #6ee7b7);
-        }
-
-        /* Tab Transitions */
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.4s ease-in-out;
-        }
-        .tab-content.active {
-            display: block;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        
+        .accent-text-gradient {
+            background: linear-gradient(to right, #34d399, #10b981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        /* Hero Pattern Background */
-        .hero-pattern {
-            background-color: #f0fdf4;
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23059669' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        .feature-card {
+            background: #151F32;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            transition: all 0.3s ease;
         }
-        .dark .hero-pattern {
-            background-color: #0f172a; /* Slate-900 */
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2334d399' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-        }
-
-        /* Mobile Menu Transition */
-        #mobileMenu {
-            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
-            max-height: 0;
-            opacity: 0;
-            overflow: hidden;
-        }
-        #mobileMenu.active {
-            max-height: 500px;
-            opacity: 1;
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(16, 185, 129, 0.3);
+            box-shadow: 0 10px 40px -10px rgba(16, 185, 129, 0.1);
         }
 
-        /* Notification Toast Animation */
-        @keyframes slideInRight {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+        .search-input {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(4px);
         }
-        @keyframes slideOutRight {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(100%); opacity: 0; }
+        
+        .search-input:focus {
+            border-color: #10B981;
+            background: rgba(30, 41, 59, 0.8);
         }
-        .toast-enter {
-            animation: slideInRight 0.5s forwards cubic-bezier(0.68, -0.55, 0.27, 1.55);
-        }
-        .toast-exit {
-            animation: slideOutRight 0.5s forwards;
-        }
+
+        /* Animations */
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        
+        .tab-content { display: none; animation: fadeIn 0.5s ease; }
+        .tab-content.active { display: block; }
+
+        /* Custom selection color */
+        ::selection { background: #10B981; color: #fff; }
     </style>
-    
-    <!-- Prevent Context Menu & Back Nav -->
+
+    <!-- MAINTENANCE CHECKER -->
     <script>
-        document.addEventListener('contextmenu', event => event.preventDefault());
-        window.addEventListener('beforeunload', function (e) { e.preventDefault(); e.returnValue = ''; });
+        const sbUrl = 'https://hppojrbfhzttzvlvovre.supabase.co';
+        const sbKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhwcG9qcmJmaHp0dHp2bHZvdnJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjExODgxNDYsImV4cCI6MjA3Njc2NDE0Nn0.aL2fegb_eRPY0E7P6Mwufhq3TCAeX8-hDCHBo9VeAsA';
+        const _sb = window.supabase.createClient(sbUrl, sbKey);
+
+        async function checkSystemStatus() {
+            try {
+                const { data, error } = await _sb.from('system_settings').select('value').eq('key', 'maintenance').single();
+                if (data && data.value && data.value.isActive === true) {
+                    window.location.href = 'maintenance.html';
+                }
+            } catch (e) { console.error("Status check failed", e); }
+        }
+        checkSystemStatus();
     </script>
 </head>
-<body class="min-h-screen flex flex-col bg-gray-50 dark:bg-slate-900 text-gray-800 dark:text-gray-200 transition-colors duration-300 selection:bg-emerald-500 selection:text-white hero-pattern font-sans">
+<body class="text-gray-200 antialiased min-h-screen flex flex-col">
 
-    <!-- Welcome Page Overlay -->
-    <div id="welcomePage" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-500">
-        <div class="glass-card w-full max-w-md rounded-2xl p-8 text-center animate__animated animate__zoomIn shadow-2xl">
-            <div class="mb-6 inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 mb-6">
-                <i class="fas fa-graduation-cap text-3xl"></i>
+    <!-- Header -->
+    <header class="fixed w-full top-0 z-50 glass-nav transition-all duration-300">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                
+                <!-- Logo -->
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-emerald-900/50">DE</div>
+                    <div>
+                        <h1 class="text-lg font-bold text-white leading-none">DE Education.lk</h1>
+                        <p class="text-[10px] font-medium text-emerald-400 uppercase tracking-wider">Educational Platform</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Pills (Desktop) -->
+                <nav class="hidden md:flex items-center p-1 rounded-full nav-pill">
+                    <a href="#" class="px-5 py-2 rounded-full text-sm font-medium transition-all text-emerald-400 bg-white/10 shadow-sm" data-tab="home">Home</a>
+                    <a href="#" class="px-5 py-2 rounded-full text-sm font-medium text-gray-400 hover:text-white transition-all" data-tab="papers">Papers</a>
+                    <a href="#" class="px-5 py-2 rounded-full text-sm font-medium text-gray-400 hover:text-white transition-all" data-tab="results">Results</a>
+                    <a href="#" class="px-5 py-2 rounded-full text-sm font-medium text-gray-400 hover:text-white transition-all" data-tab="timetables">Timetables</a>
+                    <a href="#" class="px-5 py-2 rounded-full text-sm font-medium text-gray-400 hover:text-white transition-all" data-tab="notices">Notices</a>
+                </nav>
+
+                <!-- Right Actions -->
+                <div class="flex items-center gap-3">
+                    <!-- Admin Link (Hidden/Icon) -->
+                    <a href="admin.html" class="w-9 h-9 flex items-center justify-center rounded-full bg-gray-800 text-gray-400 hover:text-yellow-400 hover:bg-gray-700 transition-all border border-gray-700">
+                        <i class="fas fa-cog"></i>
+                    </a>
+                    
+                    <!-- Creator Button -->
+                    <a href="https://dilnuka13.github.io/my" target="_blank" class="hidden sm:flex items-center gap-2 px-4 py-2 rounded-lg border border-emerald-500/30 text-emerald-400 text-sm font-bold hover:bg-emerald-500/10 transition-all">
+                        <span>Creator</span>
+                        <i class="fas fa-external-link-alt text-xs"></i>
+                    </a>
+
+                    <!-- Mobile Menu Button -->
+                    <button id="mobileMenuButton" class="md:hidden w-9 h-9 flex items-center justify-center rounded-lg bg-gray-800 text-gray-300 border border-gray-700">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
             </div>
-            <h2 class="text-3xl font-bold mb-3 text-gray-900 dark:text-white">DE Education.lk</h2>
-            <p class="text-gray-600 dark:text-gray-300 mb-8 text-sm leading-relaxed">
-                Your complete educational resource platform for A/L students in Sri Lanka.
-            </p>
 
-            <button onclick="enterSite()" class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-xl text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all duration-300 transform hover:scale-[1.02] shadow-lg shadow-emerald-500/30">
-                <span class="absolute left-0 inset-y-0 flex items-center pl-3">
-                    <i class="fas fa-arrow-right text-emerald-200 group-hover:text-white transition-colors"></i>
-                </span>
-                Enter Site
-            </button>
-
-            <div class="mt-6">
-                <button onclick="toggleLanguage()" class="text-xs font-medium text-gray-500 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors underline decoration-dotted underline-offset-2">
-                    <span id="languageToggleText">සිංහලට මාරු වන්න</span>
-                </button>
+            <!-- Mobile Menu -->
+            <div id="mobileMenu" class="md:hidden hidden mt-4 bg-[#151F32] border border-gray-800 rounded-xl overflow-hidden shadow-2xl animate__animated animate__fadeIn">
+                <a href="#" class="block px-4 py-3 text-sm text-white bg-emerald-500/10 border-l-4 border-emerald-500" data-tab="home">Home</a>
+                <a href="#" class="block px-4 py-3 text-sm text-gray-400 hover:bg-gray-800 hover:text-white border-l-4 border-transparent" data-tab="papers">Papers</a>
+                <a href="#" class="block px-4 py-3 text-sm text-gray-400 hover:bg-gray-800 hover:text-white border-l-4 border-transparent" data-tab="results">Results</a>
+                <a href="#" class="block px-4 py-3 text-sm text-gray-400 hover:bg-gray-800 hover:text-white border-l-4 border-transparent" data-tab="timetables">Timetables</a>
+                <a href="#" class="block px-4 py-3 text-sm text-gray-400 hover:bg-gray-800 hover:text-white border-l-4 border-transparent" data-tab="notices">Notices</a>
             </div>
-            
-            <p class="mt-8 text-[10px] text-gray-400 uppercase tracking-wider">
-                © 2025 DE Education.lk
-            </p>
         </div>
-    </div>
-
-    <!-- Notification Toast Container -->
-    <div id="notificationContainer" class="fixed top-24 right-5 z-50 flex flex-col gap-3 pointer-events-none"></div>
+    </header>
 
     <!-- Main Content -->
-    <div id="mainContent" class="flex flex-col min-h-screen opacity-0 transition-opacity duration-700 hidden">
+    <main class="flex-grow pt-24 pb-12 container mx-auto px-4 relative z-10">
         
-        <!-- Header -->
-        <header class="sticky top-0 z-40 glass shadow-sm transition-all duration-300">
-            <div class="container mx-auto px-4 py-3">
-                <div class="flex justify-between items-center">
-                    <!-- Logo Area -->
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-lg flex items-center justify-center text-white font-bold shadow-lg shadow-emerald-500/20">
-                            DE
-                        </div>
-                        <div class="hidden sm:block">
-                            <h1 class="text-lg font-bold leading-tight text-gray-900 dark:text-white" id="headerTitle">DE Education.lk</h1>
-                            <p class="text-[10px] font-medium text-emerald-600 dark:text-emerald-400 uppercase tracking-wide" id="headerSubtitle">Educational Platform</p>
-                        </div>
-                    </div>
+        <!-- HOME TAB -->
+        <div id="home" class="tab-content active">
+            <!-- Hero Section -->
+            <div class="text-center py-12 md:py-20 relative">
+                <!-- Decorative Badge -->
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-900/30 border border-emerald-500/30 text-emerald-400 text-xs font-bold uppercase tracking-wider mb-6 animate__animated animate__fadeInDown">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    Welcome to DE Education
+                </div>
 
-                    <!-- Desktop Nav -->
-                    <nav class="hidden md:flex items-center space-x-1 bg-gray-100/50 dark:bg-gray-800/50 p-1 rounded-xl border border-gray-200 dark:border-gray-700/50">
-                        <a href="#" class="px-4 py-2 rounded-lg text-sm font-medium text-emerald-700 dark:text-emerald-400 bg-white dark:bg-gray-700 shadow-sm transition-all" data-tab="home">Home</a>
-                        <a href="#" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all" data-tab="papers">Papers</a>
-                        <a href="#" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all" data-tab="results">Results</a>
-                        <a href="#" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all" data-tab="timetables">Timetables</a>
-                        <a href="#" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all" data-tab="notices">Notices</a>
-                    </nav>
+                <!-- Main Heading -->
+                <h1 class="text-5xl md:text-7xl font-extrabold mb-6 tracking-tight animate__animated animate__zoomIn">
+                    Shape Your <span class="accent-text-gradient">Future</span> Today
+                </h1>
+                
+                <p class="text-lg text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed animate__animated animate__fadeInUp animate__delay-1s">
+                    Access G.C.E. A/L past papers, timetables, and exam results in one unified, modern platform designed for Sri Lankan students.
+                </p>
 
-                    <!-- Right Actions -->
-                    <div class="flex items-center gap-3">
-                        <!-- Theme Toggle -->
-                        <button id="themeToggle" class="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-yellow-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors focus:outline-none ring-1 ring-gray-200 dark:ring-gray-700">
-                            <i class="fas fa-sun text-sm hidden dark:block"></i>
-                            <i class="fas fa-moon text-sm block dark:hidden"></i>
-                        </button>
-
-                        <!-- Creator Button (Desktop) -->
-                         <a href="https://dilnuka13.github.io/my/" target="_blank" class="hidden md:inline-flex items-center justify-center px-4 py-2 border border-emerald-200 dark:border-emerald-800 rounded-lg text-xs font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition-colors">
-                             Creator
-                         </a>
-
-                        <!-- Mobile Menu Button -->
-                        <button id="mobileMenuButton" class="md:hidden p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-                            </svg>
+                <!-- Search Bar -->
+                <div class="max-w-2xl mx-auto mb-16 relative group animate__animated animate__fadeInUp animate__delay-1s">
+                    <div class="absolute inset-0 bg-emerald-500 opacity-20 blur-xl group-hover:opacity-30 transition-opacity duration-500 rounded-2xl"></div>
+                    <div class="relative flex items-center">
+                        <i class="fas fa-search absolute left-5 text-gray-500 text-lg"></i>
+                        <input type="text" id="mainSearch" placeholder="Search for papers, subjects, or notices..." 
+                            class="w-full pl-14 pr-32 py-4 rounded-2xl text-white search-input outline-none placeholder-gray-500">
+                        <button class="absolute right-2 top-2 bottom-2 px-6 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-emerald-900/50">
+                            Search
                         </button>
                     </div>
                 </div>
 
-                <!-- Mobile Menu Dropdown -->
-                <div id="mobileMenu" class="md:hidden mt-2 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden">
-                    <div class="flex flex-col p-2 space-y-1">
-                        <a href="#" class="block px-4 py-3 rounded-lg text-sm font-medium bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400" data-tab="home">Home</a>
-                        <a href="#" class="block px-4 py-3 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700" data-tab="papers">Past Papers</a>
-                        <a href="#" class="block px-4 py-3 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700" data-tab="results">Exam Results</a>
-                        <a href="#" class="block px-4 py-3 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700" data-tab="timetables">Time Tables</a>
-                        <a href="#" class="block px-4 py-3 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700" data-tab="notices">Notices</a>
-                        <a href="#" class="block px-4 py-3 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700" data-tab="contact">Contact</a>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <!-- Main Content Container -->
-        <main class="flex-grow container mx-auto px-4 py-8">
-            
-            <!-- HOME TAB -->
-            <div id="home" class="tab-content active">
-                <!-- Hero Section -->
-                <div class="text-center py-10 md:py-16 animate__animated animate__fadeInDown">
-                    <span class="inline-block py-1 px-3 rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 text-xs font-bold uppercase tracking-wider mb-4 border border-emerald-200 dark:border-emerald-800">
-                        Welcome to DE Education
-                    </span>
-                    <h2 class="text-4xl md:text-6xl font-extrabold mb-4 text-gray-900 dark:text-white tracking-tight">
-                        Shape Your <span class="text-gradient">Future</span> Today
-                    </h2>
-                    <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-8 leading-relaxed">
-                        Access past papers, timetables, and exam results in one unified platform designed for Sri Lankan A/L students.
-                    </p>
-
-                    <!-- Search Bar -->
-                    <div class="relative max-w-2xl mx-auto group z-10">
-                        <div class="absolute -inset-1 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
-                        <div class="relative flex items-center bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700">
-                            <i class="fas fa-search text-gray-400 ml-5 text-lg"></i>
-                            <input type="text" id="globalSearch" placeholder="Search for papers, subjects, or notices..." 
-                                class="w-full p-4 pl-4 bg-transparent border-none focus:ring-0 text-gray-800 dark:text-gray-200 placeholder-gray-400 text-base md:text-lg">
-                            <button onclick="globalSearch()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-4 font-semibold transition-colors hidden md:block">
-                                Search
-                            </button>
+                <!-- System Update Banner (Dynamic) -->
+                <div id="system-update-banner" class="hidden max-w-4xl mx-auto mb-16 animate__animated animate__fadeIn">
+                    <div class="bg-yellow-900/10 border border-yellow-500/20 rounded-xl p-4 flex items-start gap-4">
+                        <i class="fas fa-info-circle text-yellow-500 mt-1"></i>
+                        <div class="text-left">
+                            <h4 class="font-bold text-yellow-500 text-xs uppercase tracking-wider mb-1">System Update</h4>
+                            <p id="system-update-text" class="text-sm text-yellow-100/80"></p>
                         </div>
                     </div>
                 </div>
 
-                <!-- System Update Notice (Static - No Scrolling) -->
-                <div class="w-full mb-12 relative z-10 animate__animated animate__fadeIn">
-                    <div class="max-w-4xl mx-auto bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700/50 rounded-xl p-4 flex items-start gap-4 shadow-sm hover:shadow-md transition-shadow">
-                        <div class="flex-shrink-0 text-yellow-600 dark:text-yellow-500 mt-1">
-                            <i class="fas fa-info-circle text-lg"></i>
-                        </div>
-                        <div class="flex-1">
-                            <h4 class="font-bold text-yellow-800 dark:text-yellow-400 text-xs uppercase tracking-wider mb-1">System Update</h4>
-                            <p class="text-sm font-medium text-yellow-800/90 dark:text-yellow-100/90 leading-relaxed">
-                                All subjects are not yet added. Next massive update scheduled for 2026.01.05.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Quick Access Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-                    <!-- Card 1 -->
-                    <div class="glass-card rounded-2xl p-6 text-center hover:-translate-y-2 transition-transform duration-300 cursor-pointer group relative overflow-hidden" onclick="document.querySelector('[data-tab=\'papers\']').click()">
-                        <div class="absolute top-0 right-0 w-20 h-20 bg-blue-500 opacity-5 rounded-bl-full -mr-4 -mt-4 group-hover:scale-110 transition-transform"></div>
-                        <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 mb-4 group-hover:rotate-6 transition-transform">
+                <!-- Feature Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 animate__animated animate__fadeInUp animate__delay-2s">
+                    <!-- Papers Card -->
+                    <div onclick="switchTab('papers')" class="feature-card rounded-2xl p-8 text-center cursor-pointer group h-full flex flex-col items-center justify-center relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="w-16 h-16 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-400 mb-6 group-hover:scale-110 transition-transform duration-300 border border-blue-500/20">
                             <i class="fas fa-file-pdf text-2xl"></i>
                         </div>
-                        <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-2">Past Papers</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Download papers & marking schemes</p>
+                        <h3 class="text-xl font-bold text-white mb-2">Past Papers</h3>
+                        <p class="text-sm text-gray-500">Download papers & marking schemes</p>
                     </div>
 
-                    <!-- Card 2 -->
-                    <div class="glass-card rounded-2xl p-6 text-center hover:-translate-y-2 transition-transform duration-300 cursor-pointer group relative overflow-hidden" onclick="document.querySelector('[data-tab=\'results\']').click()">
-                        <div class="absolute top-0 right-0 w-20 h-20 bg-emerald-500 opacity-5 rounded-bl-full -mr-4 -mt-4 group-hover:scale-110 transition-transform"></div>
-                        <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 mb-4 group-hover:rotate-6 transition-transform">
+                    <!-- Results Card -->
+                    <div onclick="switchTab('results')" class="feature-card rounded-2xl p-8 text-center cursor-pointer group h-full flex flex-col items-center justify-center relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="w-16 h-16 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 mb-6 group-hover:scale-110 transition-transform duration-300 border border-emerald-500/20">
                             <i class="fas fa-chart-line text-2xl"></i>
                         </div>
-                        <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-2">Exam Results</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Check your latest exam scores</p>
+                        <h3 class="text-xl font-bold text-white mb-2">Exam Results</h3>
+                        <p class="text-sm text-gray-500">Check your latest exam scores</p>
                     </div>
 
-                    <!-- Card 3 -->
-                    <div class="glass-card rounded-2xl p-6 text-center hover:-translate-y-2 transition-transform duration-300 cursor-pointer group relative overflow-hidden" onclick="document.querySelector('[data-tab=\'timetables\']').click()">
-                         <div class="absolute top-0 right-0 w-20 h-20 bg-yellow-500 opacity-5 rounded-bl-full -mr-4 -mt-4 group-hover:scale-110 transition-transform"></div>
-                        <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600 dark:text-yellow-400 mb-4 group-hover:rotate-6 transition-transform">
+                    <!-- Timetables Card -->
+                    <div onclick="switchTab('timetables')" class="feature-card rounded-2xl p-8 text-center cursor-pointer group h-full flex flex-col items-center justify-center relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-br from-yellow-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="w-16 h-16 rounded-2xl bg-yellow-500/10 flex items-center justify-center text-yellow-400 mb-6 group-hover:scale-110 transition-transform duration-300 border border-yellow-500/20">
                             <i class="fas fa-calendar-alt text-2xl"></i>
                         </div>
-                        <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-2">Time Tables</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">View upcoming exam schedules</p>
+                        <h3 class="text-xl font-bold text-white mb-2">Time Tables</h3>
+                        <p class="text-sm text-gray-500">View upcoming exam schedules</p>
                     </div>
 
-                    <!-- Card 4 -->
-                    <div class="glass-card rounded-2xl p-6 text-center hover:-translate-y-2 transition-transform duration-300 cursor-pointer group relative overflow-hidden" onclick="document.querySelector('[data-tab=\'notices\']').click()">
-                         <div class="absolute top-0 right-0 w-20 h-20 bg-red-500 opacity-5 rounded-bl-full -mr-4 -mt-4 group-hover:scale-110 transition-transform"></div>
-                        <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 mb-4 group-hover:rotate-6 transition-transform">
+                    <!-- Notices Card -->
+                    <div onclick="switchTab('notices')" class="feature-card rounded-2xl p-8 text-center cursor-pointer group h-full flex flex-col items-center justify-center relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-br from-red-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="w-16 h-16 rounded-2xl bg-red-500/10 flex items-center justify-center text-red-400 mb-6 group-hover:scale-110 transition-transform duration-300 border border-red-500/20">
                             <i class="fas fa-bullhorn text-2xl"></i>
                         </div>
-                        <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-2">Notices</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Important updates & news</p>
+                        <h3 class="text-xl font-bold text-white mb-2">Notices</h3>
+                        <p class="text-sm text-gray-500">Important updates & news</p>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- PAST PAPERS TAB -->
-            <div id="papers" class="tab-content">
-                <div class="text-center mb-10">
-                    <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-3">Past Papers</h2>
-                    <p class="text-gray-600 dark:text-gray-400">Select your stream to access relevant study materials.</p>
+        <!-- PAPERS TAB -->
+        <div id="papers" class="tab-content">
+            <div class="text-center mb-12 animate__animated animate__fadeInDown">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Past Papers Library</h2>
+                <p class="text-gray-400">Select your stream to access relevant study materials.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                <!-- Stream Cards -->
+                <div class="feature-card p-6 rounded-2xl cursor-pointer group" onclick="loadSubjects('science')">
+                    <div class="h-2 w-10 bg-blue-500 rounded-full mb-4"></div>
+                    <h4 class="text-xl font-bold text-white mb-2">Science</h4>
+                    <p class="text-xs text-gray-500">Bio, Maths, Physics, Chemistry</p>
                 </div>
+                <div class="feature-card p-6 rounded-2xl cursor-pointer group" onclick="loadSubjects('commerce')">
+                    <div class="h-2 w-10 bg-emerald-500 rounded-full mb-4"></div>
+                    <h4 class="text-xl font-bold text-white mb-2">Commerce</h4>
+                    <p class="text-xs text-gray-500">Accounting, Business, Econ</p>
+                </div>
+                <div class="feature-card p-6 rounded-2xl cursor-pointer group" onclick="loadSubjects('arts')">
+                    <div class="h-2 w-10 bg-yellow-500 rounded-full mb-4"></div>
+                    <h4 class="text-xl font-bold text-white mb-2">Arts</h4>
+                    <p class="text-xs text-gray-500">Sinhala, History, Logic</p>
+                </div>
+                <div class="feature-card p-6 rounded-2xl cursor-pointer group" onclick="loadSubjects('technology')">
+                    <div class="h-2 w-10 bg-purple-500 rounded-full mb-4"></div>
+                    <h4 class="text-xl font-bold text-white mb-2">Technology</h4>
+                    <p class="text-xs text-gray-500">SFT, ET, BST, ICT</p>
+                </div>
+            </div>
+
+            <!-- Subject List Area -->
+            <div id="subjectSelection" class="hidden mb-12 animate__animated animate__fadeIn">
+                <div class="flex items-center gap-3 mb-6">
+                    <button onclick="hideSubjects()" class="text-gray-400 hover:text-white"><i class="fas fa-arrow-left"></i> Back</button>
+                    <h3 class="text-xl font-bold text-white">Select Subject</h3>
+                </div>
+                <div id="subjectList" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+            </div>
+
+            <!-- Papers List Area -->
+            <div id="papersDisplay" class="hidden animate__animated animate__fadeIn">
+                <div class="flex items-center gap-3 mb-6">
+                    <button onclick="document.getElementById('papersDisplay').classList.add('hidden'); document.getElementById('subjectSelection').classList.remove('hidden');" class="text-gray-400 hover:text-white"><i class="fas fa-arrow-left"></i> Back</button>
+                    <h3 class="text-xl font-bold text-white" id="subjectTitle">Papers</h3>
+                </div>
+                <div id="papersList" class="space-y-3"></div>
+            </div>
+        </div>
+
+        <!-- RESULTS TAB -->
+        <div id="results" class="tab-content">
+            <div class="max-w-2xl mx-auto text-center py-12">
+                <div class="w-20 h-20 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-6 text-emerald-400 animate-pulse">
+                    <i class="fas fa-graduation-cap text-4xl"></i>
+                </div>
+                <h2 class="text-3xl font-bold text-white mb-4">Examination Results</h2>
+                <p class="text-gray-400 mb-8">Direct links to the Department of Examinations.</p>
                 
-                <!-- Stream Selection Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-                    <!-- Stream Item -->
-                    <div class="stream-card bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-xl hover:border-emerald-500 dark:hover:border-emerald-500 transition-all cursor-pointer group" data-stream="science">
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                                <i class="fas fa-flask text-lg"></i>
-                            </div>
-                            <i class="fas fa-arrow-right text-gray-300 dark:text-gray-600 group-hover:text-blue-500 transition-colors"></i>
+                <a href="https://www.doenets.lk/examresults" target="_blank" class="block feature-card p-6 rounded-2xl hover:border-emerald-500/50 transition-all group">
+                    <div class="flex items-center justify-between">
+                        <div class="text-left">
+                            <h4 class="text-lg font-bold text-white group-hover:text-emerald-400 transition-colors">G.C.E. A/L Results</h4>
+                            <p class="text-sm text-gray-500">Click to view on doenets.lk</p>
                         </div>
-                        <h4 class="text-lg font-bold text-gray-800 dark:text-white">Science</h4>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Bio, Physics, Chem</p>
+                        <i class="fas fa-external-link-alt text-gray-400 group-hover:text-emerald-400"></i>
                     </div>
+                </a>
 
-                    <div class="stream-card bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-xl hover:border-emerald-500 dark:hover:border-emerald-500 transition-all cursor-pointer group" data-stream="commerce">
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 flex items-center justify-center group-hover:bg-green-600 group-hover:text-white transition-colors">
-                                <i class="fas fa-chart-pie text-lg"></i>
-                            </div>
-                            <i class="fas fa-arrow-right text-gray-300 dark:text-gray-600 group-hover:text-green-500 transition-colors"></i>
-                        </div>
-                        <h4 class="text-lg font-bold text-gray-800 dark:text-white">Commerce</h4>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Acc, Econ, BS</p>
-                    </div>
-
-                    <div class="stream-card bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-xl hover:border-emerald-500 dark:hover:border-emerald-500 transition-all cursor-pointer group" data-stream="arts">
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="w-12 h-12 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 flex items-center justify-center group-hover:bg-purple-600 group-hover:text-white transition-colors">
-                                <i class="fas fa-palette text-lg"></i>
-                            </div>
-                            <i class="fas fa-arrow-right text-gray-300 dark:text-gray-600 group-hover:text-purple-500 transition-colors"></i>
-                        </div>
-                        <h4 class="text-lg font-bold text-gray-800 dark:text-white">Arts</h4>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">History, Geo, Sinhala</p>
-                    </div>
-
-                    <div class="stream-card bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-xl hover:border-emerald-500 dark:hover:border-emerald-500 transition-all cursor-pointer group" data-stream="technology">
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 flex items-center justify-center group-hover:bg-red-600 group-hover:text-white transition-colors">
-                                <i class="fas fa-microchip text-lg"></i>
-                            </div>
-                            <i class="fas fa-arrow-right text-gray-300 dark:text-gray-600 group-hover:text-red-500 transition-colors"></i>
-                        </div>
-                        <h4 class="text-lg font-bold text-gray-800 dark:text-white">Technology</h4>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">SFT, ET, BST</p>
-                    </div>
-                </div>
-
-                <!-- Subject Selection (Hidden initially) -->
-                <div id="subjectSelection" class="hidden mb-8 animate__animated animate__fadeIn">
-                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 pl-1 border-l-4 border-emerald-500">Select Subject</h3>
-                    <div id="subjectList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <!-- Dynamic Subjects -->
-                    </div>
-                </div>
-
-                <!-- Papers List (Hidden initially) -->
-                <div id="papersDisplay" class="hidden animate__animated animate__fadeInUp">
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700">
-                        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 flex justify-between items-center">
-                            <h3 class="font-bold text-gray-800 dark:text-white" id="subjectTitle">Available Papers</h3>
-                        </div>
-                        <div class="overflow-x-auto">
-                            <table class="w-full">
-                                <thead class="bg-gray-50 dark:bg-gray-700/30 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                    <tr>
-                                        <th class="px-6 py-3">Year</th>
-                                        <th class="px-6 py-3">Question Paper</th>
-                                        <th class="px-6 py-3">Marking Scheme</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="papersList" class="divide-y divide-gray-200 dark:divide-gray-700 text-sm">
-                                    <!-- Dynamic Rows -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                <div id="results-message-box" class="mt-8 bg-blue-900/20 border border-blue-500/20 rounded-xl p-6 hidden text-left">
+                    <h5 class="font-bold text-blue-400 mb-2 flex items-center gap-2"><i class="fas fa-bell"></i> <span id="res-msg-title">Title</span></h5>
+                    <p class="text-sm text-blue-100/80" id="res-msg-body">Message body...</p>
                 </div>
             </div>
+        </div>
 
-            <!-- TIMETABLES TAB -->
-            <div id="timetables" class="tab-content">
-                 <div class="text-center mb-10">
-                    <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-3">2025 Examination Timetable</h2>
-                    <a href="https://www.doenets.lk/images/resources/NEWS/AL%20Time%20Table%202025_1755235352612.pdf" download class="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-medium transition-colors shadow-lg shadow-emerald-500/30">
-                        <i class="fas fa-download"></i> Download Official PDF
+        <!-- TIMETABLES TAB -->
+        <div id="timetables" class="tab-content">
+             <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-white mb-4">Exam Schedules</h2>
+                <div id="timetable-download-area" class="mb-8">
+                    <a id="timetable-pdf-link" href="#" download class="hidden inline-flex items-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold transition-all shadow-lg shadow-emerald-900/50 hover:-translate-y-1">
+                        <i class="fas fa-cloud-download-alt"></i> Download Official PDF (<span id="timetable-year"></span>)
                     </a>
                 </div>
-
-                <div class="glass-card rounded-2xl p-6 md:p-8">
-                    <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-                        <h3 class="text-xl font-bold text-gray-800 dark:text-white">December 2025</h3>
-                        <div class="flex gap-2 text-xs">
-                            <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-emerald-500"></span> Exam Day</span>
-                            <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-gray-200 dark:bg-gray-600"></span> No Exam</span>
-                        </div>
-                    </div>
-                    
-                    <div id="timetableCalendar" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-3 md:gap-4 text-center">
-                        <!-- Calendar generated by JS -->
-                    </div>
-
-                    <div id="examDetailsContainer" class="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
-                        <h4 id="timetableDayTitle" class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Select a date to view exams</h4>
-                        <div id="examDetailsList" class="space-y-3"></div>
+            </div>
+            
+            <div class="max-w-3xl mx-auto">
+                <div class="feature-card rounded-2xl p-8">
+                    <h3 class="text-xl font-bold text-white mb-6 border-b border-gray-800 pb-4">Upcoming Events</h3>
+                    <div id="exam-calendar-list" class="space-y-4">
+                        <div class="text-center text-gray-500 py-4">Loading dates...</div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- RESULTS TAB -->
-            <div id="results" class="tab-content">
-                <div class="max-w-3xl mx-auto">
-                    <div class="text-center mb-10">
-                        <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-3">Examination Results</h2>
-                        <p class="text-gray-600 dark:text-gray-400">Direct links to the Department of Examinations.</p>
-                    </div>
-
-                    <div class="grid gap-4">
-                        <a href="https://www.doenets.lk/examresults" target="_blank" class="group flex items-center justify-between p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl hover:border-blue-500 dark:hover:border-blue-500 transition-all shadow-sm hover:shadow-md">
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center">
-                                    <i class="fas fa-graduation-cap"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-gray-900 dark:text-white">G.C.E. A/L Results</h4>
-                                    <p class="text-sm text-gray-500 dark:text-gray-400">Check your main exam results</p>
-                                </div>
-                            </div>
-                            <i class="fas fa-external-link-alt text-gray-400 group-hover:text-blue-500 transition-colors"></i>
-                        </a>
-
-                        <a href="https://www.results.exams.gov.lk/viewresultsforexam.htm" target="_blank" class="group flex items-center justify-between p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl hover:border-emerald-500 dark:hover:border-emerald-500 transition-all shadow-sm hover:shadow-md">
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
-                                    <i class="fas fa-laptop-code"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-gray-900 dark:text-white">GIT Results</h4>
-                                    <p class="text-sm text-gray-500 dark:text-gray-400">General Information Technology</p>
-                                </div>
-                            </div>
-                            <i class="fas fa-external-link-alt text-gray-400 group-hover:text-emerald-500 transition-colors"></i>
-                        </a>
-                    </div>
-
-                    <div class="mt-8 bg-yellow-50 dark:bg-yellow-900/10 border border-yellow-100 dark:border-yellow-800/30 rounded-xl p-4 flex items-start gap-3">
-                        <i class="fas fa-info-circle text-yellow-600 dark:text-yellow-500 mt-1"></i>
-                        <div>
-                            <h5 class="font-bold text-yellow-800 dark:text-yellow-500 text-sm">Upcoming Release</h5>
-                            <p class="text-sm text-yellow-700 dark:text-yellow-600/80 mt-1">2024 (2025) A/L results are expected to be released in January 2026.</p>
-                        </div>
-                    </div>
+        <!-- NOTICES TAB -->
+        <div id="notices" class="tab-content">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-white mb-4">Announcements Board</h2>
+                </div>
+                <div id="notices-feed" class="space-y-4">
+                    <div class="text-center text-gray-500 py-10">Loading notices...</div>
                 </div>
             </div>
+        </div>
 
-            <!-- NOTICES TAB -->
-            <div id="notices" class="tab-content">
-                <div class="max-w-4xl mx-auto">
-                    <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">Announcements</h2>
-                    
-                    <div class="space-y-4">
-                        <!-- Notice Item -->
-                        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 relative overflow-hidden">
-                            <div class="absolute top-0 left-0 w-1 h-full bg-red-500"></div>
-                            <div class="flex justify-between items-start mb-2">
-                                <h3 class="font-bold text-gray-800 dark:text-white">2025 A/L Application Process</h3>
-                                <span class="px-2 py-1 rounded bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-xs font-bold">Important</span>
-                            </div>
-                            <p class="text-gray-600 dark:text-gray-300 text-sm mb-4">Applications will be accepted from September 15th to October 15th, 2025.</p>
-                            <div class="text-xs text-gray-400 flex items-center gap-2">
-                                <i class="far fa-calendar"></i> 2025-08-01
-                            </div>
-                        </div>
+    </main>
 
-                         <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 relative overflow-hidden">
-                            <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500"></div>
-                            <div class="flex justify-between items-start mb-2">
-                                <h3 class="font-bold text-gray-800 dark:text-white">Scholarships 2025</h3>
-                                <span class="px-2 py-1 rounded bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-xs font-bold">Opportunity</span>
-                            </div>
-                            <p class="text-gray-600 dark:text-gray-300 text-sm mb-4">Government higher education scholarship applications opening soon.</p>
-                            <div class="text-xs text-gray-400 flex items-center gap-2">
-                                <i class="far fa-calendar"></i> 2025-07-15
-                            </div>
-                        </div>
-                    </div>
+    <!-- Footer -->
+    <footer class="border-t border-gray-800 bg-[#0B1120] py-8 mt-auto">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center gap-2">
+                    <span class="text-emerald-500 font-bold">DE Education.lk</span>
+                    <span class="text-gray-600 text-sm">| Empowering A/L students since 2025.</span>
+                </div>
+                <div class="text-xs text-gray-500 flex items-center gap-1">
+                    &copy; 2025 DE Education.lk. Designed by 
+                    <a href="https://dilnuka13.github.io/my/about.html" target="_blank" class="text-emerald-500 hover:text-emerald-400 hover:underline font-bold transition-colors">
+                        Isara Dilnuka
+                    </a>
+                </div>
+                <div class="flex gap-4">
+                    <a href="#" class="text-gray-500 hover:text-white transition-colors"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-gray-500 hover:text-white transition-colors"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-gray-500 hover:text-white transition-colors"><i class="fab fa-instagram"></i></a>
                 </div>
             </div>
+        </div>
+    </footer>
 
-             <!-- CONTACT TAB -->
-             <div id="contact" class="tab-content">
-                <div class="max-w-4xl mx-auto">
-                     <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">Get in Touch</h2>
-                     <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden grid grid-cols-1 md:grid-cols-2">
-                         <div class="p-8 bg-emerald-600 text-white">
-                             <h3 class="text-xl font-bold mb-4">Contact Information</h3>
-                             <p class="text-emerald-100 mb-8 text-sm">Have questions? We are here to help you with your educational journey.</p>
-                             
-                             <div class="space-y-6">
-                                 <div class="flex items-center gap-4">
-                                     <div class="w-10 h-10 rounded-full bg-emerald-500/50 flex items-center justify-center">
-                                         <i class="fas fa-envelope"></i>
-                                     </div>
-                                     <span class="text-sm">isaradilnuka@gmail.com</span>
-                                 </div>
-                                 <div class="flex items-center gap-4">
-                                     <div class="w-10 h-10 rounded-full bg-emerald-500/50 flex items-center justify-center">
-                                         <i class="fas fa-phone"></i>
-                                     </div>
-                                     <span class="text-sm">+94 76 416 4804</span>
-                                 </div>
-                                 <div class="flex items-center gap-4">
-                                     <div class="w-10 h-10 rounded-full bg-emerald-500/50 flex items-center justify-center">
-                                         <i class="fas fa-map-marker-alt"></i>
-                                     </div>
-                                     <span class="text-sm">Horana, Sri Lanka</span>
-                                 </div>
-                             </div>
-                         </div>
-                         
-                         <div class="p-8">
-                             <form id="contactForm" class="space-y-4">
-                                 <div>
-                                     <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase mb-2">Name</label>
-                                     <input type="text" class="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-800 dark:text-white transition-all" placeholder="John Doe">
-                                 </div>
-                                 <div>
-                                     <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase mb-2">Email</label>
-                                     <input type="email" class="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-800 dark:text-white transition-all" placeholder="john@example.com">
-                                 </div>
-                                 <div>
-                                     <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase mb-2">Message</label>
-                                     <textarea rows="4" class="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-800 dark:text-white transition-all" placeholder="Your message..."></textarea>
-                                 </div>
-                                 <button type="submit" class="w-full bg-gray-900 dark:bg-emerald-600 text-white font-bold py-3 rounded-lg hover:bg-gray-800 dark:hover:bg-emerald-700 transition-colors">Send Message</button>
-                             </form>
-                         </div>
-                     </div>
-                </div>
-             </div>
-
-        </main>
-
-        <!-- Footer -->
-        <footer class="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 py-8 mt-auto">
-            <div class="container mx-auto px-4 text-center">
-                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                    <div class="text-left">
-                        <h4 class="font-bold text-gray-900 dark:text-white">DE Education.lk</h4>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Empowering A/L students since 2025.</p>
-                    </div>
-                    <div class="flex gap-4">
-                         <a href="#" class="text-gray-400 hover:text-emerald-600 transition-colors"><i class="fab fa-facebook"></i></a>
-                         <a href="#" class="text-gray-400 hover:text-emerald-600 transition-colors"><i class="fab fa-twitter"></i></a>
-                         <a href="#" class="text-gray-400 hover:text-emerald-600 transition-colors"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-                <div class="border-t border-gray-100 dark:border-gray-800 mt-8 pt-8">
-                    <p class="text-xs text-gray-400">
-                        &copy; 2025 DE Education.lk. Designed by 
-                        <a href="https://dilnuka13.github.io/my/" target="_blank" class="text-emerald-600 dark:text-emerald-400 hover:underline">Isara Dilnuka</a>
-                    </p>
-                </div>
-            </div>
-        </footer>
-
-        <!-- Back to Top -->
-        <button id="backToTopBtn" class="fixed bottom-6 right-6 bg-emerald-600 text-white p-3 rounded-full shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 hover:bg-emerald-700 z-40">
-            <i class="fas fa-arrow-up"></i>
-        </button>
-
-    </div>
-
+    <!-- JS Logic -->
     <script>
-        // --- 1. DARK MODE LOGIC ---
-        const themeToggleBtn = document.getElementById('themeToggle');
-        const html = document.documentElement;
-        
-        // Check Init Theme
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            html.classList.add('dark');
-        } else {
-            html.classList.remove('dark');
-        }
+        const supabase = window.supabase.createClient(sbUrl, sbKey);
 
-        // Toggle Theme
-        themeToggleBtn.addEventListener('click', () => {
-            html.classList.toggle('dark');
-            if (html.classList.contains('dark')) {
-                localStorage.theme = 'dark';
-            } else {
-                localStorage.theme = 'light';
-            }
-        });
-
-
-        // --- 2. NAVIGATION & TABS ---
-        document.querySelectorAll('a[data-tab]').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const tabId = this.getAttribute('data-tab');
-                
-                // Update Tabs
-                document.querySelectorAll('.tab-content').forEach(tab => {
-                    tab.classList.remove('active');
-                });
-                document.getElementById(tabId).classList.add('active');
-                
-                // Update Visual State of Nav Links
-                document.querySelectorAll('nav a').forEach(navLink => {
-                    if(navLink.getAttribute('data-tab') === tabId) {
-                        navLink.classList.add('bg-white', 'dark:bg-gray-700', 'text-emerald-700', 'dark:text-emerald-400', 'shadow-sm');
-                        navLink.classList.remove('text-gray-600', 'dark:text-gray-300');
-                    } else {
-                        navLink.classList.remove('bg-white', 'dark:bg-gray-700', 'text-emerald-700', 'dark:text-emerald-400', 'shadow-sm');
-                        navLink.classList.add('text-gray-600', 'dark:text-gray-300');
-                    }
-                });
-
-                // Close Mobile Menu
-                document.getElementById('mobileMenu').classList.remove('active');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
-        });
-
-        // Mobile Menu Toggle
-        document.getElementById('mobileMenuButton').addEventListener('click', () => {
-            document.getElementById('mobileMenu').classList.toggle('active');
-        });
-
-
-        // --- 3. WELCOME SCREEN ---
-        function enterSite() {
-            const welcomePage = document.getElementById('welcomePage');
-            const mainContent = document.getElementById('mainContent');
+        // --- UI Functions ---
+        function switchTab(tabId) {
+            // Update Content
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
             
-            welcomePage.style.opacity = '0';
-            setTimeout(() => {
-                welcomePage.style.display = 'none';
-                mainContent.classList.remove('hidden');
-                // Small delay to allow display:block to render before opacity transition
-                setTimeout(() => {
-                    mainContent.classList.remove('opacity-0');
-                }, 50);
-
-                // TRIGGER SYSTEM UPDATE MESSAGE AFTER DELAY (2000ms = 2 seconds)
-                setTimeout(() => {
-                    showSystemNotification();
-                }, 2000);
-
-            }, 500);
-        }
-
-        // --- SYSTEM NOTIFICATION TOAST LOGIC ---
-        function showSystemNotification() {
-            const container = document.getElementById('notificationContainer');
-            const toast = document.createElement('div');
-            
-            toast.className = 'glass-card p-4 rounded-xl shadow-2xl flex items-start gap-3 max-w-sm transform translate-x-full pointer-events-auto toast-enter border-l-4 border-yellow-500 bg-white dark:bg-gray-800';
-            toast.innerHTML = `
-                <div class="flex-shrink-0 text-yellow-500 mt-0.5">
-                    <i class="fas fa-info-circle text-xl"></i>
-                </div>
-                <div class="flex-1">
-                    <h4 class="font-bold text-sm text-gray-900 dark:text-white mb-1">System Update</h4>
-                    <p class="text-xs text-gray-600 dark:text-gray-300 leading-relaxed">
-                        All subjects are not yet added. Next massive update scheduled for 2026.01.05.
-                    </p>
-                </div>
-                <button onclick="this.parentElement.classList.add('toast-exit'); setTimeout(() => this.parentElement.remove(), 500);" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
-                    <i class="fas fa-times"></i>
-                </button>
-            `;
-            
-            container.appendChild(toast);
-            
-            // Auto remove after 8 seconds
-            setTimeout(() => {
-                if(toast.parentElement) {
-                    toast.classList.add('toast-exit');
-                    setTimeout(() => toast.remove(), 500);
+            // Update Nav Pills (Desktop)
+            document.querySelectorAll('.nav-pill a').forEach(link => {
+                if(link.getAttribute('data-tab') === tabId) {
+                    link.classList.remove('text-gray-400', 'hover:text-white');
+                    link.classList.add('text-emerald-400', 'bg-white/10', 'shadow-sm');
+                } else {
+                    link.classList.add('text-gray-400', 'hover:text-white');
+                    link.classList.remove('text-emerald-400', 'bg-white/10', 'shadow-sm');
                 }
-            }, 8000);
-        }
+            });
 
+            // Update Mobile Menu (Simple styling)
+            document.querySelectorAll('#mobileMenu a').forEach(link => {
+                if(link.getAttribute('data-tab') === tabId) {
+                    link.classList.add('text-white', 'bg-emerald-500/10', 'border-emerald-500');
+                    link.classList.remove('text-gray-400', 'border-transparent');
+                } else {
+                    link.classList.remove('text-white', 'bg-emerald-500/10', 'border-emerald-500');
+                    link.classList.add('text-gray-400', 'border-transparent');
+                }
+            });
 
-        // --- 5. BACK TO TOP ---
-        const backToTopBtn = document.getElementById('backToTopBtn');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 300) {
-                backToTopBtn.classList.remove('translate-y-20', 'opacity-0');
-            } else {
-                backToTopBtn.classList.add('translate-y-20', 'opacity-0');
-            }
-        });
-        backToTopBtn.addEventListener('click', () => {
+            // Close Mobile Menu if open
+            document.getElementById('mobileMenu').classList.add('hidden');
+            
+            // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
+        }
 
-
-        // --- 6. SUPABASE & DATA LOGIC ---
-        // NOTE: Using the original API keys provided in the prompt
-        const supabaseUrl = 'https://hppojrbfhzttzvlvovre.supabase.co';
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhwcG9qcmJmaHp0dHp2bHZvdnJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjExODgxNDYsImV4cCI6MjA3Njc2NDE0Nn0.aL2fegb_eRPY0E7P6Mwufhq3TCAeX8-hDCHBo9VeAsA';
-        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-
-        // Stream Selection
-        document.querySelectorAll('.stream-card').forEach(card => {
-            card.addEventListener('click', function() {
-                // Highlight Logic
-                document.querySelectorAll('.stream-card').forEach(c => {
-                    c.classList.remove('ring-2', 'ring-emerald-500', 'border-emerald-500');
-                });
-                this.classList.add('ring-2', 'ring-emerald-500', 'border-emerald-500');
-
-                const stream = this.getAttribute('data-stream');
-                loadSubjects(stream);
+        // Attach Click Listeners
+        document.querySelectorAll('a[data-tab]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                switchTab(link.getAttribute('data-tab'));
             });
         });
 
-        async function loadSubjects(stream) {
-            const subjectSelection = document.getElementById('subjectSelection');
-            const subjectList = document.getElementById('subjectList');
-            const papersDisplay = document.getElementById('papersDisplay');
-            
-            subjectSelection.classList.remove('hidden');
-            papersDisplay.classList.add('hidden');
-            
-            subjectList.innerHTML = '<div class="col-span-full text-center text-gray-500 py-8"><i class="fas fa-circle-notch fa-spin mr-2"></i>Loading subjects...</div>';
+        document.getElementById('mobileMenuButton').addEventListener('click', () => {
+            document.getElementById('mobileMenu').classList.toggle('hidden');
+        });
 
-            try {
-                const { data: subjects, error } = await supabase
-                    .from('subjects')
-                    .select('code, name')
-                    .eq('stream', stream)
-                    .order('name', { ascending: true });
+        // --- Data Loading Functions ---
 
-                if (error) throw error;
+        async function loadSystemSettings() {
+            // Update Banner
+            const { data: updateData } = await supabase.from('system_settings').select('value').eq('key', 'system_update').single();
+            if(updateData && updateData.value.active) {
+                document.getElementById('system-update-banner').classList.remove('hidden');
+                document.getElementById('system-update-text').textContent = updateData.value.message;
+            }
 
-                subjectList.innerHTML = '';
-                if (!subjects || subjects.length === 0) {
-                    subjectList.innerHTML = '<div class="col-span-full text-center text-gray-500">No subjects found for this stream.</div>';
-                    return;
-                }
+            // Timetable PDF
+            const { data: ttData } = await supabase.from('system_settings').select('value').eq('key', 'timetable_pdf').single();
+            if(ttData && ttData.value.link) {
+                const link = document.getElementById('timetable-pdf-link');
+                link.href = ttData.value.link;
+                link.classList.remove('hidden');
+                document.getElementById('timetable-year').textContent = ttData.value.year;
+            }
 
-                subjects.forEach(subject => {
-                    const btn = document.createElement('div');
-                    btn.className = 'bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 cursor-pointer hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:border-emerald-200 dark:hover:border-emerald-800 transition-all text-center font-medium text-gray-700 dark:text-gray-200';
-                    btn.textContent = subject.name;
-                    btn.onclick = () => {
-                         // Select effect
-                         Array.from(subjectList.children).forEach(c => c.classList.remove('ring-2', 'ring-emerald-500'));
-                         btn.classList.add('ring-2', 'ring-emerald-500');
-                         loadPapers(stream, subject.code, subject.name);
-                    };
-                    subjectList.appendChild(btn);
-                });
-
-            } catch (error) {
-                console.error('Error:', error);
-                subjectList.innerHTML = '<div class="col-span-full text-center text-red-500">Failed to load subjects.</div>';
+            // Results Message
+            const { data: resData } = await supabase.from('system_settings').select('value').eq('key', 'results_msg').single();
+            if(resData && resData.value.title) {
+                document.getElementById('results-message-box').classList.remove('hidden');
+                document.getElementById('res-msg-title').textContent = resData.value.title;
+                document.getElementById('res-msg-body').textContent = resData.value.message;
             }
         }
+        loadSystemSettings();
 
-        async function loadPapers(stream, subjectCode, subjectName) {
-            const papersDisplay = document.getElementById('papersDisplay');
-            const papersList = document.getElementById('papersList');
-            const subjectTitle = document.getElementById('subjectTitle');
-
-            subjectTitle.textContent = `${subjectName} Papers`;
-            papersDisplay.classList.remove('hidden');
-            papersList.innerHTML = '<tr><td colspan="3" class="text-center py-8 text-gray-500"><i class="fas fa-circle-notch fa-spin mr-2"></i>Fetching papers...</td></tr>';
+        async function loadNotices() {
+            const { data } = await supabase.from('notices').select('*').order('created_at', {ascending: false});
+            const container = document.getElementById('notices-feed');
+            container.innerHTML = '';
             
-            // Scroll to papers
-            papersDisplay.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-            try {
-                const { data, error } = await supabase
-                    .from('past_papers')
-                    .select('*')
-                    .eq('stream', stream)
-                    .eq('subject_code', subjectCode)
-                    .order('year', { ascending: false });
-
-                if (error) throw error;
-
-                papersList.innerHTML = '';
-                if (!data || data.length === 0) {
-                    papersList.innerHTML = '<tr><td colspan="3" class="text-center py-8 text-gray-500">No papers available yet.</td></tr>';
-                    return;
-                }
-
-                data.forEach(paper => {
-                    const row = document.createElement('tr');
-                    row.className = 'hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors border-b border-gray-100 dark:border-gray-800 last:border-0';
-                    
-                    const paperLink = paper.paper_link 
-                        ? `<a href="${paper.paper_link}" target="_blank" class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:underline"><i class="fas fa-file-alt mr-2"></i> Download</a>`
-                        : '<span class="text-gray-400 text-xs italic">Unavailable</span>';
-                        
-                    const markingLink = paper.marking_scheme_link
-                        ? `<a href="${paper.marking_scheme_link}" target="_blank" class="inline-flex items-center text-emerald-600 dark:text-emerald-400 hover:underline"><i class="fas fa-check-circle mr-2"></i> Scheme</a>`
-                        : '<span class="text-gray-400 text-xs italic">Unavailable</span>';
-
-                    row.innerHTML = `
-                        <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">${paper.year}</td>
-                        <td class="px-6 py-4">${paperLink}</td>
-                        <td class="px-6 py-4">${markingLink}</td>
-                    `;
-                    papersList.appendChild(row);
-                });
-
-            } catch (error) {
-                console.error('Error:', error);
-                papersList.innerHTML = '<tr><td colspan="3" class="text-center py-8 text-red-500">Error loading papers.</td></tr>';
+            if(!data || !data.length) {
+                container.innerHTML = '<div class="text-center text-gray-500 py-8">No announcements yet.</div>';
+                return;
             }
-        }
 
-
-        // --- 7. TIMETABLE GENERATOR ---
-        function initializeTimetable() {
-            const calendar = document.getElementById('timetableCalendar');
-            // Mock Data
-            const exams = [
-                { date: '2025-12-01', subjects: ['Physics', 'Accounting', 'Sinhala'], type: 'Exam' },
-                { date: '2025-12-02', subjects: ['Chemistry', 'Business Studies'], type: 'Exam' },
-                { date: '2025-12-05', subjects: ['General English'], type: 'General' }
-            ];
-            
-            // Generate December 2025 (31 days)
-            // Starts on Monday (Dec 1, 2025)
-            
-            for (let i = 1; i <= 31; i++) {
-                const dayDiv = document.createElement('div');
-                const dateStr = `2025-12-${i.toString().padStart(2, '0')}`;
-                const examDay = exams.find(e => e.date === dateStr);
-
-                let bgClass = 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700';
-                let textClass = 'text-gray-700 dark:text-gray-300';
+            data.forEach(n => {
+                const colors = n.type === 'important' ? 'border-red-500 bg-red-900/10' : 
+                               n.type === 'opportunity' ? 'border-emerald-500 bg-emerald-900/10' : 
+                               'border-blue-500 bg-blue-900/10';
                 
-                if (examDay) {
-                    bgClass = 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-500 dark:border-emerald-600 ring-1 ring-emerald-500';
-                    textClass = 'text-emerald-700 dark:text-emerald-400 font-bold';
-                }
-
-                dayDiv.className = `p-2 md:p-3 rounded-xl border flex flex-col items-center justify-center min-h-[80px] cursor-pointer transition-all hover:scale-105 ${bgClass}`;
-                dayDiv.innerHTML = `
-                    <span class="text-xs uppercase text-gray-400 mb-1">Dec</span>
-                    <span class="text-xl md:text-2xl ${textClass}">${i}</span>
-                    ${examDay ? '<div class="w-2 h-2 rounded-full bg-emerald-500 mt-1"></div>' : ''}
+                const item = document.createElement('div');
+                item.className = `p-6 rounded-2xl border-l-4 ${colors} feature-card animate__animated animate__fadeInUp`;
+                item.innerHTML = `
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-bold text-white text-lg">${n.title}</h3>
+                        <span class="text-xs text-gray-500 font-mono">${new Date(n.created_at).toLocaleDateString()}</span>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed">${n.body}</p>
                 `;
+                container.appendChild(item);
+            });
+        }
+        loadNotices();
 
-                dayDiv.onclick = () => {
-                    const detailsContainer = document.getElementById('examDetailsList');
-                    const title = document.getElementById('timetableDayTitle');
-                    title.textContent = `Exams on December ${i}, 2025`;
-                    
-                    if (examDay) {
-                        detailsContainer.innerHTML = examDay.subjects.map(sub => `
-                            <div class="p-4 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800/50 flex justify-between items-center animate__animated animate__fadeIn">
-                                <span class="font-medium text-gray-800 dark:text-white">${sub}</span>
-                                <span class="text-xs px-2 py-1 rounded bg-emerald-200 dark:bg-emerald-800 text-emerald-800 dark:text-emerald-200">08:30 AM</span>
-                            </div>
-                        `).join('');
-                    } else {
-                        detailsContainer.innerHTML = '<div class="text-gray-500 italic animate__animated animate__fadeIn">No exams scheduled for this date.</div>';
-                    }
-                };
+        async function loadExamDates() {
+            const { data } = await supabase.from('exam_dates').select('*').order('date', {ascending: true});
+            const container = document.getElementById('exam-calendar-list');
+            container.innerHTML = '';
+            
+            if(!data || !data.length) {
+                container.innerHTML = '<div class="text-center text-gray-500 py-4">No scheduled events.</div>';
+                return;
+            }
 
-                calendar.appendChild(dayDiv);
+            data.forEach(d => {
+                const item = document.createElement('div');
+                item.className = 'flex items-center gap-4 p-4 bg-[#0B1120] rounded-xl border border-gray-800 hover:border-emerald-500/30 transition-all';
+                item.innerHTML = `
+                    <div class="flex flex-col items-center justify-center w-12 h-12 bg-gray-800 rounded-lg text-white">
+                        <span class="text-[10px] font-bold text-red-400 uppercase">${new Date(d.date).toLocaleString('default', {month: 'short'})}</span>
+                        <span class="text-lg font-bold leading-none">${new Date(d.date).getDate()}</span>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-gray-200 text-sm">${d.details}</h4>
+                        <span class="text-xs px-2 py-0.5 rounded bg-gray-700 text-gray-300 mt-1 inline-block">${d.type}</span>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+        loadExamDates();
+
+        // Paper Logic
+        window.loadSubjects = async (stream) => {
+            document.getElementById('subjectSelection').classList.remove('hidden');
+            window.scrollTo({top: document.getElementById('papers').offsetTop, behavior: 'smooth'});
+            
+            const list = document.getElementById('subjectList');
+            list.innerHTML = '<div class="col-span-full text-center text-gray-500"><i class="fas fa-spinner fa-spin"></i> Loading Subjects...</div>';
+            
+            const { data } = await supabase.from('subjects').select('*').eq('stream', stream);
+            list.innerHTML = '';
+            
+            if(data && data.length > 0) {
+                data.forEach(s => {
+                    const btn = document.createElement('button');
+                    btn.className = 'feature-card p-5 rounded-xl text-left font-medium text-gray-200 hover:text-emerald-400 flex justify-between items-center group';
+                    btn.innerHTML = `
+                        <span>${s.name}</span>
+                        <i class="fas fa-chevron-right text-xs text-gray-600 group-hover:text-emerald-500 transition-colors"></i>
+                    `;
+                    btn.onclick = () => loadPapers(stream, s.code, s.name);
+                    list.appendChild(btn);
+                });
+            } else {
+                list.innerHTML = '<div class="col-span-full text-center text-gray-500">No subjects found for this stream.</div>';
             }
         }
 
-        // Run Timetable Init
-        initializeTimetable();
-
-        // Global Search Alert
-        window.globalSearch = function() {
-            const val = document.getElementById('globalSearch').value;
-            if(val) alert(`Search for "${val}" coming in the next update!`);
-            else alert("Please enter a keyword.");
+        window.hideSubjects = () => {
+            document.getElementById('subjectSelection').classList.add('hidden');
         }
 
-        // Language Toggle Stub
-        window.toggleLanguage = function() {
-            alert("Language switching logic will be migrated from the original script.");
+        async function loadPapers(stream, code, name) {
+            document.getElementById('papersDisplay').classList.remove('hidden');
+            document.getElementById('subjectSelection').classList.add('hidden');
+            document.getElementById('subjectTitle').textContent = name;
+            
+            const list = document.getElementById('papersList');
+            list.innerHTML = '<div class="text-center text-gray-500">Fetching resources...</div>';
+            
+            const { data } = await supabase.from('past_papers').select('*').eq('stream', stream).eq('subject_code', code).order('year', {ascending: false});
+            list.innerHTML = '';
+            
+            if(data && data.length > 0) {
+                data.forEach(p => {
+                    const div = document.createElement('div');
+                    div.className = 'flex justify-between items-center p-4 bg-[#0B1120] rounded-xl border border-gray-800 hover:border-emerald-500/30 transition-all';
+                    div.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-gray-800 flex items-center justify-center text-xs font-bold text-gray-400">${p.year}</div>
+                        </div>
+                        <div class="flex gap-2 text-sm">
+                            ${p.paper_link ? `<a href="${p.paper_link}" target="_blank" class="px-3 py-1.5 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 transition text-xs font-bold">Paper</a>` : ''}
+                            ${p.marking_scheme_link ? `<a href="${p.marking_scheme_link}" target="_blank" class="px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition text-xs font-bold">Marking</a>` : ''}
+                        </div>
+                    `;
+                    list.appendChild(div);
+                });
+            } else {
+                list.innerHTML = '<div class="text-gray-500 text-sm text-center py-4">No papers available yet.</div>';
+            }
         }
 
+        // Search Functionality
+        document.getElementById('mainSearch').addEventListener('input', (e) => {
+            // Simple placeholder logic for now
+            // Can be expanded to filter existing DOM elements or query Supabase
+        });
     </script>
 </body>
 </html>
