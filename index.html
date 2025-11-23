@@ -525,6 +525,61 @@
         document.getElementById('mobileMenuButton').addEventListener('click', () => {
             document.getElementById('mobileMenu').classList.toggle('hidden');
         });
+        
+        // --- Download Logging (UPDATED) ---
+        async function logDownload(paperId, type, subjectName) {
+            const countColumn = (type === 'paper') ? 'paper_downloads' : 'marking_downloads';
+
+            // 1. Fetch current count (or null if not exists)
+            const { data: currentStats, error: fetchError } = await supabase.from('subject_download_stats')
+                .select('paper_downloads, marking_downloads')
+                .eq('subject_name', subjectName)
+                .maybeSingle();
+
+            if (fetchError) {
+                console.error("Error fetching stats:", fetchError);
+                return;
+            }
+
+            let payload = { subject_name: subjectName };
+            let newCount = 1;
+
+            if (currentStats) {
+                // 2. Calculate new count (Note: This client-side increment is susceptible to race conditions 
+                // but necessary for this demonstration without dedicated database functions/RLS policies.)
+                const currentVal = currentStats[countColumn] || 0;
+                newCount = currentVal + 1;
+
+                payload = {
+                    paper_downloads: currentStats.paper_downloads || 0,
+                    marking_downloads: currentStats.marking_downloads || 0,
+                };
+                payload[countColumn] = newCount;
+                
+                // 3. Update the existing row
+                const { error: updateError } = await supabase.from('subject_download_stats')
+                    .update(payload)
+                    .eq('subject_name', subjectName);
+
+                if (updateError) {
+                    console.error("Error updating stats:", updateError);
+                }
+
+            } else {
+                // 3. Insert new row if it didn't exist
+                payload = {
+                    subject_name: subjectName,
+                    paper_downloads: (type === 'paper') ? 1 : 0,
+                    marking_downloads: (type === 'marking') ? 1 : 0,
+                };
+                const { error: insertError } = await supabase.from('subject_download_stats')
+                    .insert(payload);
+
+                if (insertError) {
+                    console.error("Error inserting stats:", insertError);
+                }
+            }
+        }
 
         // --- Paper Management Functions ---
 
@@ -609,7 +664,7 @@
             }
         }
 
-        // Paper Rendering Logic
+        // Paper Rendering Logic (UPDATED logDownload calls)
         function renderPapers() {
             const list = document.getElementById('papersList');
             const searchTerm = document.getElementById('paperSearch').value.toLowerCase();
@@ -645,6 +700,8 @@
                 card.style.animationDelay = `${index * 0.05}s`;
 
                 const color = currentStreamColor; 
+                // Ensure p.subject_name is sanitized for use in inline attributes
+                const subjectName = p.subject_name.replace(/'/g, "\\'"); 
 
                 if (viewMode === 'large') {
                     card.innerHTML = `
@@ -662,8 +719,8 @@
                                 </div>
                             </div>
                             <div class="flex gap-3 mt-4">
-                                ${p.paper_link ? `<a href="${p.paper_link}" target="_blank" class="flex-1 text-center py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold shadow-lg shadow-blue-900/20 transition-all hover:-translate-y-1"><i class="fas fa-download mr-2"></i>Paper</a>` : ''}
-                                ${p.marking_scheme_link ? `<a href="${p.marking_scheme_link}" target="_blank" class="flex-1 text-center py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold shadow-lg shadow-emerald-900/20 transition-all hover:-translate-y-1"><i class="fas fa-check-circle mr-2"></i>Marking</a>` : ''}
+                                ${p.paper_link ? `<a href="${p.paper_link}" target="_blank" onclick="logDownload('${p.id}', 'paper', '${subjectName}')" class="flex-1 text-center py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold shadow-lg shadow-blue-900/20 transition-all hover:-translate-y-1"><i class="fas fa-download mr-2"></i>Paper</a>` : ''}
+                                ${p.marking_scheme_link ? `<a href="${p.marking_scheme_link}" target="_blank" onclick="logDownload('${p.id}', 'marking', '${subjectName}')" class="flex-1 text-center py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold shadow-lg shadow-emerald-900/20 transition-all hover:-translate-y-1"><i class="fas fa-check-circle mr-2"></i>Marking</a>` : ''}
                             </div>
                         </div>
                     `;
@@ -675,8 +732,8 @@
                                 <span class="text-xs font-bold text-${color}-400 bg-${color}-500/10 px-2 py-1 rounded border border-${color}-500/20">A/L</span>
                             </div>
                             <div class="flex gap-2">
-                                ${p.paper_link ? `<a href="${p.paper_link}" target="_blank" class="flex-1 py-2 rounded-lg bg-gray-800 hover:bg-blue-600 text-gray-300 hover:text-white text-xs font-bold text-center transition-colors border border-gray-700 hover:border-blue-500">Paper</a>` : ''}
-                                ${p.marking_scheme_link ? `<a href="${p.marking_scheme_link}" target="_blank" class="flex-1 py-2 rounded-lg bg-gray-800 hover:bg-emerald-600 text-gray-300 hover:text-white text-xs font-bold text-center transition-colors border border-gray-700 hover:border-emerald-500">Marking</a>` : ''}
+                                ${p.paper_link ? `<a href="${p.paper_link}" target="_blank" onclick="logDownload('${p.id}', 'paper', '${subjectName}')" class="flex-1 py-2 rounded-lg bg-gray-800 hover:bg-blue-600 text-gray-300 hover:text-white text-xs font-bold text-center transition-colors border border-gray-700 hover:border-blue-500">Paper</a>` : ''}
+                                ${p.marking_scheme_link ? `<a href="${p.marking_scheme_link}" target="_blank" onclick="logDownload('${p.id}', 'marking', '${subjectName}')" class="flex-1 py-2 rounded-lg bg-gray-800 hover:bg-emerald-600 text-gray-300 hover:text-white text-xs font-bold text-center transition-colors border border-gray-700 hover:border-emerald-500">Marking</a>` : ''}
                             </div>
                         </div>
                     `;
@@ -691,8 +748,8 @@
                                 </div>
                             </div>
                             <div class="flex gap-3">
-                                ${p.paper_link ? `<a href="${p.paper_link}" target="_blank" class="px-4 py-2 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500 hover:text-white text-sm font-medium transition-all"><i class="fas fa-file-pdf mr-1"></i> Paper</a>` : ''}
-                                ${p.marking_scheme_link ? `<a href="${p.marking_scheme_link}" target="_blank" class="px-4 py-2 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500 hover:text-white text-sm font-medium transition-all"><i class="fas fa-check mr-1"></i> Marking</a>` : ''}
+                                ${p.paper_link ? `<a href="${p.paper_link}" target="_blank" onclick="logDownload('${p.id}', 'paper', '${subjectName}')" class="px-4 py-2 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500 hover:text-white text-sm font-medium transition-all"><i class="fas fa-file-pdf mr-1"></i> Paper</a>` : ''}
+                                ${p.marking_scheme_link ? `<a href="${p.marking_scheme_link}" target="_blank" onclick="logDownload('${p.id}', 'marking', '${subjectName}')" class="px-4 py-2 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500 hover:text-white text-sm font-medium transition-all"><i class="fas fa-check mr-1"></i> Marking</a>` : ''}
                             </div>
                         </div>
                     `;
@@ -701,8 +758,8 @@
                         <div class="flex items-center justify-between p-2.5 bg-[#151F32] rounded-lg border border-gray-800 hover:border-${color}-500/30 transition-all">
                             <span class="font-mono font-bold text-${color}-400 ml-2">${p.year}</span>
                             <div class="flex gap-2">
-                                ${p.paper_link ? `<a href="${p.paper_link}" target="_blank" class="w-8 h-8 flex items-center justify-center rounded bg-gray-800 hover:bg-blue-600 text-gray-400 hover:text-white transition-colors" title="Paper"><i class="fas fa-file-pdf text-xs"></i></a>` : ''}
-                                ${p.marking_scheme_link ? `<a href="${p.marking_scheme_link}" target="_blank" class="w-8 h-8 flex items-center justify-center rounded bg-gray-800 hover:bg-emerald-600 text-gray-400 hover:text-white transition-colors" title="Marking"><i class="fas fa-check text-xs"></i></a>` : ''}
+                                ${p.paper_link ? `<a href="${p.paper_link}" target="_blank" onclick="logDownload('${p.id}', 'paper', '${subjectName}')" class="w-8 h-8 flex items-center justify-center rounded bg-gray-800 hover:bg-blue-600 text-gray-400 hover:text-white transition-colors" title="Paper"><i class="fas fa-file-pdf text-xs"></i></a>` : ''}
+                                ${p.marking_scheme_link ? `<a href="${p.marking_scheme_link}" target="_blank" onclick="logDownload('${p.id}', 'marking', '${subjectName}')" class="w-8 h-8 flex items-center justify-center rounded bg-gray-800 hover:bg-emerald-600 text-gray-400 hover:text-white transition-colors" title="Marking"><i class="fas fa-check text-xs"></i></a>` : ''}
                             </div>
                         </div>
                     `;

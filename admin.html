@@ -243,8 +243,13 @@
                 </div>
 
                 <div class="space-y-1">
+                    <p class="px-4 text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Dashboard</p>
+                    <a onclick="showSection('dashboard')" id="nav-dashboard" class="nav-link active flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all cursor-pointer">
+                        <i class="fas fa-chart-line w-5"></i> Dashboard
+                    </a>
+                    
                     <p class="px-4 text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 mt-4">Modules</p>
-                    <a onclick="showSection('papers')" id="nav-papers" class="nav-link active flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all cursor-pointer">
+                    <a onclick="showSection('papers')" id="nav-papers" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all cursor-pointer">
                         <i class="fas fa-layer-group w-5"></i> Past Papers
                     </a>
                     <a onclick="showSection('timetables')" id="nav-timetables" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all cursor-pointer">
@@ -285,8 +290,84 @@
                 <button onclick="toggleSidebar()" class="text-gray-600 dark:text-gray-300 p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"><i class="fas fa-bars text-lg"></i></button>
             </div>
 
+            <!-- 0. DASHBOARD SECTION (NEW) -->
+            <section id="dashboard-section" class="admin-section active animate__animated animate__fadeIn">
+                <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-8">Admin Dashboard</h1>
+                
+                <!-- Top-level Resource Counts (UPDATED GRID) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-10" id="top-counts">
+                    
+                    <!-- Total Papers Uploaded -->
+                    <div class="glass-panel p-6 rounded-2xl border-l-4 border-emerald-500 shadow-lg">
+                        <p class="text-sm text-gray-500 dark:text-gray-400 font-bold uppercase tracking-widest">Total Papers Uploaded</p>
+                        <div class="flex items-center mt-2">
+                            <span id="count-papers" class="text-4xl font-extrabold dark:text-white">0</span>
+                            <i class="fas fa-file-alt text-2xl text-emerald-500 ml-auto opacity-50"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Total Marking Schemes -->
+                    <div class="glass-panel p-6 rounded-2xl border-l-4 border-blue-500 shadow-lg">
+                        <p class="text-sm text-gray-500 dark:text-gray-400 font-bold uppercase tracking-widest">Total Marking Schemes</p>
+                        <div class="flex items-center mt-2">
+                            <span id="count-schemes" class="text-4xl font-extrabold dark:text-white">0</span>
+                            <i class="fas fa-check-circle text-2xl text-blue-500 ml-auto opacity-50"></i>
+                        </div>
+                    </div>
+
+                    <!-- NEW: Total Paper Downloads (Real-time) -->
+                    <div class="glass-panel p-6 rounded-2xl border-l-4 border-indigo-500 shadow-lg">
+                        <p class="text-sm text-gray-500 dark:text-gray-400 font-bold uppercase tracking-widest">Total Paper Downloads</p>
+                        <div class="flex items-center mt-2">
+                            <span id="count-total-papers-downloads" class="text-4xl font-extrabold dark:text-white text-indigo-500">0</span>
+                            <i class="fas fa-download text-2xl text-indigo-500 ml-auto opacity-50"></i>
+                        </div>
+                    </div>
+
+                    <!-- NEW: Total Marking Downloads (Real-time) -->
+                    <div class="glass-panel p-6 rounded-2xl border-l-4 border-purple-500 shadow-lg">
+                        <p class="text-sm text-gray-500 dark:text-gray-400 font-bold uppercase tracking-widest">Total Marking Downloads</p>
+                        <div class="flex items-center mt-2">
+                            <span id="count-total-marking-downloads" class="text-4xl font-extrabold dark:text-white text-purple-500">0</span>
+                            <i class="fas fa-clipboard-check text-2xl text-purple-500 ml-auto opacity-50"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Total Notices Posted -->
+                    <div class="glass-panel p-6 rounded-2xl border-l-4 border-yellow-500 shadow-lg">
+                        <p class="text-sm text-gray-500 dark:text-gray-400 font-bold uppercase tracking-widest">Total Notices Posted</p>
+                        <div class="flex items-center mt-2">
+                            <span id="count-notices" class="text-4xl font-extrabold dark:text-white">0</span>
+                            <i class="fas fa-bell text-2xl text-yellow-500 ml-auto opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Download Statistics Table -->
+                <div class="glass-panel p-6 rounded-2xl shadow-xl">
+                    <h3 class="font-bold text-xl dark:text-white mb-4 flex items-center gap-2"><i class="fas fa-chart-bar text-emerald-500"></i> Download Statistics by Subject</h3>
+                    
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-4">Shows how many times users have downloaded papers and marking schemes per subject.</p>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full text-left whitespace-nowrap table-auto">
+                            <thead>
+                                <tr class="bg-gray-50 dark:bg-dark-bg/50 border-b border-gray-200 dark:border-gray-700">
+                                    <th class="p-3 text-xs font-bold text-gray-500 uppercase w-1/2">Subject Name</th>
+                                    <th class="p-3 text-xs font-bold text-gray-500 uppercase text-right">Paper Downloads</th>
+                                    <th class="p-3 text-xs font-bold text-gray-500 uppercase text-right">Marking Scheme Downloads</th>
+                                </tr>
+                            </thead>
+                            <tbody id="download-stats-body" class="divide-y divide-gray-100 dark:divide-gray-800 text-sm dark:text-white">
+                                <tr><td colspan="3" class="p-8 text-center text-gray-400">Loading statistics...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
             <!-- 1. PAPERS SECTION -->
-            <section id="papers-section" class="admin-section active animate__animated animate__fadeIn">
+            <section id="papers-section" class="admin-section hidden animate__animated animate__fadeIn">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
                     <div>
                         <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Past Paper Library</h1>
@@ -359,7 +440,7 @@
                         <div class="p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl border border-emerald-200 dark:border-emerald-800 mb-6">
                             <label class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase mb-2 block">Step 1: Quick Subject Select</label>
                             <select id="subject-selector" class="w-full p-3 rounded-lg bg-white dark:bg-dark-bg border border-emerald-300 dark:border-emerald-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none">
-                                <option value="">Loading Subjects...</option>
+                                <option value="">Select Existing Subject...</option>
                             </select>
                             <p class="text-[10px] text-emerald-600/70 dark:text-emerald-400/70 mt-1">* Selecting a subject will auto-fill details below.</p>
                         </div>
@@ -609,6 +690,8 @@
         let stream;
         let detectionInterval;
         let registrationDescriptors = [];
+        let downloadStats = []; // Global state for download statistics
+        let realtimeChannel = null; // Supabase Realtime Channel
 
         // --- INIT ---
         document.addEventListener('DOMContentLoaded', async () => {
@@ -820,8 +903,9 @@
             // Show Restricted Menu
             if(user.email === SUPER_ADMIN_EMAIL) document.getElementById('nav-users').classList.remove('hidden');
 
-            loadPapers(); // Load Initial View
-            loadSubjects(); // Load Subjects for dropdown
+            // Initial Load - Load Dashboard first
+            loadDashboard();
+            loadSubjects();
         }
 
         // --- NAVIGATION ---
@@ -837,12 +921,107 @@
                  if (!sb.classList.contains('-translate-x-full')) toggleSidebar();
             }
 
-            if(id === 'papers') renderPapers(); 
+            if(id === 'dashboard') loadDashboard();
+            if(id === 'papers') loadPapers();
             if(id === 'settings') loadSettings();
             if(id === 'timetables') loadTimetables();
             if(id === 'notices') loadNotices();
             if(id === 'users' && currentUser.email === SUPER_ADMIN_EMAIL) loadUsers();
         };
+
+        // --- DASHBOARD LOGIC (REAL-TIME UPDATED) ---
+        async function loadDashboard() {
+            // Load papers once for overall resource counts (which relies on `allPapers`)
+            if (allPapers.length === 0) await loadPapers();
+
+            // Fetch and display the current stats immediately
+            await fetchDownloadStats(); 
+            
+            // Setup real-time listener for constant updates
+            setupRealtimeDownloadsListener(); 
+            
+            // Update total resource counters (including download totals)
+            await fetchTotalResourceCounts(); 
+        }
+
+        async function fetchTotalResourceCounts() {
+            // 1. Static Resource Counts (Papers / Schemes / Notices)
+            const { count: paperCount } = await supabase.from('past_papers').select('*', { count: 'exact', head: true });
+            const { count: noticeCount } = await supabase.from('notices').select('*', { count: 'exact', head: true });
+            
+            document.getElementById('count-papers').textContent = paperCount || 0;
+            document.getElementById('count-schemes').textContent = paperCount || 0; 
+            document.getElementById('count-notices').textContent = noticeCount || 0;
+            
+            // 2. Dynamic Download Totals (from the updated global state)
+            const totalPaperDownloads = downloadStats.reduce((sum, stat) => sum + (stat.paper_downloads || 0), 0);
+            const totalMarkingDownloads = downloadStats.reduce((sum, stat) => sum + (stat.marking_downloads || 0), 0);
+            
+            document.getElementById('count-total-papers-downloads').textContent = totalPaperDownloads.toLocaleString();
+            document.getElementById('count-total-marking-downloads').textContent = totalMarkingDownloads.toLocaleString();
+        }
+
+        async function fetchDownloadStats() {
+            const list = document.getElementById('download-stats-body');
+            
+            // Fetch the current state of download counts
+            const { data: statsData, error } = await supabase.from('subject_download_stats').select('*');
+            
+            if (error) {
+                console.error("Error fetching download stats:", error);
+                list.innerHTML = '<tr><td colspan="3" class="p-8 text-center text-red-400">Error loading data. Check console.</td></tr>';
+                return;
+            }
+            
+            downloadStats = statsData || [];
+            renderDownloadStats();
+        }
+
+        function renderDownloadStats() {
+            const list = document.getElementById('download-stats-body');
+            list.innerHTML = '';
+            
+            if (downloadStats.length === 0) {
+                list.innerHTML = '<tr><td colspan="3" class="p-8 text-center text-gray-400">No download logs recorded yet.</td></tr>';
+                return;
+            }
+
+            // Sort by combined downloads (most popular first)
+            downloadStats.sort((a, b) => (b.paper_downloads + b.marking_downloads) - (a.paper_downloads + a.marking_downloads)); 
+            
+            downloadStats.forEach(stat => {
+                const tr = document.createElement('tr');
+                tr.className = 'border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50';
+                tr.innerHTML = `
+                    <td class="p-3 font-bold">${stat.subject_name}</td>
+                    <td class="p-3 text-right font-mono text-lg text-blue-500">${(stat.paper_downloads || 0).toLocaleString()}</td>
+                    <td class="p-3 text-right font-mono text-lg text-emerald-500">${(stat.marking_downloads || 0).toLocaleString()}</td>
+                `;
+                list.appendChild(tr);
+            });
+            
+            // Update total downloads in the top counters
+            fetchTotalResourceCounts();
+        }
+
+        function setupRealtimeDownloadsListener() {
+            if (realtimeChannel) {
+                supabase.removeChannel(realtimeChannel); // Clean up previous listener
+            }
+            
+            // Listen for any changes (INSERT, UPDATE, DELETE) in the subject_download_stats table
+            realtimeChannel = supabase.channel('download_stats_changes')
+                .on(
+                    'postgres_changes',
+                    { event: '*', schema: 'public', table: 'subject_download_stats' },
+                    (payload) => {
+                        // Immediately fetch and re-render the stats
+                        fetchDownloadStats();
+                    }
+                )
+                .subscribe();
+        }
+
 
         // --- SUBJECT SELECTOR LOGIC ---
         async function loadSubjects() {
@@ -1040,6 +1219,7 @@
                 loadPapers();
                 togglePaperForm();
                 document.getElementById('paperForm').reset();
+                loadDashboard(); // Update dashboard counts
             }
         };
 
@@ -1053,6 +1233,7 @@
                 } else {
                     showToast("Resource deleted successfully", "success");
                     loadPapers();
+                    loadDashboard(); // Update dashboard counts
                 }
             }
         };
@@ -1203,6 +1384,7 @@
                 showToast(id ? "Notice Updated" : "Notice Published", "success");
                 resetNoticeForm();
                 loadNotices();
+                loadDashboard(); // Update dashboard counts
             }
         };
 
@@ -1214,6 +1396,7 @@
                 } else {
                     showToast("Notice deleted", "success");
                     loadNotices();
+                    loadDashboard(); // Update dashboard counts
                 }
             }
         };
@@ -1321,7 +1504,7 @@
             const t = document.createElement('div');
             const colors = type === 'error' ? 'bg-red-500' : 'bg-gray-900 dark:bg-emerald-600';
             t.className = `${colors} text-white px-6 py-3 rounded-xl shadow-2xl text-sm font-bold animate__animated animate__slideInRight flex items-center gap-3`;
-            t.innerHTML = `<i class="fas fa-info-circle"></i> ${msg}`;
+            t.innerHTML = `<i class=\"fas fa-info-circle\"></i> ${msg}`;
             document.getElementById('toast-container').appendChild(t);
             setTimeout(() => {
                 t.classList.remove('animate__slideInRight');
