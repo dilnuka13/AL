@@ -94,6 +94,34 @@
         /* Card Hover Effects */
         .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
         .hover-lift:hover { transform: translateY(-3px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); }
+
+        /* Calendar Day Enhancements */
+        .calendar-day-cell {
+            position: relative;
+            min-height: 80px;
+            padding: 8px;
+            border-radius: 1rem; /* rounded-2xl */
+            border: 1px solid;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+        .calendar-day-cell:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+        .dark .calendar-day-cell:hover {
+             box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .calendar-day-cell.today {
+            border-color: #10b981;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+        }
     </style>
 </head>
 <body class="h-screen bg-slate-50 dark:bg-dark-bg text-slate-800 dark:text-slate-200 transition-colors duration-300 font-sans overflow-hidden select-none">
@@ -331,25 +359,25 @@
                     </div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
-                        <!-- Stat Card 1 -->
+                        <!-- Stat Card 1: Total Papers -->
                         <div class="glass-panel p-6 rounded-3xl relative overflow-hidden group hover-lift">
                             <div class="absolute right-0 top-0 w-24 h-24 bg-primary-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
                             <div class="relative z-10">
                                 <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center mb-4 text-lg shadow-sm"><i class="fas fa-file-alt"></i></div>
                                 <h2 class="text-3xl font-bold dark:text-white" id="dash-papers-count">0</h2>
-                                <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mt-1">Total Papers</p>
+                                <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mt-1">Total Papers (Add Papers)</p>
                             </div>
                         </div>
-                        <!-- Stat Card 2 -->
+                        <!-- Stat Card 2: Total Downloads (Activity Amusement) -->
                         <div class="glass-panel p-6 rounded-3xl relative overflow-hidden group hover-lift">
                             <div class="absolute right-0 top-0 w-24 h-24 bg-blue-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
                             <div class="relative z-10">
                                 <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center mb-4 text-lg shadow-sm"><i class="fas fa-download"></i></div>
                                 <h2 class="text-3xl font-bold dark:text-white" id="dash-downloads-count">0</h2>
-                                <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mt-1">Downloads</p>
+                                <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mt-1">Total Downloads (Activity Amusement)</p>
                             </div>
                         </div>
-                        <!-- Stat Card 3 -->
+                        <!-- Stat Card 3: Active Notices -->
                         <div class="glass-panel p-6 rounded-3xl relative overflow-hidden group hover-lift">
                             <div class="absolute right-0 top-0 w-24 h-24 bg-yellow-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
                             <div class="relative z-10">
@@ -358,19 +386,19 @@
                                 <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mt-1">Active Notices</p>
                             </div>
                         </div>
-                        <!-- Stat Card 4 -->
+                        <!-- Stat Card 4: Admin Users -->
                         <div class="glass-panel p-6 rounded-3xl relative overflow-hidden group hover-lift">
                             <div class="absolute right-0 top-0 w-24 h-24 bg-purple-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
                             <div class="relative z-10">
                                 <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center mb-4 text-lg shadow-sm"><i class="fas fa-users"></i></div>
                                 <h2 class="text-3xl font-bold dark:text-white" id="dash-users-count">0</h2>
-                                <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mt-1">Admin Users</p>
+                                <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mt-1">Total User Accounts</p>
                             </div>
                         </div>
                     </div>
                     
                     <div class="glass-panel p-6 rounded-3xl shadow-sm">
-                        <h3 class="font-heading font-bold text-lg dark:text-white mb-6 flex items-center gap-2"><i class="fas fa-chart-pie text-primary-500"></i> Download Statistics</h3>
+                        <h3 class="font-heading font-bold text-lg dark:text-white mb-6 flex items-center gap-2"><i class="fas fa-chart-pie text-primary-500"></i> Download Statistics (Papae Download / Marking Download / All Marking)</h3>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left text-sm dark:text-white">
                                 <thead class="bg-slate-50 dark:bg-slate-800/50 text-xs uppercase text-slate-500 font-bold tracking-wider rounded-lg">
@@ -542,6 +570,10 @@
                                 <select id="filter-year" class="p-3 rounded-xl bg-slate-50 dark:bg-dark-bg border border-transparent text-sm font-bold text-slate-600 dark:text-slate-300 outline-none focus:ring-2 focus:ring-primary-500">
                                     <option value="all">Year</option>
                                 </select>
+                                <!-- NEW: Refresh Button -->
+                                <button onclick="loadPapers(); showToast('Resource List Refreshed', 'success')" class="bg-primary-500 text-white px-4 py-2 rounded-xl font-bold text-sm hover:bg-primary-600 transition shadow-md shadow-primary-500/30 flex items-center justify-center">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -563,7 +595,11 @@
                                     <tr>
                                         <th class="p-5 text-xs font-bold text-slate-400 uppercase tracking-wider">User Profile</th>
                                         <th class="p-5 text-xs font-bold text-slate-400 uppercase tracking-wider">Contact</th>
-                                        <th class="p-5 text-xs font-bold text-slate-400 uppercase tracking-wider">Status</th>
+                                        
+                                        <!-- UPDATED HEADER: Split Status/Access for clarity -->
+                                        <th class="p-5 text-xs font-bold text-slate-400 uppercase tracking-wider">Approval Status</th>
+                                        <th class="p-5 text-xs font-bold text-slate-400 uppercase tracking-wider">Last Access Time</th>
+                                        <th class="p-5 text-xs font-bold text-slate-400 uppercase tracking-wider">Email Confirmed</th>
                                         <th class="p-5 text-xs font-bold text-slate-400 uppercase tracking-wider text-center">Role</th>
                                         <th class="p-5 text-xs font-bold text-slate-400 uppercase tracking-wider text-right">Controls</th>
                                     </tr>
@@ -593,6 +629,55 @@
                             <button onclick="document.getElementById('edit-user-modal').classList.add('hidden')" class="px-5 py-2.5 rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition">Cancel</button>
                             <button onclick="saveUserChanges()" class="px-5 py-2.5 bg-primary-600 text-white rounded-xl font-bold hover:bg-primary-700 shadow-lg shadow-primary-500/20">Save</button>
                         </div>
+                    </div>
+                </div>
+
+                <!-- NEW: EDIT PAPER MODAL -->
+                <div id="edit-paper-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+                    <div class="glass-panel w-full max-w-2xl p-6 rounded-3xl relative shadow-2xl animate__animated animate__zoomIn">
+                        <button onclick="document.getElementById('edit-paper-modal').classList.add('hidden')" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-slate-100 dark:bg-slate-700 rounded-full hover:bg-red-100 text-slate-500 hover:text-red-500 transition-colors"><i class="fas fa-times"></i></button>
+                        <h3 class="font-bold text-lg dark:text-white mb-6 border-b pb-3 border-slate-100 dark:border-slate-700/50">Edit Resource: <span id="edit-paper-title-display" class="text-primary-500"></span></h3>
+                        <form id="editPaperForm" onsubmit="event.preventDefault(); savePaperChanges()" class="space-y-6">
+                            <input type="hidden" id="edit-paper-id">
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="text-xs font-bold text-slate-500 uppercase block mb-1">Subject Name</label>
+                                    <input type="text" id="edit-subject-name" class="w-full p-3.5 rounded-xl bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-slate-700 text-sm dark:text-white outline-none focus:ring-2 focus:ring-primary-500" required>
+                                </div>
+                                <div>
+                                    <label class="text-xs font-bold text-slate-500 uppercase block mb-1">Year</label>
+                                    <input type="number" id="edit-year" placeholder="2025" class="w-full p-3.5 rounded-xl bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-slate-700 text-sm dark:text-white outline-none focus:ring-2 focus:ring-primary-500" required>
+                                </div>
+                            </div>
+                            <!-- Stream is read-only as it affects database partitioning, but shown for context -->
+                            <div class="mb-4">
+                                <label class="text-xs font-bold text-slate-500 uppercase block mb-1">Stream (Read-Only)</label>
+                                <span id="edit-stream-display" class="text-sm font-mono dark:text-white p-3 rounded-xl bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-slate-700 inline-block w-full"></span>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="text-xs font-bold text-slate-500 uppercase block mb-1">Paper Link (PDF)</label>
+                                    <div class="relative">
+                                        <i class="fas fa-link absolute left-3 top-3.5 text-slate-400"></i>
+                                        <input type="url" id="edit-paper-link" placeholder="https://..." class="w-full pl-9 pr-3 py-3 rounded-xl bg-white dark:bg-dark-bg border border-slate-200 dark:border-slate-700 text-sm dark:text-white outline-none focus:ring-2 focus:ring-primary-500">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="text-xs font-bold text-slate-500 uppercase block mb-1">Marking Scheme</label>
+                                    <div class="relative">
+                                        <i class="fas fa-check-double absolute left-3 top-3.5 text-slate-400"></i>
+                                        <input type="url" id="edit-marking-link" placeholder="https://..." class="w-full pl-9 pr-3 py-3 rounded-xl bg-white dark:bg-dark-bg border border-slate-200 dark:border-slate-700 text-sm dark:text-white outline-none focus:ring-2 focus:ring-primary-500">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-700">
+                                <button type="button" onclick="document.getElementById('edit-paper-modal').classList.add('hidden')" class="w-full md:w-auto px-6 py-3 rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition">Cancel</button>
+                                <button type="submit" class="w-full md:w-auto bg-primary-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-primary-700 shadow-lg shadow-primary-500/20">Save Changes</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
 
@@ -664,8 +749,8 @@
                             <button onclick="changeMonth(1)" class="p-2 w-10 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition"><i class="fas fa-chevron-right text-xs"></i></button>
                         </div>
                     </div>
-                    <div class="glass-panel p-4 md:p-6 rounded-3xl">
-                        <div class="grid grid-cols-7 gap-2 mb-4 text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                    <div class="glass-panel p-4 md:p-6 rounded-3xl animate__animated animate__fadeInUp">
+                        <div class="grid grid-cols-7 gap-4 mb-4 text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                             <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
                         </div>
                         <div id="calendar-grid" class="grid grid-cols-7 gap-2 md:gap-4"></div>
@@ -780,6 +865,7 @@
     <script type="module">
         // --- CONFIG & CONSTANTS ---
         const SUPER_ADMIN_EMAIL = 'isaradilnuka2005@gmail.com';
+        // Updated Super Admin Photo URL
         const SUPER_ADMIN_IMG = 'https://dilnuka13.github.io/my/isara-profile.jpg';
         const ADMIN_SECRET = '20050616';
         
@@ -880,7 +966,8 @@
                 document.getElementById('loginModal').classList.add('opacity-100', 'scale-100');
             } catch (e) { 
                 console.error(e); 
-                alert("Face recognition models failed to load. Please refresh."); 
+                // Using a non-alert custom message box as per constraints
+                showToast("Face recognition models failed to load. Please refresh.", "error"); 
             }
         }
 
@@ -979,7 +1066,8 @@
                     video.dataset.interval = interval;
                 };
             } catch(e) {
-                alert("Camera Access Denied or Error: " + e.message);
+                // Using a non-alert custom message box as per constraints
+                showToast("Camera Access Denied or Error: " + e.message, "error");
                 stopCamera();
             }
         };
@@ -999,7 +1087,11 @@
             const { error } = await supabase.from('users').insert({
                 name, email, phone, password,
                 face_descriptors: registrationDescriptors.length > 0 ? registrationDescriptors : null,
-                approved: false
+                approved: false,
+                // Add initial online status
+                last_login: new Date().toISOString(),
+                // Initialize email_confirmed_at to null on registration
+                email_confirmed_at: null 
             });
 
             btn.innerHTML = 'Complete Registration';
@@ -1091,6 +1183,7 @@
             
             document.getElementById('user-name-display').textContent = user.name;
             document.getElementById('user-role-display').textContent = (user.email === SUPER_ADMIN_EMAIL) ? 'Super Admin' : 'Editor';
+            // Ensure SUPER_ADMIN_IMG is used for Super Admin
             document.getElementById('user-avatar').src = (user.email === SUPER_ADMIN_EMAIL) ? SUPER_ADMIN_IMG : `https://ui-avatars.com/api/?name=${user.name}&background=random&color=fff`;
 
             // Access Control
@@ -1212,14 +1305,14 @@
         };
 
         window.deleteSubject = async (id) => {
-            if(confirm('Are you sure?')) {
+            if(confirm('Are you sure? This will not delete related past papers.')) {
                 await supabase.from('subjects').delete().eq('id', id);
                 loadSubjects();
                 showToast('Subject Deleted', 'success');
             }
         };
 
-        // --- PAPERS LOGIC ---
+        // --- PAPERS LOGIC (Updated with Edit) ---
         window.togglePaperForm = () => document.getElementById('paper-form-container').classList.toggle('hidden');
 
         window.filterUploadSubjects = () => {
@@ -1251,7 +1344,13 @@
             
             if(!selectedStreams.length || !subjectVal) return showToast('Please complete the form', 'error');
             
-            const subjectObj = JSON.parse(subjectVal);
+            let subjectObj;
+            try {
+                 subjectObj = JSON.parse(subjectVal);
+            } catch(e) {
+                return showToast('Invalid subject selection.', 'error');
+            }
+            
             const subjectName = subjectObj.name;
             const subjectDefinition = definedSubjects.find(s => s.name === subjectName);
             
@@ -1267,6 +1366,7 @@
                 marking_scheme_link: document.getElementById('marking_link').value
             };
             
+            // Insert one record for each selected stream combination (as per existing logic)
             const inserts = finalStreams.map(s => ({ ...base, stream: s }));
             const { error } = await supabase.from('past_papers').insert(inserts);
             
@@ -1308,7 +1408,7 @@
             const yearFilter = document.getElementById('filter-year').value;
 
             const filtered = allPapers.filter(p => {
-                const matchSearch = p.subject_name.toLowerCase().includes(searchText);
+                const matchSearch = p.subject_name.toLowerCase().includes(searchText) || p.subject_code.toLowerCase().includes(searchText);
                 const matchStream = streamFilter === 'all' || p.stream === streamFilter;
                 const matchSubject = subjectFilter === 'all' || p.subject_name === subjectFilter;
                 const matchYear = yearFilter === 'all' || p.year == yearFilter;
@@ -1327,26 +1427,69 @@
                 if(p.stream === 'commerce') colorClass = 'bg-blue-100 text-blue-700';
                 if(p.stream === 'arts') colorClass = 'bg-yellow-100 text-yellow-700';
                 if(p.stream === 'technology') colorClass = 'bg-purple-100 text-purple-700';
+                
+                // Escape quotes for JS function call
+                const paperData = JSON.stringify(p).replace(/"/g, "'");
 
                 const card = document.createElement('div'); 
                 card.className = "bg-white dark:bg-dark-card p-5 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm hover-lift relative group animate__animated animate__fadeIn";
                 card.innerHTML = `
                     <div class="flex justify-between items-start mb-3">
                         <span class="text-[10px] uppercase font-bold ${colorClass} px-2 py-1 rounded-full tracking-wide">${p.stream}</span>
-                        <button onclick="deletePaper('${p.id}')" class="w-8 h-8 flex items-center justify-center rounded-full text-slate-300 hover:text-red-500 hover:bg-red-50 transition"><i class="fas fa-trash"></i></button>
+                        <div class="flex gap-2">
+                             <button onclick="openEditPaper(${paperData})" class="w-8 h-8 flex items-center justify-center rounded-full text-slate-400 hover:text-blue-500 hover:bg-blue-50 transition" title="Edit Resource"><i class="fas fa-pen"></i></button>
+                             <button onclick="deletePaper('${p.id}')" class="w-8 h-8 flex items-center justify-center rounded-full text-slate-300 hover:text-red-500 hover:bg-red-50 transition" title="Delete Resource"><i class="fas fa-trash"></i></button>
+                        </div>
                     </div>
                     <h4 class="font-bold dark:text-white text-lg leading-tight mb-1 line-clamp-2">${p.subject_name}</h4>
                     <p class="text-xs text-slate-400 mb-4 font-mono font-bold">${p.year} • ${p.subject_code || 'N/A'}</p>
                     
                     <div class="grid grid-cols-2 gap-2">
-                        ${p.paper_link ? `<a href="${p.paper_link}" target="_blank" class="flex items-center justify-center gap-2 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold hover:bg-blue-50 hover:text-blue-600 dark:hover:text-blue-400 transition"><i class="fas fa-file-pdf"></i> Paper</a>` : ''}
-                        ${p.marking_scheme_link ? `<a href="${p.marking_scheme_link}" target="_blank" class="flex items-center justify-center gap-2 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold hover:bg-emerald-50 hover:text-emerald-600 dark:hover:text-emerald-400 transition"><i class="fas fa-check-circle"></i> Scheme</a>` : ''}
+                        ${p.paper_link ? `<a href="${p.paper_link}" target="_blank" class="flex items-center justify-center gap-2 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold hover:bg-blue-50 hover:text-blue-600 dark:hover:text-blue-400 transition"><i class="fas fa-file-pdf"></i> Paper</a>` : `<span class="flex items-center justify-center gap-2 py-2 rounded-xl bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400 text-xs font-bold cursor-not-allowed opacity-50"><i class="fas fa-file-pdf"></i> No Paper</span>`}
+                        ${p.marking_scheme_link ? `<a href="${p.marking_scheme_link}" target="_blank" class="flex items-center justify-center gap-2 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold hover:bg-emerald-50 hover:text-emerald-600 dark:hover:text-emerald-400 transition"><i class="fas fa-check-circle"></i> Scheme</a>` : `<span class="flex items-center justify-center gap-2 py-2 rounded-xl bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400 text-xs font-bold cursor-not-allowed opacity-50"><i class="fas fa-check-circle"></i> No Scheme</span>`}
                     </div>
                 `;
                 container.appendChild(card);
             });
         }
         
+        // New: Open Edit Modal
+        window.openEditPaper = (p) => {
+            // Unescape quotes in keys/values
+            const paper = JSON.parse(JSON.stringify(p).replace(/'/g, '"'));
+            
+            document.getElementById('edit-paper-id').value = paper.id;
+            document.getElementById('edit-paper-title-display').textContent = `${paper.subject_name} (${paper.year})`;
+            document.getElementById('edit-subject-name').value = paper.subject_name;
+            document.getElementById('edit-year').value = paper.year;
+            document.getElementById('edit-paper-link').value = paper.paper_link || '';
+            document.getElementById('edit-marking-link').value = paper.marking_scheme_link || '';
+            document.getElementById('edit-stream-display').textContent = paper.stream.toUpperCase();
+
+            document.getElementById('edit-paper-modal').classList.remove('hidden');
+        };
+
+        // New: Save Changes Function
+        window.savePaperChanges = async () => {
+            const id = document.getElementById('edit-paper-id').value;
+            const subject_name = document.getElementById('edit-subject-name').value;
+            const year = document.getElementById('edit-year').value;
+            const paper_link = document.getElementById('edit-paper-link').value;
+            const marking_scheme_link = document.getElementById('edit-marking-link').value;
+
+            const { error } = await supabase.from('past_papers').update({ 
+                subject_name, year, paper_link, marking_scheme_link 
+            }).eq('id', id);
+
+            if (!error) {
+                showToast("Resource Updated", "success");
+                document.getElementById('edit-paper-modal').classList.add('hidden');
+                loadPapers();
+            } else {
+                showToast(error.message, "error");
+            }
+        };
+
         window.deletePaper = async (id) => { 
             if(confirm("Permanently delete this resource?")) { 
                 await supabase.from('past_papers').delete().eq('id', id); 
@@ -1362,14 +1505,19 @@
         // --- USERS ---
         window.loadUsers = async () => {
             if(!currentUser || currentUser.email !== SUPER_ADMIN_EMAIL) return;
-            const { data } = await supabase.from('users').select('*').order('last_login', {ascending: false});
+            // Fetch all users
+            const { data } = await supabase.from('users').select('*').order('last_login', {ascending: false, nullsFirst: true});
             const users = data || []; 
             const tbody = document.getElementById('users-list-body'); tbody.innerHTML = '';
             
             users.forEach(u => {
+                // Status check constants
                 const isOnline = u.last_login && moment().diff(moment(u.last_login), 'minutes') < 5;
                 const isSuper = u.email === SUPER_ADMIN_EMAIL;
+                const isEmailConfirmed = !!u.email_confirmed_at;
+                
                 const uStr = JSON.stringify(u).replace(/"/g, '&quot;');
+                const lastAccessText = isOnline ? '<span class="text-green-500 font-bold">Online now</span>' : (u.last_login ? moment(u.last_login).fromNow() : 'Never logged in');
 
                 const tr = document.createElement('tr');
                 tr.className = 'border-b border-slate-50 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors';
@@ -1377,7 +1525,7 @@
                     <td class="p-5">
                         <div class="flex items-center gap-4">
                             <div class="relative">
-                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 font-bold">${u.name.charAt(0)}</div>
+                                <img src="${isSuper ? SUPER_ADMIN_IMG : `https://ui-avatars.com/api/?name=${u.name}&background=random&color=fff`}" class="w-10 h-10 rounded-full object-cover border-2 border-primary-500 shadow-sm" onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name=${u.name}&background=random&color=fff'">
                                 ${isOnline ? '<div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white dark:border-dark-card rounded-full"></div>' : ''}
                             </div>
                             <div>
@@ -1387,20 +1535,46 @@
                         </div>
                     </td>
                     <td class="p-5 text-sm text-slate-500 font-mono">${u.phone || '-'}</td>
+                    
+                    <!-- NEW: Approval Status -->
                     <td class="p-5">
                         <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide ${u.approved ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}">
-                            ${u.approved ? 'Active' : 'Pending'}
+                            ${u.approved ? 'Approved' : 'Pending'}
                         </span>
                     </td>
+
+                    <!-- NEW: Last Access Time -->
+                    <td class="p-5 text-xs text-slate-500">
+                        ${lastAccessText}
+                    </td>
+
+                    <!-- NEW: Email Confirmed Status -->
+                    <td class="p-5">
+                        <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide ${isEmailConfirmed ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-orange-700'}">
+                            ${isEmailConfirmed ? 'Confirmed' : 'Unconfirmed'}
+                        </span>
+                        <div class="text-xs text-slate-400 mt-1">
+                            ${isEmailConfirmed ? moment(u.email_confirmed_at).format('MMM Do, h:mm a') : 'Awaiting confirmation'}
+                        </div>
+                    </td>
+
+                    <!-- Role -->
                     <td class="p-5 text-center">
                         ${isSuper ? '<span class="text-xs font-bold text-purple-500"><i class="fas fa-crown"></i> Super Admin</span>' : '<span class="text-xs text-slate-500">Editor</span>'}
                     </td>
+                    
+                    <!-- Controls -->
                     <td class="p-5 text-right">
                         ${!isSuper ? `
                         <div class="flex justify-end gap-2">
-                            <button onclick='openEditUser(${uStr})' class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 hover:bg-blue-100 flex items-center justify-center transition"><i class="fas fa-pen"></i></button>
-                            <button onclick="toggleUserActive('${u.id}', ${u.approved})" class="w-8 h-8 rounded-lg ${u.approved ? 'bg-orange-50 text-orange-500 hover:bg-orange-100' : 'bg-green-50 text-green-500 hover:bg-green-100'} flex items-center justify-center transition"><i class="fas ${u.approved ? 'fa-ban' : 'fa-check'}"></i></button>
-                            <button onclick="deleteUser('${u.id}')" class="w-8 h-8 rounded-lg bg-slate-50 text-slate-400 hover:text-red-500 hover:bg-red-50 flex items-center justify-center transition"><i class="fas fa-trash"></i></button>
+                            <!-- Toggle Email Confirmed -->
+                            <button onclick="toggleEmailConfirmed('${u.id}', ${isEmailConfirmed})" class="w-8 h-8 rounded-lg ${isEmailConfirmed ? 'bg-orange-50 text-orange-500 hover:bg-orange-100' : 'bg-blue-50 text-blue-500 hover:bg-blue-100'} flex items-center justify-center transition" title="${isEmailConfirmed ? 'Mark Email Unconfirmed' : 'Mark Email Confirmed'}"><i class="fas ${isEmailConfirmed ? 'fa-envelope-open-text' : 'fa-check-double'}"></i></button>
+
+                            <button onclick='openEditUser(${uStr})' class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 hover:bg-blue-100 flex items-center justify-center transition" title="Edit Profile"><i class="fas fa-pen"></i></button>
+
+                            <button onclick="toggleUserActive('${u.id}', ${u.approved})" class="w-8 h-8 rounded-lg ${u.approved ? 'bg-red-50 text-red-500 hover:bg-red-100' : 'bg-green-50 text-green-500 hover:bg-green-100'} flex items-center justify-center transition" title="${u.approved ? 'Suspend User' : 'Approve User'}"><i class="fas ${u.approved ? 'fa-ban' : 'fa-check'}"></i></button>
+
+                            <button onclick="deleteUser('${u.id}')" class="w-8 h-8 rounded-lg bg-slate-50 text-slate-400 hover:text-red-500 hover:bg-red-50 flex items-center justify-center transition" title="Delete User"><i class="fas fa-trash"></i></button>
                         </div>` : ''}
                     </td>
                 `;
@@ -1408,7 +1582,32 @@
             });
         }
 
-        window.toggleUserActive = async (id, currentStatus) => { await supabase.from('users').update({ approved: !currentStatus }).eq('id', id); loadUsers(); showToast('Status Updated', 'success'); };
+        // NEW: Function to toggle email confirmation status
+        window.toggleEmailConfirmed = async (id, currentStatus) => { 
+            const confirmationMessage = currentStatus ? "Are you sure you want to unconfirm this user's email?" : "Are you sure you want to confirm this user's email address now?";
+            if(confirm(confirmationMessage)) {
+                // Set to current timestamp if confirming, or null if unconfirming
+                const confirmedAt = currentStatus ? null : new Date().toISOString(); 
+                
+                const { error } = await supabase.from('users').update({ email_confirmed_at: confirmedAt }).eq('id', id); 
+                
+                if (!error) {
+                    loadUsers(); 
+                    showToast('Email Confirmation Status Updated', 'success'); 
+                } else {
+                    showToast(error.message, 'error');
+                }
+            }
+        };
+
+        window.toggleUserActive = async (id, currentStatus) => { 
+            const confirmationMessage = currentStatus ? "Are you sure you want to suspend this user?" : "Are you sure you want to approve this user?";
+            if(confirm(confirmationMessage)) {
+                await supabase.from('users').update({ approved: !currentStatus }).eq('id', id); 
+                loadUsers(); 
+                showToast('Status Updated', 'success'); 
+            }
+        };
         window.deleteUser = async (id) => { if(confirm("Permanently delete user?")) { await supabase.from('users').delete().eq('id', id); loadUsers(); showToast('User Removed', 'success'); } };
         
         window.openEditUser = (user) => {
@@ -1430,37 +1629,143 @@
             }
         };
 
-        // --- CALENDAR & EVENTS ---
+        // --- CALENDAR & EVENTS (Upgraded for SL Holidays/UI) ---
+
+        // NEW: Hardcoded SL Poya/Holidays for 2025 (Approximation for demo stability)
+        function getSriLankaHolidays(year) {
+            const fixedHolidays = [
+                // Month is 0-indexed in JS Date/Moment
+                { month: 0, day: 1, title: "New Year's Day", type: 'holiday' },
+                { month: 1, day: 4, title: "Independence Day", type: 'holiday' },
+                { month: 3, day: 13, title: "Sinhala & Tamil New Year (Eve)", type: 'holiday' },
+                { month: 3, day: 14, title: "Sinhala & Tamil New Year", type: 'holiday' },
+                { month: 4, day: 1, title: "May Day", type: 'holiday' },
+                { month: 9, day: 1, title: "Deepavali Festival Day", type: 'holiday' },
+                { month: 11, day: 25, title: "Christmas Day", type: 'holiday' },
+            ];
+
+            // Poya Days (Approximate 2025/2026 data - highly subject to change)
+            // Format: YYYY-MM-DD
+            const poyaDays = [
+                `${year}-01-13`, `${year}-02-12`, `${year}-03-13`, `${year}-04-12`, `${year}-05-12`, 
+                `${year}-06-10`, `${year}-07-09`, `${year}-08-08`, `${year}-09-06`, `${year}-10-06`, 
+                `${year}-11-04`, `${year}-12-04`, 
+            ];
+            // Include next year's January/February for continuity
+            const nextYear = year + 1;
+            poyaDays.push(`${nextYear}-01-03`, `${nextYear}-02-02`);
+
+            const holidays = [];
+            
+            // Add fixed holidays
+            fixedHolidays.forEach(h => {
+                holidays.push({ date: moment({year: year, month: h.month, day: h.day}).format('YYYY-MM-DD'), title: h.title, type: h.type });
+            });
+
+            // Add Poya days
+            poyaDays.forEach(dateStr => {
+                 if(moment(dateStr).year() === year || moment(dateStr).year() === nextYear) {
+                    holidays.push({ date: dateStr, title: moment(dateStr).format('MMMM') + ' Poya Day', type: 'poya' });
+                }
+            });
+
+            // Add other recurring SL Holidays (e.g. Bank holidays on fixed holidays)
+            holidays.forEach(h => {
+                if (h.type === 'holiday' && h.title !== "New Year's Day") { // Exclude Jan 1 which is already added as holiday
+                    holidays.push({ date: h.date, title: h.title.replace('Day', 'Bank Holiday'), type: 'bank' });
+                }
+            });
+            
+            // Filter only unique dates and take the earliest title for a date if multiple exist.
+            const uniqueHolidays = {};
+            holidays.forEach(h => {
+                if (!uniqueHolidays[h.date] || (h.type === 'poya' && uniqueHolidays[h.date].type !== 'poya')) {
+                    uniqueHolidays[h.date] = h;
+                }
+            });
+
+            return Object.values(uniqueHolidays);
+        }
+
         async function loadCalendar() {
             const start = currentMonth.clone().startOf('month').startOf('week');
             const end = currentMonth.clone().endOf('month').endOf('week');
+            const currentYear = currentMonth.year();
+            
             document.getElementById('calendar-month-display').textContent = currentMonth.format('MMMM YYYY');
+            
+            // 1. Fetch user-defined events from Supabase
             const { data } = await supabase.from('calendar_events').select('*');
             allEvents = data || [];
             
+            // 2. Generate recurring SL holidays for this year (+ next year for continuity)
+            const slHolidays = getSriLankaHolidays(currentYear).concat(getSriLankaHolidays(currentYear + 1));
+
+            // 3. Merge: Prioritize Supabase events over hardcoded holidays
+            const mergedEvents = {};
+            slHolidays.forEach(e => mergedEvents[e.date] = e); // Add SL holidays first
+            allEvents.forEach(e => mergedEvents[e.date] = e); // Overwrite with user events
+
             const grid = document.getElementById('calendar-grid');
             grid.innerHTML = '';
             
             let day = start.clone();
+            const today = moment().startOf('day');
+
             while(day.isBefore(end)) {
                 const dateStr = day.format('YYYY-MM-DD');
                 const isCurrentMonth = day.month() === currentMonth.month();
-                const event = allEvents.find(e => e.date === dateStr);
+                const isToday = day.isSame(today, 'day');
+                const event = mergedEvents[dateStr];
                 
-                const div = document.createElement('div');
-                div.className = `p-2 min-h-[80px] rounded-2xl border dark:border-slate-700 flex flex-col items-center justify-start cursor-pointer transition hover:bg-slate-50 dark:hover:bg-slate-800 ${!isCurrentMonth ? 'opacity-30 bg-slate-100 dark:bg-slate-800/50' : 'bg-white dark:bg-dark-card'}`;
-                
-                let dotClass = '';
-                if(event) {
-                    if(event.type === 'holiday') dotClass = 'bg-red-100 text-red-600 border-red-200';
-                    if(event.type === 'poya') dotClass = 'bg-yellow-100 text-yellow-600 border-yellow-200';
-                    if(event.type === 'bank') dotClass = 'bg-blue-100 text-blue-600 border-blue-200';
-                    if(event.type === 'special') dotClass = 'bg-green-100 text-green-600 border-green-200';
+                let dotClass = 'border-slate-300 dark:border-slate-700';
+                let cellColorClass = 'bg-white dark:bg-dark-card';
+                let textColor = 'dark:text-white';
+
+                if(!isCurrentMonth) {
+                    cellColorClass = 'opacity-50 bg-slate-100 dark:bg-slate-800/50';
+                    dotClass = 'border-slate-400 dark:border-slate-600';
                 }
 
+                if(event) {
+                    switch(event.type) {
+                        case 'holiday': 
+                            dotClass = 'bg-red-500/10 text-red-600 border-red-500'; 
+                            cellColorClass = 'bg-red-50 dark:bg-red-900/10'; 
+                            textColor = 'text-red-500';
+                            break;
+                        case 'poya': 
+                            dotClass = 'bg-yellow-500/10 text-yellow-600 border-yellow-500'; 
+                            cellColorClass = 'bg-yellow-50 dark:bg-yellow-900/10'; 
+                            textColor = 'text-yellow-600';
+                            break;
+                        case 'bank': 
+                            dotClass = 'bg-blue-500/10 text-blue-600 border-blue-500'; 
+                            cellColorClass = 'bg-blue-50 dark:bg-blue-900/10';
+                            textColor = 'text-blue-500';
+                            break;
+                        case 'special': 
+                            dotClass = 'bg-green-500/10 text-green-600 border-green-500'; 
+                            cellColorClass = 'bg-green-50 dark:bg-green-900/10';
+                            textColor = 'text-green-500';
+                            break;
+                    }
+                } else if(day.format('d') === '0' && isCurrentMonth) { // Sunday default styling
+                    textColor = 'text-red-500';
+                }
+                
+                if(isToday) {
+                    dotClass += ' ring-2 ring-primary-500 ring-offset-2 ring-offset-slate-50 dark:ring-offset-dark-bg';
+                    cellColorClass = 'bg-primary-50 dark:bg-primary-900/10';
+                }
+
+
+                const div = document.createElement('div');
+                div.className = `calendar-day-cell ${cellColorClass} ${dotClass} ${isToday ? 'today' : ''} transition-all border-slate-200 dark:border-dark-border`;
+                
                 div.innerHTML = `
-                    <span class="text-xs font-bold mb-1 ${day.format('d')==='0'?'text-red-500':'dark:text-white'}">${day.format('D')}</span>
-                    ${event ? `<span class="text-[10px] w-full text-center px-1 py-1 rounded-lg border ${dotClass} truncate leading-tight">${event.title}</span>` : ''}
+                    <span class="text-lg font-extrabold mb-1 ${textColor} ${isCurrentMonth ? '' : 'text-slate-400 dark:text-slate-600'}">${day.format('D')}</span>
+                    ${event ? `<span class="text-[10px] w-full text-center px-1 py-1 rounded-lg border font-bold ${dotClass.replace('border-slate', 'border-current')} truncate leading-tight">${event.title}</span>` : ''}
                 `;
                 
                 if(currentUser.email === SUPER_ADMIN_EMAIL) div.onclick = () => openEventModal(dateStr, event);
@@ -1468,7 +1773,16 @@
                 day.add(1, 'day');
             }
         }
-        window.changeMonth = (dir) => { currentMonth.add(dir, 'months'); loadCalendar(); };
+        
+        window.changeMonth = (dir) => { 
+            currentMonth.add(dir, 'months'); 
+            const grid = document.getElementById('calendar-grid');
+            grid.classList.add('animate__animated', dir > 0 ? 'animate__slideInRight' : 'animate__slideInLeft');
+            loadCalendar(); 
+            setTimeout(() => {
+                grid.classList.remove('animate__slideInRight', 'animate__slideInLeft');
+            }, 500);
+        };
         window.openEventModal = (date, event) => {
             document.getElementById('event-modal').classList.remove('hidden');
             document.getElementById('event-date').value = date;
@@ -1484,8 +1798,15 @@
             const date = document.getElementById('event-date').value;
             const type = document.getElementById('event-type').value;
             const title = document.getElementById('event-name').value;
-            if(!type) await supabase.from('calendar_events').delete().eq('date', date); 
-            else await supabase.from('calendar_events').upsert({ date, type, title });
+            
+            const existing = allEvents.find(e => e.date === date);
+
+            if(!type) {
+                if(existing) await supabase.from('calendar_events').delete().eq('date', date); 
+            }
+            else { 
+                await supabase.from('calendar_events').upsert({ date, type, title });
+            }
             document.getElementById('event-modal').classList.add('hidden');
             loadCalendar();
             showToast('Calendar Updated', 'success');
@@ -1501,7 +1822,7 @@
                 if(n.type==='opportunity') border = 'border-l-4 border-emerald-500';
 
                 const div = document.createElement('div');
-                div.className = `p-5 rounded-2xl bg-white dark:bg-dark-card shadow-sm ${border} relative group`;
+                div.className = `p-5 rounded-2xl bg-white dark:bg-dark-card shadow-sm ${border} relative group animate__animated animate__fadeInUp`;
                 div.innerHTML = `
                     <div class="flex justify-between items-start">
                         <div>
@@ -1525,7 +1846,7 @@
             const { data: dates } = await supabase.from('exam_dates').select('*').order('date', {ascending: true});
             const list = document.getElementById('exam-dates-list'); list.innerHTML = '';
             (dates||[]).forEach(d => {
-                const div = document.createElement('div'); div.className = 'flex justify-between items-center p-3 mb-2 rounded-xl bg-slate-50 dark:bg-dark-bg border border-slate-100 dark:border-slate-700';
+                const div = document.createElement('div'); div.className = 'flex justify-between items-center p-3 mb-2 rounded-xl bg-slate-50 dark:bg-dark-bg border border-slate-100 dark:border-slate-700 animate__animated animate__fadeInUp';
                 div.innerHTML = `
                     <div class="flex items-center gap-3">
                         <div class="flex flex-col items-center justify-center w-10 h-10 rounded-lg ${d.type === 'Exam' ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600'} font-bold text-[10px] leading-tight text-center">
