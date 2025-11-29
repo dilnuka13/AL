@@ -39,7 +39,7 @@
                         dark: {
                             bg: '#0f172a',
                             sidebar: '#1e293b',
-                            card: '#1e293b',
+                            card: '#1e293b', // Slightly lighter than bg
                             border: '#334155'
                         }
                     },
@@ -53,11 +53,13 @@
     </script>
 
     <style>
+        /* Modern Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         .dark ::-webkit-scrollbar-thumb { background: #475569; }
 
+        /* Glassmorphism Utilities */
         .glass-panel {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(16px);
@@ -71,6 +73,7 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         }
 
+        /* Sidebar Links */
         .nav-link { position: relative; transition: all 0.3s ease; }
         .nav-link:hover { background: rgba(16, 185, 129, 0.08); color: #059669; transform: translateX(4px); }
         .dark .nav-link:hover { background: rgba(16, 185, 129, 0.15); color: #34d399; }
@@ -82,26 +85,48 @@
         }
         .dark .nav-link.active { color: #34d399; }
 
+        /* Mobile Adjustments */
         .mobile-hidden { display: none; }
         @media (min-width: 1024px) {
             .mobile-hidden { display: block; }
         }
 
+        /* Card Hover Effects */
         .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
         .hover-lift:hover { transform: translateY(-3px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); }
 
+        /* Calendar Day Enhancements */
         .calendar-day-cell {
-            position: relative; min-height: 80px; padding: 8px; border-radius: 1rem; border: 1px solid;
-            display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-            cursor: pointer; transition: all 0.2s ease-in-out; transform-style: preserve-3d; perspective: 1000px;
+            position: relative;
+            min-height: 80px;
+            padding: 8px;
+            border-radius: 1rem; /* rounded-2xl */
+            border: 1px solid;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            transform-style: preserve-3d;
+            perspective: 1000px;
         }
-        .calendar-day-cell:hover { transform: scale(1.05); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
-        .dark .calendar-day-cell:hover { box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-        .calendar-day-cell.today { border-color: #10b981; box-shadow: 0 0 10px rgba(16, 185, 129, 0.3); }
+        .calendar-day-cell:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+        .dark .calendar-day-cell:hover {
+             box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .calendar-day-cell.today {
+            border-color: #10b981;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+        }
     </style>
 </head>
 <body class="h-screen bg-slate-50 dark:bg-dark-bg text-slate-800 dark:text-slate-200 transition-colors duration-300 font-sans overflow-hidden select-none">
     
+    <!-- INITIAL LOADER -->
     <div id="loader-view" class="fixed inset-0 z-[100] bg-white dark:bg-dark-bg flex flex-col items-center justify-center transition-opacity duration-500">
         <div class="relative w-28 h-28 mb-6">
             <div class="absolute inset-0 border-t-4 border-primary-500 rounded-full animate-spin"></div>
@@ -114,9 +139,14 @@
         <p class="text-sm text-slate-400 mt-2 font-mono">System Initializing...</p>
     </div>
 
+    <!-- LOGIN MODAL -->
     <div id="loginModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-500 opacity-0 pointer-events-none scale-95">
         <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-md"></div>
+        
+        <!-- Login Card -->
         <div class="glass-panel w-full max-w-md p-8 rounded-3xl relative z-10 shadow-2xl border-t border-white/20 transform transition-all">
+            
+            <!-- 1. Login View -->
             <div id="view-login" class="animate__animated animate__fadeIn">
                 <div class="text-center mb-8">
                     <div class="w-20 h-20 bg-gradient-to-tr from-primary-400 to-emerald-700 rounded-2xl mx-auto flex items-center justify-center shadow-lg shadow-emerald-500/30 mb-5 rotate-3 hover:rotate-0 transition-all duration-300">
@@ -125,6 +155,7 @@
                     <h1 class="text-3xl font-heading font-bold text-slate-900 dark:text-white">Welcome Back</h1>
                     <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Access the administration portal</p>
                 </div>
+
                 <div class="space-y-6">
                     <div class="group">
                         <label class="text-xs font-bold text-slate-500 uppercase ml-1 mb-2 block tracking-wider">Admin Email</label>
@@ -133,6 +164,8 @@
                             <input type="email" id="login-email" class="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-slate-100 dark:bg-dark-bg/50 border border-transparent focus:bg-white dark:focus:bg-dark-card focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all dark:text-white" placeholder="admin@deeducation.lk">
                         </div>
                     </div>
+
+                    <!-- Password Field -->
                     <div id="password-field-container" class="hidden group animate__animated animate__fadeIn">
                         <label class="text-xs font-bold text-slate-500 uppercase ml-1 mb-2 block tracking-wider">Password</label>
                         <div class="relative">
@@ -140,17 +173,21 @@
                             <input type="password" id="login-password" class="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-slate-100 dark:bg-dark-bg/50 border border-transparent focus:bg-white dark:focus:bg-dark-card focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all dark:text-white" placeholder="••••••••">
                         </div>
                     </div>
+                    
                     <button id="login-action-btn" class="w-full py-4 bg-gradient-to-r from-primary-600 to-emerald-500 hover:from-primary-500 hover:to-emerald-400 text-white rounded-2xl font-bold shadow-lg shadow-emerald-500/30 transition-all transform active:scale-95 flex items-center justify-center gap-3 text-lg">
                         <span>Verify Identity</span>
                     </button>
+                    
                     <div class="flex justify-between items-center pt-4 border-t border-slate-100 dark:border-slate-700/50">
                         <a href="#" class="text-xs text-slate-400 hover:text-primary-500 transition-colors">Forgot Credentials?</a>
                         <a href="#" onclick="switchView('secret')" class="text-xs font-bold text-primary-600 hover:text-primary-500 transition-colors">New Admin?</a>
                     </div>
+                    
                     <div id="login-msg" class="h-5 text-center text-xs font-mono text-red-500 font-bold mt-1"></div>
                 </div>
             </div>
 
+            <!-- 2. Secret Verification View -->
             <div id="view-secret" class="hidden animate__animated animate__fadeIn">
                 <div class="text-center mb-6">
                     <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Security Check</h2>
@@ -163,6 +200,7 @@
                 </div>
             </div>
 
+            <!-- 3. Registration View -->
             <div id="view-register" class="hidden animate__animated animate__fadeIn">
                 <div class="flex items-center gap-3 mb-6">
                     <button onclick="switchView('login')" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500"><i class="fas fa-arrow-left"></i></button>
@@ -173,37 +211,57 @@
                     <input type="email" id="reg-email" placeholder="Email Address" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-dark-bg/50 border border-slate-200 dark:border-slate-700 dark:text-white outline-none focus:ring-2 focus:ring-primary-500/50 text-sm">
                     <input type="tel" id="reg-phone" placeholder="Phone Number" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-dark-bg/50 border border-slate-200 dark:border-slate-700 dark:text-white outline-none focus:ring-2 focus:ring-primary-500/50 text-sm">
                     <input type="password" id="reg-pass" placeholder="Create Password" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-dark-bg/50 border border-slate-200 dark:border-slate-700 dark:text-white outline-none focus:ring-2 focus:ring-primary-500/50 text-sm">
+                    
                     <div class="pt-2">
                         <button id="reg-scan-btn" class="w-full py-3 border-2 border-dashed border-primary-400/50 text-primary-600 dark:text-primary-400 rounded-xl font-bold text-sm hover:bg-primary-50 dark:hover:bg-primary-900/10 transition-all flex items-center justify-center gap-2">
                             <i class="fas fa-expand"></i> Setup Face ID (Recommended)
                         </button>
                         <p id="reg-status" class="text-[10px] text-center text-primary-600 font-bold h-4 mt-1"></p>
                     </div>
+                    
                     <button id="reg-submit-btn" class="w-full py-3.5 bg-primary-600 text-white rounded-xl font-bold hover:bg-primary-500 transition-all shadow-lg mt-2">Complete Registration</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- CAMERA OVERLAY (Mobile Friendly) -->
     <div id="camera-modal" class="hidden fixed inset-0 z-[60] bg-black flex flex-col items-center justify-center">
         <div class="absolute top-0 left-0 w-full p-4 z-10 flex justify-between items-center bg-gradient-to-b from-black/80 to-transparent">
             <span class="text-white font-mono text-xs"><i class="fas fa-circle text-red-500 animate-pulse mr-2"></i>LIVE FEED</span>
             <button onclick="stopCamera()" class="text-white bg-white/20 px-3 py-1 rounded-full text-xs backdrop-blur-sm">Close</button>
         </div>
+        
         <div class="relative w-full max-w-md aspect-[3/4] md:aspect-video bg-black overflow-hidden rounded-none md:rounded-3xl border-0 md:border-2 border-primary-500/30">
             <video id="video-feed" autoplay muted playsinline class="w-full h-full object-cover transform scale-x-[-1]"></video>
             <canvas id="face-canvas" class="absolute inset-0 w-full h-full transform scale-x-[-1]"></canvas>
+            
+            <!-- Scan Overlay UI -->
             <div class="absolute inset-0 border-[40px] border-black/50 pointer-events-none"></div>
-            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 border-2 border-primary-500 rounded-3xl opacity-50"></div>
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 border-2 border-primary-500 rounded-3xl opacity-50">
+                <div class="absolute top-0 left-0 w-4 h-4 border-t-4 border-l-4 border-primary-400 -mt-1 -ml-1"></div>
+                <div class="absolute top-0 right-0 w-4 h-4 border-t-4 border-r-4 border-primary-400 -mt-1 -mr-1"></div>
+                <div class="absolute bottom-0 left-0 w-4 h-4 border-b-4 border-l-4 border-primary-400 -mb-1 -ml-1"></div>
+                <div class="absolute bottom-0 right-0 w-4 h-4 border-b-4 border-r-4 border-primary-400 -mb-1 -mr-1"></div>
+            </div>
+            
             <div class="absolute bottom-8 left-0 w-full text-center">
-                <span id="scan-text" class="bg-black/60 backdrop-blur-md text-white px-4 py-2 rounded-full text-sm font-bold border border-white/10 shadow-lg">Initializing...</span>
+                <span id="scan-text" class="bg-black/60 backdrop-blur-md text-white px-4 py-2 rounded-full text-sm font-bold border border-white/10 shadow-lg">
+                    Initializing Camera...
+                </span>
             </div>
         </div>
+        <p class="text-gray-400 text-xs mt-6 px-4 text-center max-w-sm">Please position your face within the frame. Ensure good lighting.</p>
     </div>
 
+    <!-- MAIN DASHBOARD -->
     <div id="mainContent" class="flex h-screen hidden overflow-hidden relative">
+        
+        <!-- SIDEBAR (Desktop: Fixed / Mobile: Off-canvas) -->
         <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-30 lg:hidden hidden transition-opacity opacity-0"></div>
+
         <aside id="admin-sidebar" class="fixed lg:static inset-y-0 left-0 z-40 w-72 bg-white dark:bg-dark-sidebar border-r border-slate-200 dark:border-dark-border transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col shadow-2xl lg:shadow-none lg:m-4 lg:rounded-3xl lg:h-[calc(100vh-2rem)]">
+            
             <div class="p-6">
                 <div class="flex items-center justify-between lg:justify-start gap-3 mb-8">
                     <div class="flex items-center gap-3">
@@ -213,26 +271,51 @@
                             <span class="text-[10px] bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 px-2 py-0.5 rounded font-bold uppercase tracking-wide">Pro</span>
                         </div>
                     </div>
+                    <!-- Mobile Close Button -->
                     <button onclick="toggleSidebar()" class="lg:hidden text-slate-400 hover:text-red-500"><i class="fas fa-times text-xl"></i></button>
                 </div>
+
                 <div class="space-y-1 overflow-y-auto max-h-[calc(100vh-200px)] custom-scrollbar pr-1">
+                    <!-- Dashboard -->
                     <div id="menu-group-main">
                         <p class="px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 mt-2">Overview</p>
-                        <a onclick="showSection('dashboard')" id="nav-dashboard" class="nav-link active flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 cursor-pointer"><i class="fas fa-th-large w-5"></i> Dashboard</a>
+                        <a onclick="showSection('dashboard')" id="nav-dashboard" class="nav-link active flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 cursor-pointer">
+                            <i class="fas fa-th-large w-5"></i> Dashboard
+                        </a>
                     </div>
+                    
                     <p class="px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 mt-6">Management</p>
-                    <a onclick="showSection('subjects')" id="nav-subjects" class="nav-link hidden flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 cursor-pointer"><i class="fas fa-book w-5"></i> Subjects</a>
-                    <a onclick="showSection('papers')" id="nav-papers" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 cursor-pointer"><i class="fas fa-folder-open w-5"></i> Past Papers</a>
+                    
+                    <a onclick="showSection('subjects')" id="nav-subjects" class="nav-link hidden flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 cursor-pointer">
+                        <i class="fas fa-book w-5"></i> Subjects
+                    </a>
+
+                    <a onclick="showSection('papers')" id="nav-papers" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 cursor-pointer">
+                        <i class="fas fa-folder-open w-5"></i> Past Papers
+                    </a>
+
                     <div id="menu-group-extra">
-                        <a onclick="showSection('calendar')" id="nav-calendar" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 cursor-pointer"><i class="fas fa-calendar-alt w-5"></i> Calendar</a>
-                        <a onclick="showSection('timetables')" id="nav-timetables" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 cursor-pointer"><i class="fas fa-clock w-5"></i> Exam Schedules</a>
-                        <a onclick="showSection('notices')" id="nav-notices" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 cursor-pointer"><i class="fas fa-bullhorn w-5"></i> Notices</a>
+                        <a onclick="showSection('calendar')" id="nav-calendar" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 cursor-pointer">
+                            <i class="fas fa-calendar-alt w-5"></i> Calendar
+                        </a>
+                        <a onclick="showSection('timetables')" id="nav-timetables" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 cursor-pointer">
+                            <i class="fas fa-clock w-5"></i> Exam Schedules
+                        </a>
+                        <a onclick="showSection('notices')" id="nav-notices" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 cursor-pointer">
+                            <i class="fas fa-bullhorn w-5"></i> Notices
+                        </a>
+                        
                         <p class="px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 mt-6">Settings</p>
-                        <a onclick="showSection('settings')" id="nav-settings" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 cursor-pointer"><i class="fas fa-sliders-h w-5"></i> App Config</a>
-                        <a onclick="showSection('users')" id="nav-users" class="nav-link hidden flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 cursor-pointer"><i class="fas fa-users w-5"></i> User Access</a>
+                        <a onclick="showSection('settings')" id="nav-settings" class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 cursor-pointer">
+                            <i class="fas fa-sliders-h w-5"></i> App Config
+                        </a>
+                        <a onclick="showSection('users')" id="nav-users" class="nav-link hidden flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 cursor-pointer">
+                            <i class="fas fa-users w-5"></i> User Access
+                        </a>
                     </div>
                 </div>
             </div>
+            
             <div class="mt-auto p-4 border-t border-slate-100 dark:border-dark-border bg-slate-50/50 dark:bg-slate-800/20 lg:rounded-b-3xl">
                 <div class="flex items-center gap-3 p-2 rounded-xl">
                     <img id="user-avatar" src="" class="w-10 h-10 rounded-full object-cover border-2 border-primary-500 shadow-sm">
@@ -245,17 +328,25 @@
             </div>
         </aside>
 
+        <!-- MAIN CONTENT AREA -->
         <main class="flex-1 overflow-y-auto overflow-x-hidden relative w-full h-full bg-slate-50 dark:bg-dark-bg">
+            
+            <!-- Mobile Header -->
             <div class="lg:hidden flex justify-between items-center px-4 py-4 bg-white/80 dark:bg-dark-card/90 backdrop-blur-md sticky top-0 z-20 border-b border-slate-200 dark:border-slate-700 shadow-sm">
                 <div class="flex items-center gap-2">
-                    <button onclick="toggleSidebar()" class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300"><i class="fas fa-bars"></i></button>
+                    <button onclick="toggleSidebar()" class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 active:scale-95 transition-transform">
+                        <i class="fas fa-bars"></i>
+                    </button>
                     <span class="font-heading font-bold text-lg dark:text-white">DE Admin</span>
                 </div>
-                <div class="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-glow">DE</div>
+                <div class="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-glow">
+                    DE
+                </div>
             </div>
 
             <div class="p-4 md:p-8 lg:p-10 max-w-7xl mx-auto pb-24 lg:pb-10">
-                
+
+                <!-- DASHBOARD -->
                 <section id="dashboard-section" class="admin-section active animate__animated animate__fadeIn">
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                         <div>
@@ -266,55 +357,106 @@
                             <i class="fas fa-sync-alt text-primary-500"></i> Refresh
                         </button>
                     </div>
+                    
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
+                        <!-- Stat Card 1: Total Papers -->
                         <div class="glass-panel p-6 rounded-3xl relative overflow-hidden group hover-lift">
+                            <div class="absolute right-0 top-0 w-24 h-24 bg-primary-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
                             <div class="relative z-10">
                                 <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center mb-4 text-lg shadow-sm"><i class="fas fa-file-alt"></i></div>
                                 <h2 class="text-3xl font-bold dark:text-white" id="dash-papers-count">0</h2>
-                                <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mt-1">Total Papers</p>
+                                <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mt-1">Total Papers (Add Papers)</p>
                             </div>
                         </div>
+                        <!-- Stat Card 2: Total Downloads (Activity Amusement) -->
                         <div class="glass-panel p-6 rounded-3xl relative overflow-hidden group hover-lift">
+                            <div class="absolute right-0 top-0 w-24 h-24 bg-blue-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
                             <div class="relative z-10">
                                 <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center mb-4 text-lg shadow-sm"><i class="fas fa-download"></i></div>
                                 <h2 class="text-3xl font-bold dark:text-white" id="dash-downloads-count">0</h2>
-                                <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mt-1">Total Downloads</p>
+                                <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mt-1">Total Downloads (Activity Amusement)</p>
                             </div>
                         </div>
+                        <!-- Stat Card 3: Active Notices -->
                         <div class="glass-panel p-6 rounded-3xl relative overflow-hidden group hover-lift">
+                            <div class="absolute right-0 top-0 w-24 h-24 bg-yellow-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
                             <div class="relative z-10">
                                 <div class="w-10 h-10 rounded-xl bg-yellow-100 text-yellow-600 flex items-center justify-center mb-4 text-lg shadow-sm"><i class="fas fa-bell"></i></div>
                                 <h2 class="text-3xl font-bold dark:text-white" id="dash-notices-count">0</h2>
                                 <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mt-1">Active Notices</p>
                             </div>
                         </div>
+                        <!-- Stat Card 4: Admin Users -->
                         <div class="glass-panel p-6 rounded-3xl relative overflow-hidden group hover-lift">
+                            <div class="absolute right-0 top-0 w-24 h-24 bg-purple-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
                             <div class="relative z-10">
                                 <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center mb-4 text-lg shadow-sm"><i class="fas fa-users"></i></div>
                                 <h2 class="text-3xl font-bold dark:text-white" id="dash-users-count">0</h2>
-                                <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mt-1">User Accounts</p>
+                                <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mt-1">Total User Accounts</p>
                             </div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-panel p-6 rounded-3xl shadow-sm">
+                        <h3 class="font-heading font-bold text-lg dark:text-white mb-6 flex items-center gap-2"><i class="fas fa-chart-pie text-primary-500"></i> Download Statistics (Papae Download / Marking Download / All Marking)</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm dark:text-white">
+                                <thead class="bg-slate-50 dark:bg-slate-800/50 text-xs uppercase text-slate-500 font-bold tracking-wider rounded-lg">
+                                    <tr>
+                                        <th class="p-4 rounded-l-xl">Subject</th>
+                                        <th class="p-4 text-right">Paper DLs</th>
+                                        <th class="p-4 text-right rounded-r-xl">Scheme DLs</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dashboard-stats-body" class="divide-y divide-slate-100 dark:divide-slate-800"></tbody>
+                            </table>
                         </div>
                     </div>
                 </section>
 
+                <!-- SUBJECTS SECTION -->
                 <section id="subjects-section" class="admin-section hidden animate__animated animate__fadeIn">
                     <h1 class="text-2xl font-bold text-slate-900 dark:text-white mb-6">Subject Management</h1>
+                    
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Add Subject Form -->
                         <div class="glass-panel p-6 rounded-3xl h-fit border-t-4 border-purple-500 shadow-md">
                             <h3 class="font-bold text-lg dark:text-white mb-4">Add New Subject</h3>
                             <form id="subjectForm" class="space-y-4">
-                                <input type="text" id="new-sub-name" placeholder="Subject Name" class="w-full p-3 rounded-xl bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-dark-border dark:text-white outline-none" required>
-                                <input type="text" id="new-sub-code" placeholder="Code (e.g. ENG-01)" class="w-full p-3 rounded-xl bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-dark-border dark:text-white outline-none">
-                                <div class="grid grid-cols-2 gap-3">
-                                    <label class="flex items-center gap-2"><input type="checkbox" name="new_sub_stream" value="science" class="accent-purple-500"><span class="text-xs font-bold dark:text-slate-300">Science</span></label>
-                                    <label class="flex items-center gap-2"><input type="checkbox" name="new_sub_stream" value="commerce" class="accent-purple-500"><span class="text-xs font-bold dark:text-slate-300">Commerce</span></label>
-                                    <label class="flex items-center gap-2"><input type="checkbox" name="new_sub_stream" value="arts" class="accent-purple-500"><span class="text-xs font-bold dark:text-slate-300">Arts</span></label>
-                                    <label class="flex items-center gap-2"><input type="checkbox" name="new_sub_stream" value="technology" class="accent-purple-500"><span class="text-xs font-bold dark:text-slate-300">Tech</span></label>
+                                <div>
+                                    <label class="text-xs font-bold text-slate-500 uppercase mb-1 block">Subject Name</label>
+                                    <input type="text" id="new-sub-name" placeholder="e.g. General English" class="w-full p-3 rounded-xl bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-dark-border dark:text-white outline-none focus:ring-2 focus:ring-purple-500" required>
                                 </div>
-                                <button type="submit" class="w-full bg-purple-600 text-white py-3 rounded-xl font-bold hover:bg-purple-700">Save Subject</button>
+                                <div>
+                                    <label class="text-xs font-bold text-slate-500 uppercase mb-1 block">Subject Code</label>
+                                    <input type="text" id="new-sub-code" placeholder="e.g. ENG-01" class="w-full p-3 rounded-xl bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-dark-border dark:text-white outline-none focus:ring-2 focus:ring-purple-500">
+                                </div>
+                                <div>
+                                    <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Applicable Streams</label>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <label class="cursor-pointer flex items-center gap-2 p-2 bg-slate-50 dark:bg-dark-bg rounded-lg border border-transparent hover:border-purple-200 transition-colors">
+                                            <input type="checkbox" name="new_sub_stream" value="science" class="accent-purple-500 w-4 h-4">
+                                            <span class="text-xs font-bold dark:text-slate-300">Science</span>
+                                        </label>
+                                        <label class="cursor-pointer flex items-center gap-2 p-2 bg-slate-50 dark:bg-dark-bg rounded-lg border border-transparent hover:border-purple-200 transition-colors">
+                                            <input type="checkbox" name="new_sub_stream" value="commerce" class="accent-purple-500 w-4 h-4">
+                                            <span class="text-xs font-bold dark:text-slate-300">Commerce</span>
+                                        </label>
+                                        <label class="cursor-pointer flex items-center gap-2 p-2 bg-slate-50 dark:bg-dark-bg rounded-lg border border-transparent hover:border-purple-200 transition-colors">
+                                            <input type="checkbox" name="new_sub_stream" value="arts" class="accent-purple-500 w-4 h-4">
+                                            <span class="text-xs font-bold dark:text-slate-300">Arts</span>
+                                        </label>
+                                        <label class="cursor-pointer flex items-center gap-2 p-2 bg-slate-50 dark:bg-dark-bg rounded-lg border border-transparent hover:border-purple-200 transition-colors">
+                                            <input type="checkbox" name="new_sub_stream" value="technology" class="accent-purple-500 w-4 h-4">
+                                            <span class="text-xs font-bold dark:text-slate-300">Tech</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <button type="submit" class="w-full bg-purple-600 text-white py-3 rounded-xl font-bold hover:bg-purple-700 shadow-lg shadow-purple-500/20 transition-all">Save Subject</button>
                             </form>
                         </div>
+
+                        <!-- Subject List -->
                         <div class="lg:col-span-2 glass-panel p-6 rounded-3xl">
                              <h3 class="font-bold text-lg dark:text-white mb-4">Existing Subjects</h3>
                              <div id="subjects-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[500px] overflow-y-auto pr-1"></div>
@@ -322,73 +464,144 @@
                     </div>
                 </section>
 
+                <!-- PAPERS SECTION -->
                 <section id="papers-section" class="admin-section hidden animate__animated animate__fadeIn">
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                         <div>
                             <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Resource Library</h1>
                             <p class="text-sm text-slate-500">Manage past papers and marking schemes</p>
                         </div>
-                        <button onclick="togglePaperForm()" class="bg-primary-600 text-white px-6 py-3 rounded-xl font-bold text-sm hover:bg-primary-700 shadow-lg flex items-center gap-2"><i class="fas fa-cloud-upload-alt"></i> Upload Resource</button>
+                        <button onclick="togglePaperForm()" class="w-full md:w-auto bg-primary-600 text-white px-6 py-3 rounded-xl font-bold text-sm hover:bg-primary-700 shadow-lg shadow-primary-500/30 transition-all flex items-center justify-center gap-2">
+                            <i class="fas fa-cloud-upload-alt"></i> Upload Resource
+                        </button>
                     </div>
 
+                    <!-- ADD PAPER FORM -->
                     <div id="paper-form-container" class="hidden mb-8 glass-panel p-6 rounded-3xl border-t-4 border-primary-500 shadow-xl relative animate__animated animate__fadeInDown">
-                        <button onclick="togglePaperForm()" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-slate-100 dark:bg-slate-700 rounded-full hover:bg-red-100 text-slate-500 hover:text-red-500"><i class="fas fa-times"></i></button>
+                        <button onclick="togglePaperForm()" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-slate-100 dark:bg-slate-700 rounded-full hover:bg-red-100 text-slate-500 hover:text-red-500 transition-colors"><i class="fas fa-times"></i></button>
+                        
                         <h3 class="font-bold text-lg dark:text-white mb-6">Upload New Resource</h3>
                         <form id="paperForm" class="space-y-6">
+                            
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="col-span-3 md:col-span-1 p-4 bg-slate-50 dark:bg-dark-bg/50 rounded-2xl border border-slate-100 dark:border-slate-700">
-                                    <label class="text-xs font-bold text-primary-600 dark:text-primary-400 uppercase mb-3 block">1. Target Streams</label>
-                                    <div class="flex flex-col gap-2">
-                                        <label class="flex items-center gap-3"><input type="checkbox" name="upload_stream" value="science" class="accent-primary-500" onchange="filterUploadSubjects()"><span class="text-sm dark:text-slate-300 font-bold">Science</span></label>
-                                        <label class="flex items-center gap-3"><input type="checkbox" name="upload_stream" value="commerce" class="accent-primary-500" onchange="filterUploadSubjects()"><span class="text-sm dark:text-slate-300 font-bold">Commerce</span></label>
-                                        <label class="flex items-center gap-3"><input type="checkbox" name="upload_stream" value="arts" class="accent-primary-500" onchange="filterUploadSubjects()"><span class="text-sm dark:text-slate-300 font-bold">Arts</span></label>
-                                        <label class="flex items-center gap-3"><input type="checkbox" name="upload_stream" value="technology" class="accent-primary-500" onchange="filterUploadSubjects()"><span class="text-sm dark:text-slate-300 font-bold">Technology</span></label>
+                                <div class="col-span-3 md:col-span-1 p-4 bg-slate-50 dark:bg-dark-bg/50 rounded-2xl border border-slate-100 dark:border-slate-700 h-full">
+                                    <label class="text-xs font-bold text-primary-600 dark:text-primary-400 uppercase mb-3 block">1. Select Target Streams</label>
+                                    <div class="flex flex-col gap-2" id="upload-stream-checks">
+                                        <label class="cursor-pointer flex items-center gap-3 p-2 rounded-lg hover:bg-white dark:hover:bg-dark-card transition">
+                                            <input type="checkbox" name="upload_stream" value="science" class="accent-primary-500 w-4 h-4" onchange="filterUploadSubjects()">
+                                            <span class="text-sm dark:text-slate-300 font-bold">Science</span>
+                                        </label>
+                                        <label class="cursor-pointer flex items-center gap-3 p-2 rounded-lg hover:bg-white dark:hover:bg-dark-card transition">
+                                            <input type="checkbox" name="upload_stream" value="commerce" class="accent-primary-500 w-4 h-4" onchange="filterUploadSubjects()">
+                                            <span class="text-sm dark:text-slate-300 font-bold">Commerce</span>
+                                        </label>
+                                        <label class="cursor-pointer flex items-center gap-3 p-2 rounded-lg hover:bg-white dark:hover:bg-dark-card transition">
+                                            <input type="checkbox" name="upload_stream" value="arts" class="accent-primary-500 w-4 h-4" onchange="filterUploadSubjects()">
+                                            <span class="text-sm dark:text-slate-300 font-bold">Arts</span>
+                                        </label>
+                                        <label class="cursor-pointer flex items-center gap-3 p-2 rounded-lg hover:bg-white dark:hover:bg-dark-card transition">
+                                            <input type="checkbox" name="upload_stream" value="technology" class="accent-primary-500 w-4 h-4" onchange="filterUploadSubjects()">
+                                            <span class="text-sm dark:text-slate-300 font-bold">Technology</span>
+                                        </label>
                                     </div>
                                 </div>
+
                                 <div class="col-span-3 md:col-span-2 space-y-4">
-                                    <select id="upload-subject-select" class="w-full p-3.5 rounded-xl bg-white dark:bg-dark-bg border border-slate-200 dark:border-slate-700 text-sm dark:text-white outline-none" required><option value="">Select Streams First...</option></select>
-                                    <input type="number" id="year" placeholder="Year (e.g. 2025)" class="w-full p-3.5 rounded-xl bg-white dark:bg-dark-bg border border-slate-200 dark:border-slate-700 text-sm dark:text-white outline-none" required>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <input type="url" id="paper_link" placeholder="Paper Link (PDF)" class="w-full p-3 rounded-xl bg-white dark:bg-dark-bg border border-slate-200 dark:border-slate-700 text-sm dark:text-white outline-none">
-                                        <input type="url" id="marking_link" placeholder="Marking Scheme Link" class="w-full p-3 rounded-xl bg-white dark:bg-dark-bg border border-slate-200 dark:border-slate-700 text-sm dark:text-white outline-none">
+                                    <div>
+                                        <label class="text-xs font-bold text-slate-500 uppercase block mb-1">2. Select Subject</label>
+                                        <select id="upload-subject-select" class="w-full p-3.5 rounded-xl bg-white dark:bg-dark-bg border border-slate-200 dark:border-slate-700 text-sm dark:text-white outline-none focus:ring-2 focus:ring-primary-500" required>
+                                            <option value="">Select Streams First...</option>
+                                        </select>
                                     </div>
-                                    <button type="submit" class="w-full bg-primary-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-primary-700">Add to Library</button>
+                                    
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="text-xs font-bold text-slate-500 uppercase block mb-1">Year</label>
+                                            <input type="number" id="year" placeholder="2025" class="w-full p-3.5 rounded-xl bg-white dark:bg-dark-bg border border-slate-200 dark:border-slate-700 text-sm dark:text-white outline-none focus:ring-2 focus:ring-primary-500" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="text-xs font-bold text-slate-500 uppercase block mb-1">Paper Link (PDF)</label>
+                                            <div class="relative">
+                                                <i class="fas fa-link absolute left-3 top-3.5 text-slate-400"></i>
+                                                <input type="url" id="paper_link" placeholder="https://..." class="w-full pl-9 pr-3 py-3 rounded-xl bg-white dark:bg-dark-bg border border-slate-200 dark:border-slate-700 text-sm dark:text-white outline-none focus:ring-2 focus:ring-primary-500">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="text-xs font-bold text-slate-500 uppercase block mb-1">Marking Scheme</label>
+                                            <div class="relative">
+                                                <i class="fas fa-check-double absolute left-3 top-3.5 text-slate-400"></i>
+                                                <input type="url" id="marking_link" placeholder="https://..." class="w-full pl-9 pr-3 py-3 rounded-xl bg-white dark:bg-dark-bg border border-slate-200 dark:border-slate-700 text-sm dark:text-white outline-none focus:ring-2 focus:ring-primary-500">
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
+                            </div>
+
+                            <div class="flex justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-700">
+                                <button type="submit" class="w-full md:w-auto bg-primary-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-primary-700 shadow-lg shadow-primary-500/20">Add to Library</button>
                             </div>
                         </form>
                     </div>
 
+                    <!-- Search Toolbar -->
                     <div class="glass-panel p-2 md:p-3 rounded-2xl mb-6 sticky top-0 md:static z-10 backdrop-blur-xl">
                         <div class="flex flex-col md:flex-row items-stretch md:items-center gap-3">
-                            <input type="text" id="paper-search" placeholder="Search papers..." class="flex-1 w-full p-3 rounded-xl bg-slate-50 dark:bg-dark-bg border border-transparent focus:ring-2 focus:ring-primary-500 outline-none dark:text-white text-sm">
-                            <div class="flex gap-2 overflow-x-auto">
-                                <select id="filter-stream" class="p-3 rounded-xl bg-slate-50 dark:bg-dark-bg outline-none text-sm font-bold dark:text-slate-300">
-                                    <option value="all">All Streams</option><option value="science">Science</option><option value="commerce">Commerce</option><option value="arts">Arts</option><option value="technology">Tech</option>
+                            <div class="flex-1 relative">
+                                <i class="fas fa-search absolute left-4 top-3.5 text-slate-400"></i>
+                                <input type="text" id="paper-search" placeholder="Search papers..." class="w-full pl-11 pr-4 py-3 rounded-xl bg-slate-50 dark:bg-dark-bg border border-transparent focus:bg-white dark:focus:bg-dark-card focus:ring-2 focus:ring-primary-500 outline-none transition-all dark:text-white text-sm">
+                            </div>
+                            
+                            <div class="flex gap-2 overflow-x-auto pb-1 md:pb-0">
+                                <select id="filter-stream" class="p-3 rounded-xl bg-slate-50 dark:bg-dark-bg border border-transparent text-sm font-bold text-slate-600 dark:text-slate-300 outline-none focus:ring-2 focus:ring-primary-500">
+                                    <option value="all">All Streams</option>
+                                    <option value="science">Science</option>
+                                    <option value="commerce">Commerce</option>
+                                    <option value="arts">Arts</option>
+                                    <option value="technology">Tech</option>
                                 </select>
-                                <select id="filter-subject" class="p-3 rounded-xl bg-slate-50 dark:bg-dark-bg outline-none text-sm font-bold dark:text-slate-300 min-w-[140px]"><option value="all">Subjects</option></select>
-                                <select id="filter-year" class="p-3 rounded-xl bg-slate-50 dark:bg-dark-bg outline-none text-sm font-bold dark:text-slate-300"><option value="all">Year</option></select>
-                                <button onclick="loadPapers()" class="bg-primary-500 text-white px-4 py-2 rounded-xl"><i class="fas fa-sync-alt"></i></button>
+
+                                <select id="filter-subject" class="p-3 rounded-xl bg-slate-50 dark:bg-dark-bg border border-transparent text-sm font-bold text-slate-600 dark:text-slate-300 outline-none focus:ring-2 focus:ring-primary-500 min-w-[140px]">
+                                    <option value="all">Subjects</option>
+                                </select>
+
+                                <select id="filter-year" class="p-3 rounded-xl bg-slate-50 dark:bg-dark-bg border border-transparent text-sm font-bold text-slate-600 dark:text-slate-300 outline-none focus:ring-2 focus:ring-primary-500">
+                                    <option value="all">Year</option>
+                                </select>
+                                <!-- NEW: Refresh Button -->
+                                <button onclick="loadPapers(); showToast('Resource List Refreshed', 'success')" class="bg-primary-500 text-white px-4 py-2 rounded-xl font-bold text-sm hover:bg-primary-600 transition shadow-md shadow-primary-500/30 flex items-center justify-center">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
+
                     <div id="papers-list-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-20"></div>
                 </section>
 
+                <!-- USERS SECTION -->
                 <section id="users-section" class="admin-section hidden animate__animated animate__fadeIn">
                     <div class="flex justify-between items-center mb-6">
                          <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Team Management</h1>
-                         <button onclick="loadUsers()" class="w-10 h-10 rounded-full bg-white dark:bg-dark-card flex items-center justify-center text-primary-500 shadow-sm"><i class="fas fa-sync"></i></button>
+                         <button onclick="loadUsers()" class="w-10 h-10 rounded-full bg-white dark:bg-dark-card flex items-center justify-center text-primary-500 shadow-sm hover:rotate-180 transition-transform duration-500"><i class="fas fa-sync"></i></button>
                     </div>
+                    
                     <div class="glass-panel rounded-3xl overflow-hidden shadow-sm">
                         <div class="overflow-x-auto">
                             <table class="w-full text-left whitespace-nowrap">
                                 <thead class="bg-slate-50 dark:bg-dark-card/50 border-b border-slate-200 dark:border-slate-700">
                                     <tr>
-                                        <th class="p-5 text-xs font-bold text-slate-400 uppercase">User Profile</th>
-                                        <th class="p-5 text-xs font-bold text-slate-400 uppercase">Contact</th>
-                                        <th class="p-5 text-xs font-bold text-slate-400 uppercase">Status</th>
-                                        <th class="p-5 text-xs font-bold text-slate-400 uppercase">Role</th>
-                                        <th class="p-5 text-xs font-bold text-slate-400 uppercase text-right">Controls</th>
+                                        <th class="p-5 text-xs font-bold text-slate-400 uppercase tracking-wider">User Profile</th>
+                                        <th class="p-5 text-xs font-bold text-slate-400 uppercase tracking-wider">Contact</th>
+                                        
+                                        <!-- UPDATED HEADER: Split Status/Access for clarity -->
+                                        <th class="p-5 text-xs font-bold text-slate-400 uppercase tracking-wider">Approval Status</th>
+                                        <th class="p-5 text-xs font-bold text-slate-400 uppercase tracking-wider">Last Access Time</th>
+                                        <th class="p-5 text-xs font-bold text-slate-400 uppercase tracking-wider">Email Confirmed</th>
+                                        <th class="p-5 text-xs font-bold text-slate-400 uppercase tracking-wider text-center">Role</th>
+                                        <th class="p-5 text-xs font-bold text-slate-400 uppercase tracking-wider text-right">Controls</th>
                                     </tr>
                                 </thead>
                                 <tbody id="users-list-body" class="divide-y divide-slate-100 dark:divide-slate-800 text-sm dark:text-white"></tbody>
@@ -397,22 +610,101 @@
                     </div>
                 </section>
 
+                <!-- EDIT USER MODAL -->
+                <div id="edit-user-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+                    <div class="glass-panel w-full max-w-sm p-6 rounded-3xl relative shadow-2xl animate__animated animate__zoomIn">
+                        <h3 class="font-bold text-xl dark:text-white mb-6">Update Profile</h3>
+                        <input type="hidden" id="edit-user-id">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-xs font-bold text-slate-500 uppercase mb-1 block">Full Name</label>
+                                <input type="text" id="edit-user-name" class="w-full p-3 rounded-xl bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-slate-700 dark:text-white outline-none">
+                            </div>
+                            <div>
+                                <label class="text-xs font-bold text-slate-500 uppercase mb-1 block">Phone Number</label>
+                                <input type="tel" id="edit-user-phone" class="w-full p-3 rounded-xl bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-slate-700 dark:text-white outline-none">
+                            </div>
+                        </div>
+                        <div class="flex justify-end gap-3 mt-8">
+                            <button onclick="document.getElementById('edit-user-modal').classList.add('hidden')" class="px-5 py-2.5 rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition">Cancel</button>
+                            <button onclick="saveUserChanges()" class="px-5 py-2.5 bg-primary-600 text-white rounded-xl font-bold hover:bg-primary-700 shadow-lg shadow-primary-500/20">Save</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NEW: EDIT PAPER MODAL -->
+                <div id="edit-paper-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+                    <div class="glass-panel w-full max-w-2xl p-6 rounded-3xl relative shadow-2xl animate__animated animate__zoomIn">
+                        <button onclick="document.getElementById('edit-paper-modal').classList.add('hidden')" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-slate-100 dark:bg-slate-700 rounded-full hover:bg-red-100 text-slate-500 hover:text-red-500 transition-colors"><i class="fas fa-times"></i></button>
+                        <h3 class="font-bold text-lg dark:text-white mb-6 border-b pb-3 border-slate-100 dark:border-slate-700/50">Edit Resource: <span id="edit-paper-title-display" class="text-primary-500"></span></h3>
+                        <form id="editPaperForm" onsubmit="event.preventDefault(); savePaperChanges()" class="space-y-6">
+                            <input type="hidden" id="edit-paper-id">
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="text-xs font-bold text-slate-500 uppercase block mb-1">Subject Name</label>
+                                    <input type="text" id="edit-subject-name" class="w-full p-3.5 rounded-xl bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-slate-700 text-sm dark:text-white outline-none focus:ring-2 focus:ring-primary-500" required>
+                                </div>
+                                <div>
+                                    <label class="text-xs font-bold text-slate-500 uppercase block mb-1">Year</label>
+                                    <input type="number" id="edit-year" placeholder="2025" class="w-full p-3.5 rounded-xl bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-slate-700 text-sm dark:text-white outline-none focus:ring-2 focus:ring-primary-500" required>
+                                </div>
+                            </div>
+                            <!-- Stream is read-only as it affects database partitioning, but shown for context -->
+                            <div class="mb-4">
+                                <label class="text-xs font-bold text-slate-500 uppercase block mb-1">Stream (Read-Only)</label>
+                                <span id="edit-stream-display" class="text-sm font-mono dark:text-white p-3 rounded-xl bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-slate-700 inline-block w-full"></span>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="text-xs font-bold text-slate-500 uppercase block mb-1">Paper Link (PDF)</label>
+                                    <div class="relative">
+                                        <i class="fas fa-link absolute left-3 top-3.5 text-slate-400"></i>
+                                        <input type="url" id="edit-paper-link" placeholder="https://..." class="w-full pl-9 pr-3 py-3 rounded-xl bg-white dark:bg-dark-bg border border-slate-200 dark:border-slate-700 text-sm dark:text-white outline-none focus:ring-2 focus:ring-primary-500">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="text-xs font-bold text-slate-500 uppercase block mb-1">Marking Scheme</label>
+                                    <div class="relative">
+                                        <i class="fas fa-check-double absolute left-3 top-3.5 text-slate-400"></i>
+                                        <input type="url" id="edit-marking-link" placeholder="https://..." class="w-full pl-9 pr-3 py-3 rounded-xl bg-white dark:bg-dark-bg border border-slate-200 dark:border-slate-700 text-sm dark:text-white outline-none focus:ring-2 focus:ring-primary-500">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-700">
+                                <button type="button" onclick="document.getElementById('edit-paper-modal').classList.add('hidden')" class="w-full md:w-auto px-6 py-3 rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition">Cancel</button>
+                                <button type="submit" class="w-full md:w-auto bg-primary-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-primary-700 shadow-lg shadow-primary-500/20">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- NOTICES SECTION -->
                 <section id="notices-section" class="admin-section hidden">
                     <h1 class="text-2xl font-bold text-slate-900 dark:text-white mb-6">Announcements</h1>
+                    
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         <div class="lg:col-span-1">
                             <div class="glass-panel p-6 rounded-3xl sticky top-24 border-t-4 border-yellow-400 shadow-lg">
                                  <h3 class="font-bold text-lg dark:text-white mb-4">Create Notice</h3>
                                 <form id="noticeForm" class="space-y-4">
                                     <input type="text" id="notice-title" placeholder="Topic Headline" class="w-full p-3 rounded-xl bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-slate-700 dark:text-white outline-none font-bold" required>
+                                    
                                     <select id="notice-type" class="w-full p-3 rounded-xl bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-slate-700 dark:text-white outline-none text-sm">
-                                        <option value="normal">General (Blue)</option><option value="important">Urgent (Red)</option><option value="opportunity">Good News (Green)</option>
+                                        <option value="normal">General (Blue)</option>
+                                        <option value="important">Urgent (Red)</option>
+                                        <option value="opportunity">Good News (Green)</option>
                                     </select>
+                                    
                                     <textarea id="notice-body" rows="4" placeholder="Type your message here..." class="w-full p-3 rounded-xl bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-slate-700 dark:text-white outline-none text-sm resize-none" required></textarea>
-                                    <button type="submit" class="w-full bg-yellow-500 text-white py-3 rounded-xl font-bold hover:bg-yellow-600">Publish Now</button>
+                                    
+                                    <button type="submit" class="w-full bg-yellow-500 text-white py-3 rounded-xl font-bold hover:bg-yellow-600 shadow-lg shadow-yellow-500/20 transition-all">Publish Now</button>
                                 </form>
                             </div>
                         </div>
+                        
                         <div class="lg:col-span-2">
                              <h3 class="font-bold text-lg dark:text-slate-400 mb-4 px-2">Recent Posts</h3>
                              <div id="notices-list" class="space-y-4 pb-20"></div>
@@ -420,13 +712,14 @@
                     </div>
                 </section>
                 
+                <!-- TIMETABLES & CALENDAR & SETTINGS SECTIONS -->
                 <section id="timetables-section" class="admin-section hidden">
                     <h1 class="text-2xl font-bold text-slate-900 dark:text-white mb-6">Exam Schedules</h1>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="glass-panel p-6 rounded-3xl hover-lift">
                             <h3 class="font-bold text-lg dark:text-white mb-4 flex items-center gap-2"><i class="fas fa-file-pdf text-red-500"></i> Main Timetable PDF</h3>
                             <div class="space-y-4 bg-slate-50 dark:bg-dark-bg/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-700">
-                                <input type="text" id="tt-year" placeholder="Year Label" class="w-full p-3 rounded-xl bg-white dark:bg-dark-card outline-none text-sm">
+                                <input type="text" id="tt-year" placeholder="Year Label (e.g. 2025 A/L)" class="w-full p-3 rounded-xl bg-white dark:bg-dark-card outline-none text-sm">
                                 <input type="url" id="tt-pdf-link" placeholder="Paste PDF Link" class="w-full p-3 rounded-xl bg-white dark:bg-dark-card outline-none text-sm">
                                 <button onclick="saveTimetablePDF()" class="w-full bg-slate-800 dark:bg-slate-700 text-white py-3 rounded-xl font-bold hover:bg-slate-900">Update Link</button>
                             </div>
@@ -436,7 +729,10 @@
                             <form id="examDateForm" class="flex flex-col sm:flex-row gap-2 mb-4">
                                 <input type="date" id="exam-date" class="p-3 rounded-xl bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-slate-700 dark:text-white text-xs w-full sm:w-auto" required>
                                 <input type="text" id="exam-details" placeholder="Event Name" class="p-3 rounded-xl bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-slate-700 dark:text-white text-xs flex-1" required>
-                                <select id="exam-type" class="p-3 rounded-xl bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-slate-700 dark:text-white text-xs"><option value="Exam">Exam</option><option value="Holiday">Off</option></select>
+                                <select id="exam-type" class="p-3 rounded-xl bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-slate-700 dark:text-white text-xs">
+                                    <option value="Exam">Exam</option>
+                                    <option value="Holiday">Off</option>
+                                </select>
                                 <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700"><i class="fas fa-plus"></i></button>
                             </form>
                             <div id="exam-dates-list" class="space-y-2 max-h-64 overflow-y-auto pr-2 custom-scrollbar"></div>
@@ -459,96 +755,146 @@
                         </div>
                         <div id="calendar-grid" class="grid grid-cols-7 gap-2 md:gap-4"></div>
                     </div>
+                    
+                    <!-- Calendar Event Modal -->
+                    <div id="event-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+                        <div class="bg-white dark:bg-dark-card p-6 rounded-3xl w-full max-w-sm shadow-2xl animate__animated animate__fadeInUp">
+                            <h3 class="font-bold text-lg dark:text-white mb-4">Edit Day Event</h3>
+                            <input type="hidden" id="event-date">
+                            <div class="space-y-3">
+                                <select id="event-type" class="w-full p-3 rounded-xl bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-slate-700 dark:text-white outline-none">
+                                    <option value="">No Event</option>
+                                    <option value="holiday">Public Holiday (Red)</option>
+                                    <option value="poya">Poya Day (Yellow)</option>
+                                    <option value="bank">Bank Holiday (Blue)</option>
+                                    <option value="special">Special Event (Green)</option>
+                                </select>
+                                <input type="text" id="event-name" placeholder="Event Description" class="w-full p-3 rounded-xl bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-slate-700 dark:text-white outline-none">
+                            </div>
+                            <div class="flex justify-end gap-3 mt-6">
+                                <button onclick="document.getElementById('event-modal').classList.add('hidden')" class="px-4 py-2 text-slate-400 hover:text-slate-600">Cancel</button>
+                                <button onclick="saveEvent()" class="px-6 py-2 bg-primary-600 text-white rounded-xl font-bold shadow-lg shadow-primary-500/20">Save</button>
+                            </div>
+                        </div>
+                    </div>
                 </section>
 
-                <!-- SETTINGS SECTION (UPDATED) -->
                 <section id="settings-section" class="admin-section hidden animate__animated animate__fadeIn">
                      <h1 class="text-2xl font-bold text-slate-900 dark:text-white mb-6">System Configuration</h1>
                     
                     <div class="glass-panel p-6 rounded-3xl mb-6 border-t-4 border-blue-500 shadow-md">
                         <h3 class="font-bold text-lg dark:text-white mb-2"><i class="fas fa-shield-alt text-blue-500 mr-2"></i> Authentication Policy</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                        <p class="text-xs text-slate-500 mb-6">Control how administrators verify their identity.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <label class="relative flex flex-col p-4 rounded-2xl border border-slate-200 dark:border-slate-700 cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/10 transition-colors">
-                                <div class="flex justify-between items-start mb-2"><i class="fas fa-id-card text-2xl text-slate-400"></i><input type="radio" name="login_method" value="face" class="accent-blue-600 w-5 h-5"></div>
+                                <div class="flex justify-between items-start mb-2">
+                                    <i class="fas fa-id-card text-2xl text-slate-400"></i>
+                                    <input type="radio" name="login_method" value="face" class="accent-blue-600 w-5 h-5">
+                                </div>
                                 <span class="font-bold text-sm dark:text-white">Face ID Only</span>
+                                <span class="text-[10px] text-slate-400">Strictest security. Camera required.</span>
                             </label>
+                            
                             <label class="relative flex flex-col p-4 rounded-2xl border border-slate-200 dark:border-slate-700 cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/10 transition-colors">
-                                <div class="flex justify-between items-start mb-2"><i class="fas fa-key text-2xl text-slate-400"></i><input type="radio" name="login_method" value="password" class="accent-blue-600 w-5 h-5"></div>
+                                <div class="flex justify-between items-start mb-2">
+                                    <i class="fas fa-key text-2xl text-slate-400"></i>
+                                    <input type="radio" name="login_method" value="password" class="accent-blue-600 w-5 h-5">
+                                </div>
                                 <span class="font-bold text-sm dark:text-white">Password Only</span>
+                                <span class="text-[10px] text-slate-400">Traditional login method.</span>
                             </label>
+                            
                             <label class="relative flex flex-col p-4 rounded-2xl border border-slate-200 dark:border-slate-700 cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/10 transition-colors">
-                                <div class="flex justify-between items-start mb-2"><i class="fas fa-fingerprint text-2xl text-slate-400"></i><input type="radio" name="login_method" value="choice" class="accent-blue-600 w-5 h-5"></div>
+                                <div class="flex justify-between items-start mb-2">
+                                    <i class="fas fa-fingerprint text-2xl text-slate-400"></i>
+                                    <input type="radio" name="login_method" value="choice" class="accent-blue-600 w-5 h-5">
+                                </div>
                                 <span class="font-bold text-sm dark:text-white">User Choice</span>
+                                <span class="text-[10px] text-slate-400">Flexible access.</span>
                             </label>
                         </div>
-                        <div class="mt-4 text-right"><button onclick="saveLoginSettings()" class="bg-blue-600 text-white px-6 py-2 rounded-xl font-bold text-sm">Update Policy</button></div>
+                        <div class="mt-6 text-right">
+                             <button onclick="saveLoginSettings()" class="bg-blue-600 text-white px-6 py-2 rounded-xl font-bold text-sm shadow-lg shadow-blue-500/20">Update Policy</button>
+                        </div>
                     </div>
 
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Maintenance Mode -->
                         <div class="glass-panel p-6 rounded-3xl border-t-4 border-red-500">
                             <div class="flex items-center justify-between mb-4">
                                 <h3 class="font-bold text-lg dark:text-white flex items-center gap-2"><i class="fas fa-tools text-red-500"></i> Maintenance</h3>
-                                <label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" id="maint-toggle" class="sr-only peer"><div class="w-12 h-7 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-500"></div></label>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" id="maint-toggle" class="sr-only peer">
+                                    <div class="w-12 h-7 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-500"></div>
+                                </label>
                             </div>
                             <div class="space-y-4">
-                                <div><label class="text-xs font-bold text-slate-500 uppercase mb-1 block">Expected Completion</label><input type="datetime-local" id="maint-end" class="w-full p-3 rounded-xl bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-slate-700 dark:text-white text-sm"></div>
-                                <button onclick="saveMaintenance()" class="w-full bg-red-50 text-red-600 border border-red-100 py-3 rounded-xl font-bold text-sm hover:bg-red-100">Save Status</button>
+                                <div>
+                                    <label class="text-xs font-bold text-slate-500 uppercase mb-1 block">Expected Completion</label>
+                                    <input type="datetime-local" id="maint-end" class="w-full p-3 rounded-xl bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-slate-700 dark:text-white text-sm">
+                                </div>
+                                <button onclick="saveMaintenance()" class="w-full bg-red-50 text-red-600 border border-red-100 py-3 rounded-xl font-bold text-sm hover:bg-red-100 transition">Save Status</button>
                             </div>
                         </div>
 
+                        <!-- Homepage Alert -->
                         <div class="glass-panel p-6 rounded-3xl border-t-4 border-yellow-500">
                             <div class="flex items-center justify-between mb-4">
                                 <h3 class="font-bold text-lg dark:text-white flex items-center gap-2"><i class="fas fa-broadcast-tower text-yellow-500"></i> Global Alert</h3>
-                                <label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" id="alert-toggle" class="sr-only peer"><div class="w-12 h-7 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-yellow-500"></div></label>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" id="alert-toggle" class="sr-only peer">
+                                    <div class="w-12 h-7 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-yellow-500"></div>
+                                </label>
                             </div>
+                            
                             <div class="space-y-3">
                                 <input type="date" id="alert-date" class="w-full p-3 rounded-xl bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-slate-700 dark:text-white text-sm">
                                 <textarea id="alert-msg" rows="2" class="w-full p-3 rounded-xl bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-slate-700 dark:text-white text-sm resize-none" placeholder="Alert Message displayed on student home..."></textarea>
-                                <button onclick="saveAlert()" class="w-full bg-yellow-50 text-yellow-600 border border-yellow-100 py-3 rounded-xl font-bold text-sm hover:bg-yellow-100">Update Alert</button>
+                                <button onclick="saveAlert()" class="w-full bg-yellow-50 text-yellow-600 border border-yellow-100 py-3 rounded-xl font-bold text-sm hover:bg-yellow-100 transition">Update Alert</button>
                             </div>
                         </div>
                     </div>
 
-                    <!-- NEW: APP VERSION CONTROL (Added to Settings Section) -->
-                    <div class="glass-panel p-6 rounded-3xl mt-6 border-t-4 border-emerald-500 shadow-md animate__animated animate__fadeInUp">
-                        <h3 class="font-bold text-lg dark:text-white mb-4 flex items-center gap-2">
-                            <i class="fas fa-mobile-alt text-emerald-500"></i> App Version Control
-                        </h3>
-                        
-                        <!-- Add New App Form -->
-                        <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl mb-6 border border-slate-100 dark:border-slate-700">
-                            <form id="appVersionForm" class="grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
-                                <div class="md:col-span-1">
-                                    <label class="text-xs font-bold text-slate-500 uppercase mb-1 block">Platform</label>
-                                    <select id="app-platform" class="w-full p-3 rounded-xl bg-white dark:bg-dark-bg border border-slate-200 dark:border-slate-700 dark:text-white text-sm outline-none">
-                                        <option value="android">Android (APK)</option>
-                                        <option value="pc">Windows (PC)</option>
-                                    </select>
-                                </div>
-                                <div class="md:col-span-1">
-                                    <label class="text-xs font-bold text-slate-500 uppercase mb-1 block">Version</label>
-                                    <input type="text" id="app-version" placeholder="v1.0.0" class="w-full p-3 rounded-xl bg-white dark:bg-dark-bg border border-slate-200 dark:border-slate-700 dark:text-white text-sm outline-none" required>
-                                </div>
-                                <div class="md:col-span-1">
-                                    <label class="text-xs font-bold text-slate-500 uppercase mb-1 block">Download Link</label>
-                                    <input type="url" id="app-link" placeholder="https://..." class="w-full p-3 rounded-xl bg-white dark:bg-dark-bg border border-slate-200 dark:border-slate-700 dark:text-white text-sm outline-none" required>
-                                </div>
-                                <div class="md:col-span-1">
-                                    <button type="submit" class="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold hover:bg-emerald-700 shadow-lg shadow-emerald-500/20 transition-all text-sm">
-                                        <i class="fas fa-cloud-upload-alt mr-2"></i> Publish
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
+                    <!-- APP VERSION CONTROL (Add this inside #settings-section at the bottom) -->
+<div class="glass-panel p-6 rounded-3xl mt-6 border-t-4 border-emerald-500 shadow-md animate__animated animate__fadeInUp">
+    <h3 class="font-bold text-lg dark:text-white mb-4 flex items-center gap-2">
+        <i class="fas fa-mobile-alt text-emerald-500"></i> App Version Control
+    </h3>
+    
+    <!-- Add New App Form -->
+    <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl mb-6 border border-slate-100 dark:border-slate-700">
+        <form id="appVersionForm" class="grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
+            <div class="md:col-span-1">
+                <label class="text-xs font-bold text-slate-500 uppercase mb-1 block">Platform</label>
+                <select id="app-platform" class="w-full p-3 rounded-xl bg-white dark:bg-dark-bg border border-slate-200 dark:border-slate-700 dark:text-white text-sm outline-none">
+                    <option value="android">Android (APK)</option>
+                    <option value="pc">Windows (PC)</option>
+                </select>
+            </div>
+            <div class="md:col-span-1">
+                <label class="text-xs font-bold text-slate-500 uppercase mb-1 block">Version</label>
+                <input type="text" id="app-version" placeholder="v1.0.0" class="w-full p-3 rounded-xl bg-white dark:bg-dark-bg border border-slate-200 dark:border-slate-700 dark:text-white text-sm outline-none" required>
+            </div>
+            <div class="md:col-span-1">
+                <label class="text-xs font-bold text-slate-500 uppercase mb-1 block">Download Link</label>
+                <input type="url" id="app-link" placeholder="https://..." class="w-full p-3 rounded-xl bg-white dark:bg-dark-bg border border-slate-200 dark:border-slate-700 dark:text-white text-sm outline-none" required>
+            </div>
+            <div class="md:col-span-1">
+                <button type="submit" class="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold hover:bg-emerald-700 shadow-lg shadow-emerald-500/20 transition-all text-sm">
+                    <i class="fas fa-cloud-upload-alt mr-2"></i> Publish
+                </button>
+            </div>
+        </form>
+    </div>
 
-                        <!-- Existing Apps List -->
-                        <div class="overflow-hidden">
-                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Active Downloads</h4>
-                            <div id="app-downloads-list" class="space-y-3">
-                                <!-- Items will be loaded here via JS -->
-                            </div>
-                        </div>
-                    </div>
+    <!-- Existing Apps List -->
+    <div class="overflow-hidden">
+        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Active Downloads</h4>
+        <div id="app-downloads-list" class="space-y-3">
+            <!-- Items will be loaded here via JS -->
+        </div>
+    </div>
+</div>
                 </section>
 
             </div>
@@ -559,9 +905,12 @@
     <div id="toast-container" class="fixed bottom-5 right-5 z-[200] space-y-2 pointer-events-none flex flex-col items-end"></div>
 
     <script type="module">
+        // --- CONFIG & CONSTANTS ---
         const SUPER_ADMIN_EMAIL = 'isaradilnuka2005@gmail.com';
+        // Updated Super Admin Photo URL
         const SUPER_ADMIN_IMG = 'https://dilnuka13.github.io/my/isara-profile.jpg';
         const ADMIN_SECRET = '20050616';
+        
         const supabaseUrl = 'https://hppojrbfhzttzvlvovre.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhwcG9qcmJmaHp0dHp2bHZvdnJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjExODgxNDYsImV4cCI6MjA3Njc2NDE0Nn0.aL2fegb_eRPY0E7P6Mwufhq3TCAeX8-hDCHBo9VeAsA';
         const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
@@ -569,46 +918,84 @@
         let currentUser = null;
         let currentMonth = moment();
         let allEvents = [];
+        let allPapers = [];
         let loginMethod = 'choice';
         let definedSubjects = [];
         let registrationDescriptors = [];
 
+        // --- UI UTILS ---
         window.toggleSidebar = () => {
             const sidebar = document.getElementById('admin-sidebar');
             const overlay = document.getElementById('sidebar-overlay');
-            if (sidebar.classList.contains('-translate-x-full')) {
-                sidebar.classList.remove('-translate-x-full'); overlay.classList.remove('hidden', 'opacity-0');
+            const isHidden = sidebar.classList.contains('-translate-x-full');
+            
+            if (isHidden) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden', 'opacity-0');
             } else {
-                sidebar.classList.add('-translate-x-full'); overlay.classList.add('opacity-0'); setTimeout(() => overlay.classList.add('hidden'), 300);
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('opacity-0');
+                setTimeout(() => overlay.classList.add('hidden'), 300);
             }
         };
 
         window.showToast = (msg, type='info') => {
             const t = document.createElement('div');
+            // Modern Toast Styling
             const bgColor = type === 'error' ? 'bg-red-500' : 'bg-slate-800 dark:bg-white';
             const textColor = type === 'error' ? 'text-white' : 'text-white dark:text-slate-900';
-            t.className = `${bgColor} ${textColor} pl-4 pr-6 py-3 rounded-xl shadow-2xl text-sm font-bold animate__animated animate__slideInUp flex items-center gap-3 min-w-[200px] border border-white/10`;
-            t.innerHTML = `<i class="fas ${type === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle'}"></i> <span>${msg}</span>`;
+            const icon = type === 'error' ? '<i class="fas fa-exclamation-circle"></i>' : '<i class="fas fa-check-circle text-primary-400"></i>';
+            
+            t.className = `${bgColor} ${textColor} pl-4 pr-6 py-3 rounded-xl shadow-2xl shadow-slate-500/20 text-sm font-bold animate__animated animate__slideInUp flex items-center gap-3 min-w-[200px] border border-white/10`;
+            t.innerHTML = `${icon} <span>${msg}</span>`;
+            
             document.getElementById('toast-container').appendChild(t);
-            setTimeout(() => { t.classList.replace('animate__slideInUp', 'animate__fadeOutDown'); setTimeout(() => t.remove(), 500); }, 3000);
+            setTimeout(() => {
+                t.classList.remove('animate__slideInUp');
+                t.classList.add('animate__fadeOutDown');
+                setTimeout(() => t.remove(), 500);
+            }, 3000);
         };
 
         window.switchView = (viewId) => {
-            ['login', 'secret', 'register'].forEach(v => document.getElementById(`view-${v}`).classList.add('hidden'));
-            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+            ['login', 'secret', 'register'].forEach(v => {
+                const el = document.getElementById(`view-${v}`);
+                if(el) el.classList.add('hidden');
+            });
+            const target = document.getElementById(`view-${viewId}`);
+            if(target) target.classList.remove('hidden');
+            
+            if(viewId === 'secret') document.getElementById('admin-secret-input').value = '';
+            if(viewId === 'login') {
+                document.getElementById('login-email').value = '';
+                document.getElementById('login-password').value = '';
+            }
         };
 
+        // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', async () => {
+            // Theme check
             if(localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                 document.documentElement.classList.add('dark');
             }
-            await loadModels(); fetchSettings();
+            
+            await loadModels();
+            fetchSettings();
+            
+            // Populate Year Filter
             const yearSelect = document.getElementById('filter-year');
-            for(let i=new Date().getFullYear() + 1; i >= 2010; i--) { let opt = document.createElement('option'); opt.value = i; opt.text = i; yearSelect.appendChild(opt); }
+            const currentYear = new Date().getFullYear();
+            for(let i=currentYear + 1; i >= 2010; i--) {
+                const opt = document.createElement('option');
+                opt.value = i;
+                opt.text = i;
+                yearSelect.appendChild(opt);
+            }
         });
 
         async function loadModels() {
             try {
+                // Load simplified models for faster mobile performance if possible, using defaults here
                 await Promise.all([
                     faceapi.nets.tinyFaceDetector.loadFromUri('https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@0.22.2/weights'),
                     faceapi.nets.faceLandmark68Net.loadFromUri('https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@0.22.2/weights'),
@@ -616,102 +1003,271 @@
                 ]);
                 document.getElementById('loader-view').classList.add('opacity-0', 'pointer-events-none');
                 setTimeout(() => document.getElementById('loader-view').style.display = 'none', 500);
+                
                 document.getElementById('loginModal').classList.remove('opacity-0', 'pointer-events-none', 'scale-95');
                 document.getElementById('loginModal').classList.add('opacity-100', 'scale-100');
-            } catch (e) { showToast("Face models failed to load.", "error"); }
+            } catch (e) { 
+                console.error(e); 
+                // Using a non-alert custom message box as per constraints
+                showToast("Face recognition models failed to load. Please refresh.", "error"); 
+            }
         }
 
+        // --- AUTHENTICATION LOGIC ---
         async function fetchSettings() {
             const { data } = await supabase.from('system_settings').select('value').eq('key', 'login_policy').single();
-            if(data) { loginMethod = data.value.method; document.querySelector(`input[name="login_method"][value="${loginMethod}"]`).checked = true; }
+            if(data) {
+                loginMethod = data.value.method;
+                const rad = document.querySelector(`input[name="login_method"][value="${loginMethod}"]`);
+                if(rad) rad.checked = true;
+            }
             updateLoginFormUI();
         }
 
         function updateLoginFormUI() {
             const btn = document.getElementById('login-action-btn');
             const pwdField = document.getElementById('password-field-container');
-            if(loginMethod === 'password') { pwdField.classList.remove('hidden'); btn.innerHTML = `<span>Login with Password</span> <i class="fas fa-arrow-right"></i>`; btn.onclick = loginWithPassword; }
-            else if(loginMethod === 'choice') { pwdField.classList.remove('hidden'); btn.innerHTML = `<span>Login</span> <i class="fas fa-arrow-right"></i>`; btn.onclick = loginWithPasswordOrFace; }
-            else { pwdField.classList.add('hidden'); btn.innerHTML = `<span>Face ID Verification</span> <i class="fas fa-camera"></i>`; btn.onclick = loginWithFace; }
+            
+            if(loginMethod === 'password') {
+                pwdField.classList.remove('hidden');
+                btn.innerHTML = `<span>Login with Password</span> <i class="fas fa-arrow-right"></i>`;
+                btn.onclick = loginWithPassword;
+            } else if(loginMethod === 'choice') {
+                pwdField.classList.remove('hidden');
+                btn.innerHTML = `<span>Login</span> <i class="fas fa-arrow-right"></i>`;
+                btn.onclick = loginWithPasswordOrFace;
+            } else {
+                pwdField.classList.add('hidden');
+                btn.innerHTML = `<span>Face ID Verification</span> <i class="fas fa-camera"></i>`;
+                btn.onclick = loginWithFace;
+            }
         }
 
-        window.verifySecret = () => { if(document.getElementById('admin-secret-input').value === ADMIN_SECRET) switchView('register'); else showToast("Invalid Key", "error"); };
+        window.verifySecret = () => {
+             const input = document.getElementById('admin-secret-input').value;
+            if(input === ADMIN_SECRET) {
+                switchView('register');
+            } else {
+                showToast("Invalid Key", "error");
+                document.getElementById('admin-secret-input').classList.add('animate__animated', 'animate__shakeX');
+                setTimeout(() => document.getElementById('admin-secret-input').classList.remove('animate__animated', 'animate__shakeX'), 500);
+            }
+        };
 
+        // Camera Handling
         let videoStream = null;
-        window.stopCamera = () => { if(videoStream) { videoStream.getTracks().forEach(track => track.stop()); videoStream = null; } document.getElementById('camera-modal').classList.add('hidden'); };
+        
+        window.stopCamera = () => {
+             const video = document.getElementById('video-feed');
+             if(videoStream) {
+                 videoStream.getTracks().forEach(track => track.stop());
+                 videoStream = null;
+             }
+             if(video.dataset.interval) clearInterval(video.dataset.interval);
+             document.getElementById('camera-modal').classList.add('hidden');
+        };
 
+        // Registration Face Scan
         document.getElementById('reg-scan-btn').onclick = async () => {
-            registrationDescriptors = []; document.getElementById('camera-modal').classList.remove('hidden');
+            registrationDescriptors = [];
+            document.getElementById('camera-modal').classList.remove('hidden');
+            const scanText = document.getElementById('scan-text');
+            scanText.innerText = "Initializing Camera...";
+            
             try {
                 videoStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
-                const video = document.getElementById('video-feed'); video.srcObject = videoStream;
+                const video = document.getElementById('video-feed');
+                video.srcObject = videoStream;
+                
                 video.onloadedmetadata = () => {
-                    const canvas = document.getElementById('face-canvas'); faceapi.matchDimensions(canvas, {width: video.videoWidth, height: video.videoHeight});
+                    const canvas = document.getElementById('face-canvas');
+                    faceapi.matchDimensions(canvas, {width: video.videoWidth, height: video.videoHeight});
+                    
                     let scanCount = 0;
                     const interval = setInterval(async () => {
+                        // Use TinyFaceDetector for better mobile performance
                         const det = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptor();
-                        if(det) { scanCount++; registrationDescriptors.push(Array.from(det.descriptor)); document.getElementById('scan-text').innerText = `Scanning... ${scanCount*20}%`; 
-                        if(scanCount >= 5) { clearInterval(interval); stopCamera(); document.getElementById('reg-status').innerText = "Face Data Captured!"; showToast("Face scan complete", "success"); } }
+                        if(det) {
+                            scanCount++;
+                            registrationDescriptors.push(Array.from(det.descriptor));
+                            
+                            scanText.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i> Scanning... ${scanCount*20}%`;
+                            
+                            if(scanCount >= 5) {
+                                clearInterval(interval);
+                                stopCamera();
+                                document.getElementById('reg-status').innerText = "Face Data Captured!";
+                                document.getElementById('reg-status').className = "text-xs text-center text-emerald-600 font-bold h-4 mt-1";
+                                showToast("Face scan complete", "success");
+                            }
+                        } else {
+                            scanText.innerText = "Move closer / Adjust light";
+                        }
                     }, 400);
+                    
+                    video.dataset.interval = interval;
                 };
-            } catch(e) { showToast("Camera Error", "error"); stopCamera(); }
+            } catch(e) {
+                // Using a non-alert custom message box as per constraints
+                showToast("Camera Access Denied or Error: " + e.message, "error");
+                stopCamera();
+            }
         };
 
         document.getElementById('reg-submit-btn').onclick = async () => {
-            const name = document.getElementById('reg-name').value, email = document.getElementById('reg-email').value, password = document.getElementById('reg-pass').value;
+            const name = document.getElementById('reg-name').value;
+            const email = document.getElementById('reg-email').value;
+            const phone = document.getElementById('reg-phone').value;
+            const password = document.getElementById('reg-pass').value;
+
             if(!name || !email || !password) return showToast("Required fields missing", "error");
-            const { error } = await supabase.from('users').insert({ name, email, phone: document.getElementById('reg-phone').value, password, face_descriptors: registrationDescriptors.length ? registrationDescriptors : null, approved: false, last_login: new Date().toISOString(), email_confirmed_at: null });
-            if(error) showToast(error.message, "error"); else { showToast("Request Sent!", "success"); switchView('login'); }
+
+            const btn = document.getElementById('reg-submit-btn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...';
+            btn.disabled = true;
+
+            const { error } = await supabase.from('users').insert({
+                name, email, phone, password,
+                face_descriptors: registrationDescriptors.length > 0 ? registrationDescriptors : null,
+                approved: false,
+                // Add initial online status
+                last_login: new Date().toISOString(),
+                // Initialize email_confirmed_at to null on registration
+                email_confirmed_at: null 
+            });
+
+            btn.innerHTML = 'Complete Registration';
+            btn.disabled = false;
+
+            if(error) {
+                showToast(error.message, "error");
+            } else {
+                showToast("Request Sent! Wait for approval.", "success");
+                switchView('login');
+                document.getElementById('reg-name').value = '';
+                document.getElementById('reg-email').value = '';
+                document.getElementById('reg-pass').value = '';
+                registrationDescriptors = [];
+            }
         };
 
+        // Login Logic
         async function loginWithPassword() {
-            const email = document.getElementById('login-email').value, pass = document.getElementById('login-password').value;
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-password').value;
+            if(!email || !pass) return showToast('Enter credentials', 'error');
+
             const { data: user } = await supabase.from('users').select('*').eq('email', email).eq('password', pass).single();
-            if(user) completeLogin(user); else showToast('Invalid credentials', 'error');
+            if(user) completeLogin(user);
+            else showToast('Invalid credentials', 'error');
         }
 
         async function loginWithFace() {
             const email = document.getElementById('login-email').value;
+            if(!email) return showToast('Enter email to identify', 'error');
+            
             const { data: user } = await supabase.from('users').select('*').eq('email', email).single();
-            if(!user || !user.face_descriptors) return showToast('User not found or Face ID not set', 'error');
+            if(!user) return showToast('User not found', 'error');
+            
+            if(!user.face_descriptors || !user.face_descriptors.length) return showToast('Face ID not set up.', 'error');
+
             const descriptors = user.face_descriptors.map(d => new Float32Array(d));
             const matcher = new faceapi.FaceMatcher(new faceapi.LabeledFaceDescriptors(user.email, descriptors), 0.5);
             startCameraFlow(matcher, user);
         }
-        async function loginWithPasswordOrFace() { if(document.getElementById('login-password').value) loginWithPassword(); else loginWithFace(); }
+
+        async function loginWithPasswordOrFace() {
+            const pass = document.getElementById('login-password').value;
+            if(pass) loginWithPassword(); 
+            else loginWithFace(); 
+        }
 
         function startCameraFlow(matcher, user) {
-            document.getElementById('camera-modal').classList.remove('hidden'); document.getElementById('scan-text').innerText = "Verifying Identity...";
+            document.getElementById('camera-modal').classList.remove('hidden');
+            const scanText = document.getElementById('scan-text');
+            scanText.innerText = "Verifying Identity...";
+            
             navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } }).then(stream => {
-                videoStream = stream; const video = document.getElementById('video-feed'); video.srcObject = stream;
+                videoStream = stream;
+                const video = document.getElementById('video-feed');
+                video.srcObject = stream;
                 video.onloadedmetadata = () => {
-                    const canvas = document.getElementById('face-canvas'); faceapi.matchDimensions(canvas, {width: video.videoWidth, height: video.videoHeight});
+                    const canvas = document.getElementById('face-canvas');
+                    faceapi.matchDimensions(canvas, {width: video.videoWidth, height: video.videoHeight});
                     const interval = setInterval(async () => {
                         const det = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptor();
-                        if(det && matcher.findBestMatch(det.descriptor).label === user.email) { clearInterval(interval); stopCamera(); completeLogin(user); }
+                        if(det) {
+                            const match = matcher.findBestMatch(det.descriptor);
+                            if(match.label === user.email) {
+                                clearInterval(interval);
+                                stopCamera();
+                                completeLogin(user);
+                            }
+                        }
                     }, 500);
+                    video.dataset.interval = interval;
                 };
-            }).catch(() => { showToast("Camera Error", "error"); stopCamera(); });
+            }).catch(() => {
+                showToast("Camera Error", "error");
+                stopCamera();
+            });
         }
 
         async function completeLogin(user) {
             if(!user.approved && user.email !== SUPER_ADMIN_EMAIL) return showToast("Account awaiting approval", 'error');
-            currentUser = user; supabase.from('users').update({last_login: new Date().toISOString()}).eq('id', user.id);
-            document.getElementById('loginModal').classList.add('hidden'); document.getElementById('mainContent').classList.remove('hidden');
+            
+            currentUser = user;
+            // Update last login
+            supabase.from('users').update({last_login: new Date().toISOString()}).eq('id', user.id);
+            
+            document.getElementById('loginModal').classList.add('hidden');
+            document.getElementById('mainContent').classList.remove('hidden');
+            
             document.getElementById('user-name-display').textContent = user.name;
             document.getElementById('user-role-display').textContent = (user.email === SUPER_ADMIN_EMAIL) ? 'Super Admin' : 'Editor';
+            // Ensure SUPER_ADMIN_IMG is used for Super Admin
             document.getElementById('user-avatar').src = (user.email === SUPER_ADMIN_EMAIL) ? SUPER_ADMIN_IMG : `https://ui-avatars.com/api/?name=${user.name}&background=random&color=fff`;
-            if(user.email === SUPER_ADMIN_EMAIL) { document.getElementById('nav-users').classList.remove('hidden'); document.getElementById('nav-subjects').classList.remove('hidden'); }
-            else { document.getElementById('menu-group-main').classList.add('hidden'); document.getElementById('menu-group-extra').classList.add('hidden'); showSection('papers'); return; }
+
+            // Access Control
+            if(user.email === SUPER_ADMIN_EMAIL) {
+                document.getElementById('nav-users').classList.remove('hidden');
+                document.getElementById('nav-subjects').classList.remove('hidden');
+            } else {
+                document.getElementById('menu-group-main').classList.add('hidden');
+                document.getElementById('menu-group-extra').classList.add('hidden');
+                showSection('papers');
+                return;
+            }
+
             loadDashboard();
         }
 
+        // --- SECTION LOGIC ---
+        
         window.showSection = (id) => {
+            // Hide all sections with fade out effect (simplified for speed)
             document.querySelectorAll('.admin-section').forEach(s => s.classList.add('hidden'));
-            const target = document.getElementById(id+'-section'); target.classList.remove('hidden');
+            
+            const target = document.getElementById(id+'-section');
+            target.classList.remove('hidden');
+            // Re-trigger animation
+            target.classList.remove('animate__fadeIn');
+            void target.offsetWidth; 
+            target.classList.add('animate__fadeIn');
+
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-            const nav = document.getElementById('nav-'+id); if(nav) nav.classList.add('active');
-            if(window.innerWidth < 1024) toggleSidebar();
+            const nav = document.getElementById('nav-'+id);
+            if(nav) nav.classList.add('active');
+            
+            // Auto close sidebar on mobile
+            if(window.innerWidth < 1024) {
+                 const sidebar = document.getElementById('admin-sidebar');
+                 const overlay = document.getElementById('sidebar-overlay');
+                 sidebar.classList.add('-translate-x-full');
+                 overlay.classList.add('hidden', 'opacity-0');
+            }
+
+            // Lazy loading data
             if(id === 'dashboard') loadDashboard();
             if(id === 'papers') { loadPapers(); loadSubjects(); } 
             if(id === 'users') loadUsers();
@@ -722,166 +1278,736 @@
             if(id === 'settings') loadSettings();
         };
 
+        // --- DASHBOARD LOGIC ---
         window.loadDashboard = async () => {
             const { count: papers } = await supabase.from('past_papers').select('*', { count: 'exact', head: true });
             const { count: notices } = await supabase.from('notices').select('*', { count: 'exact', head: true });
-            const { count: users } = await supabase.from('users').select('*', { count: 'exact', head: true });
             document.getElementById('dash-papers-count').textContent = papers || 0;
             document.getElementById('dash-notices-count').textContent = notices || 0;
-            document.getElementById('dash-users-count').textContent = users || 0;
+            
+            // Dummy logic for downloads (replace with real table if exists)
+            const { data: stats } = await supabase.from('subject_download_stats').select('*').limit(5);
+            let totalDl = 0;
+            const tbody = document.getElementById('dashboard-stats-body'); tbody.innerHTML = '';
+            
+            if(!stats || stats.length === 0) {
+                 tbody.innerHTML = '<tr><td colspan="3" class="p-4 text-center text-slate-400">No stats available yet.</td></tr>';
+            } else {
+                stats.forEach(s => {
+                    totalDl += (s.paper_downloads + s.marking_downloads);
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+                            <td class="p-4 font-bold">${s.subject_name}</td>
+                            <td class="p-4 text-right"><span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs font-bold">${s.paper_downloads}</span></td>
+                            <td class="p-4 text-right"><span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-xs font-bold">${s.marking_downloads}</span></td>
+                        </tr>`;
+                });
+            }
+            document.getElementById('dash-downloads-count').textContent = totalDl;
+            document.getElementById('dash-users-count').textContent = (await supabase.from('users').select('*', {count: 'exact', head: true})).count;
         }
 
+        // --- SUBJECTS LOGIC ---
         async function loadSubjects() {
-            const { data } = await supabase.from('subjects').select('*').order('name'); definedSubjects = data || [];
-            const container = document.getElementById('subjects-list'); if(container) { container.innerHTML = ''; definedSubjects.forEach(s => {
-                container.innerHTML += `<div class="flex justify-between items-center p-4 bg-white dark:bg-dark-card border border-slate-100 dark:border-slate-700 rounded-2xl shadow-sm"><div><div class="font-bold dark:text-white">${s.name}</div></div><button onclick="deleteSubject('${s.id}')" class="text-slate-400 hover:text-red-500"><i class="fas fa-trash"></i></button></div>`;
-            }); }
+            const { data } = await supabase.from('subjects').select('*').order('name');
+            definedSubjects = data || [];
+            
+            const container = document.getElementById('subjects-list');
+            if(container) {
+                container.innerHTML = '';
+                definedSubjects.forEach(s => {
+                    const div = document.createElement('div');
+                    div.className = 'flex justify-between items-center p-4 bg-white dark:bg-dark-card border border-slate-100 dark:border-slate-700 rounded-2xl shadow-sm hover:shadow-md transition';
+                    div.innerHTML = `
+                        <div>
+                            <div class="font-bold dark:text-white flex items-center gap-2">${s.name} <span class="text-[10px] bg-slate-100 dark:bg-slate-800 px-1.5 rounded text-slate-500 font-mono">${s.code||'--'}</span></div>
+                            <div class="flex flex-wrap gap-1 mt-2">
+                                ${s.streams.map(st => `<span class="text-[10px] bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-300 px-2 py-0.5 rounded-full uppercase tracking-wide font-bold">${st}</span>`).join('')}
+                            </div>
+                        </div>
+                        <button onclick="deleteSubject('${s.id}')" class="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-400 hover:text-red-500 hover:bg-red-50 transition"><i class="fas fa-trash"></i></button>
+                    `;
+                    container.appendChild(div);
+                });
+            }
         }
-        document.getElementById('subjectForm').onsubmit = async (e) => { e.preventDefault(); await supabase.from('subjects').insert({ name: document.getElementById('new-sub-name').value, code: document.getElementById('new-sub-code').value, streams: Array.from(document.querySelectorAll('input[name="new_sub_stream"]:checked')).map(cb => cb.value) }); showToast('Subject Created', 'success'); loadSubjects(); };
-        window.deleteSubject = async (id) => { if(confirm('Delete subject?')) { await supabase.from('subjects').delete().eq('id', id); loadSubjects(); } };
 
+        document.getElementById('subjectForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('new-sub-name').value;
+            const code = document.getElementById('new-sub-code').value;
+            const streams = Array.from(document.querySelectorAll('input[name="new_sub_stream"]:checked')).map(cb => cb.value);
+
+            if(!streams.length) return showToast('Select at least one stream', 'error');
+
+            await supabase.from('subjects').insert({ name, code, streams });
+            showToast('Subject Created', 'success');
+            document.getElementById('subjectForm').reset();
+            loadSubjects();
+        };
+
+        window.deleteSubject = async (id) => {
+            if(confirm('Are you sure? This will not delete related past papers.')) {
+                await supabase.from('subjects').delete().eq('id', id);
+                loadSubjects();
+                showToast('Subject Deleted', 'success');
+            }
+        };
+
+        // --- PAPERS LOGIC (Updated with Edit) ---
         window.togglePaperForm = () => document.getElementById('paper-form-container').classList.toggle('hidden');
+
         window.filterUploadSubjects = () => {
             const selectedStreams = Array.from(document.querySelectorAll('input[name="upload_stream"]:checked')).map(cb => cb.value);
-            const select = document.getElementById('upload-subject-select'); select.innerHTML = '<option value="">Select Subject...</option>';
-            definedSubjects.filter(sub => selectedStreams.every(s => sub.streams.includes(s))).forEach(s => {
-                let opt = document.createElement('option'); opt.value = JSON.stringify({name: s.name, code: s.code}); opt.text = s.name; select.appendChild(opt);
+            const select = document.getElementById('upload-subject-select');
+            
+            if(selectedStreams.length === 0) {
+                select.innerHTML = '<option value="">Select Streams First...</option>';
+                return;
+            }
+            const validSubjects = definedSubjects.filter(sub => selectedStreams.every(s => sub.streams.includes(s)));
+
+            select.innerHTML = '<option value="">Select Subject...</option>';
+            validSubjects.forEach(s => {
+                const opt = document.createElement('option');
+                opt.value = JSON.stringify({name: s.name, code: s.code});
+                opt.text = s.name;
+                select.appendChild(opt);
             });
+            if(validSubjects.length === 0) {
+                 const opt = document.createElement('option'); opt.text = "No common subjects found"; select.appendChild(opt);
+            }
         };
+
         document.getElementById('paperForm').onsubmit = async (e) => {
-            e.preventDefault(); const selectedStreams = Array.from(document.querySelectorAll('input[name="upload_stream"]:checked')).map(cb => cb.value);
-            const subjectObj = JSON.parse(document.getElementById('upload-subject-select').value);
-            const inserts = selectedStreams.map(s => ({ subject_name: subjectObj.name, subject_code: subjectObj.code, year: document.getElementById('year').value, paper_link: document.getElementById('paper_link').value, marking_scheme_link: document.getElementById('marking_link').value, stream: s }));
-            await supabase.from('past_papers').insert(inserts); showToast('Resource Added', 'success'); loadPapers(); togglePaperForm();
+            e.preventDefault();
+            const selectedStreams = Array.from(document.querySelectorAll('input[name="upload_stream"]:checked')).map(cb => cb.value);
+            const subjectVal = document.getElementById('upload-subject-select').value;
+            
+            if(!selectedStreams.length || !subjectVal) return showToast('Please complete the form', 'error');
+            
+            let subjectObj;
+            try {
+                 subjectObj = JSON.parse(subjectVal);
+            } catch(e) {
+                return showToast('Invalid subject selection.', 'error');
+            }
+            
+            const subjectName = subjectObj.name;
+            const subjectDefinition = definedSubjects.find(s => s.name === subjectName);
+            
+            let targetStreams = new Set(selectedStreams);
+            if(subjectDefinition && subjectDefinition.streams) subjectDefinition.streams.forEach(st => targetStreams.add(st));
+            const finalStreams = Array.from(targetStreams);
+
+            const base = {
+                subject_name: subjectName,
+                subject_code: subjectObj.code,
+                year: document.getElementById('year').value,
+                paper_link: document.getElementById('paper_link').value,
+                marking_scheme_link: document.getElementById('marking_link').value
+            };
+            
+            // Insert one record for each selected stream combination (as per existing logic)
+            const inserts = finalStreams.map(s => ({ ...base, stream: s }));
+            const { error } = await supabase.from('past_papers').insert(inserts);
+            
+            if(!error) {
+                showToast(`Resource Added`, 'success');
+                document.getElementById('paperForm').reset();
+                togglePaperForm();
+                loadPapers();
+            } else showToast(error.message, 'error');
         };
+
+        // Paper Filtering & Display
+        document.getElementById('filter-stream').addEventListener('change', function() {
+            const selectedStream = this.value;
+            const subSelect = document.getElementById('filter-subject');
+            subSelect.innerHTML = '<option value="all">Subjects</option>';
+
+            let relevantSubjects = (selectedStream === 'all') ? definedSubjects : definedSubjects.filter(s => s.streams.includes(selectedStream));
+            
+            [...new Set(relevantSubjects.map(s => s.name))].sort().forEach(n => {
+                const opt = document.createElement('option');
+                opt.value = n;
+                opt.text = n;
+                subSelect.appendChild(opt);
+            });
+            loadPapers();
+        });
 
         async function loadPapers() {
             const { data } = await supabase.from('past_papers').select('*').order('created_at', {ascending: false});
-            const container = document.getElementById('papers-list-container'); container.innerHTML = '';
+            allPapers = data || [];
+            
+            const container = document.getElementById('papers-list-container'); 
+            container.innerHTML = '';
+            
             const searchText = document.getElementById('paper-search').value.toLowerCase();
-            data.filter(p => p.subject_name.toLowerCase().includes(searchText)).forEach(p => {
-                container.innerHTML += `<div class="bg-white dark:bg-dark-card p-5 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm relative group"><h4 class="font-bold dark:text-white">${p.subject_name}</h4><p class="text-xs text-slate-400">${p.year} • ${p.stream}</p><button onclick="deletePaper('${p.id}')" class="absolute top-4 right-4 text-slate-300 hover:text-red-500"><i class="fas fa-trash"></i></button></div>`;
-            });
-        }
-        window.deletePaper = async (id) => { if(confirm("Delete resource?")) { await supabase.from('past_papers').delete().eq('id', id); loadPapers(); showToast('Deleted', 'success'); } };
-        document.getElementById('paper-search').oninput = loadPapers;
+            const streamFilter = document.getElementById('filter-stream').value;
+            const subjectFilter = document.getElementById('filter-subject').value;
+            const yearFilter = document.getElementById('filter-year').value;
 
-        window.loadUsers = async () => {
-            const { data } = await supabase.from('users').select('*').order('last_login', {ascending: false});
-            const tbody = document.getElementById('users-list-body'); tbody.innerHTML = '';
-            data.forEach(u => {
-                tbody.innerHTML += `<tr class="border-b border-slate-50 dark:border-slate-800"><td class="p-5 font-bold dark:text-white">${u.name}<br><span class="text-xs font-normal text-slate-400">${u.email}</span></td><td class="p-5 text-sm dark:text-slate-300">${u.phone||'-'}</td><td class="p-5"><span class="px-2 py-1 rounded text-xs ${u.approved?'bg-green-100 text-green-700':'bg-red-100 text-red-700'}">${u.approved?'Approved':'Pending'}</span></td><td class="p-5 text-sm dark:text-slate-300">${u.email===SUPER_ADMIN_EMAIL?'Admin':'Editor'}</td><td class="p-5 text-right"><button onclick="toggleUserActive('${u.id}', ${u.approved})" class="text-blue-500 mr-2"><i class="fas ${u.approved?'fa-ban':'fa-check'}"></i></button><button onclick="deleteUser('${u.id}')" class="text-red-500"><i class="fas fa-trash"></i></button></td></tr>`;
+            const filtered = allPapers.filter(p => {
+                const matchSearch = p.subject_name.toLowerCase().includes(searchText) || p.subject_code.toLowerCase().includes(searchText);
+                const matchStream = streamFilter === 'all' || p.stream === streamFilter;
+                const matchSubject = subjectFilter === 'all' || p.subject_name === subjectFilter;
+                const matchYear = yearFilter === 'all' || p.year == yearFilter;
+                return matchSearch && matchStream && matchSubject && matchYear;
+            });
+
+            if(filtered.length === 0) {
+                container.innerHTML = '<div class="col-span-full text-center py-10"><div class="text-6xl text-slate-200 dark:text-slate-700 mb-4"><i class="fas fa-search"></i></div><p class="text-slate-400">No resources found matching criteria.</p></div>';
+                return;
+            }
+
+            filtered.forEach(p => {
+                // Determine color based on stream
+                let colorClass = 'bg-slate-100 text-slate-600';
+                if(p.stream === 'science') colorClass = 'bg-green-100 text-green-700';
+                if(p.stream === 'commerce') colorClass = 'bg-blue-100 text-blue-700';
+                if(p.stream === 'arts') colorClass = 'bg-yellow-100 text-yellow-700';
+                if(p.stream === 'technology') colorClass = 'bg-purple-100 text-purple-700';
+                
+                // Escape quotes for JS function call
+                const paperData = JSON.stringify(p).replace(/"/g, "'");
+
+                const card = document.createElement('div'); 
+                card.className = "bg-white dark:bg-dark-card p-5 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm hover-lift relative group animate__animated animate__fadeIn";
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="text-[10px] uppercase font-bold ${colorClass} px-2 py-1 rounded-full tracking-wide">${p.stream}</span>
+                        <div class="flex gap-2">
+                             <button onclick="openEditPaper(${paperData})" class="w-8 h-8 flex items-center justify-center rounded-full text-slate-400 hover:text-blue-500 hover:bg-blue-50 transition" title="Edit Resource"><i class="fas fa-pen"></i></button>
+                             <button onclick="deletePaper('${p.id}')" class="w-8 h-8 flex items-center justify-center rounded-full text-slate-300 hover:text-red-500 hover:bg-red-50 transition" title="Delete Resource"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                    <h4 class="font-bold dark:text-white text-lg leading-tight mb-1 line-clamp-2">${p.subject_name}</h4>
+                    <p class="text-xs text-slate-400 mb-4 font-mono font-bold">${p.year} • ${p.subject_code || 'N/A'}</p>
+                    
+                    <div class="grid grid-cols-2 gap-2">
+                        ${p.paper_link ? `<a href="${p.paper_link}" target="_blank" class="flex items-center justify-center gap-2 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold hover:bg-blue-50 hover:text-blue-600 dark:hover:text-blue-400 transition"><i class="fas fa-file-pdf"></i> Paper</a>` : `<span class="flex items-center justify-center gap-2 py-2 rounded-xl bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400 text-xs font-bold cursor-not-allowed opacity-50"><i class="fas fa-file-pdf"></i> No Paper</span>`}
+                        ${p.marking_scheme_link ? `<a href="${p.marking_scheme_link}" target="_blank" class="flex items-center justify-center gap-2 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold hover:bg-emerald-50 hover:text-emerald-600 dark:hover:text-emerald-400 transition"><i class="fas fa-check-circle"></i> Scheme</a>` : `<span class="flex items-center justify-center gap-2 py-2 rounded-xl bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400 text-xs font-bold cursor-not-allowed opacity-50"><i class="fas fa-check-circle"></i> No Scheme</span>`}
+                    </div>
+                `;
+                container.appendChild(card);
             });
         }
-        window.toggleUserActive = async (id, status) => { await supabase.from('users').update({ approved: !status }).eq('id', id); loadUsers(); };
-        window.deleteUser = async (id) => { if(confirm("Delete user?")) { await supabase.from('users').delete().eq('id', id); loadUsers(); } };
+        
+        // New: Open Edit Modal
+        window.openEditPaper = (p) => {
+            // Unescape quotes in keys/values
+            const paper = JSON.parse(JSON.stringify(p).replace(/'/g, '"'));
+            
+            document.getElementById('edit-paper-id').value = paper.id;
+            document.getElementById('edit-paper-title-display').textContent = `${paper.subject_name} (${paper.year})`;
+            document.getElementById('edit-subject-name').value = paper.subject_name;
+            document.getElementById('edit-year').value = paper.year;
+            document.getElementById('edit-paper-link').value = paper.paper_link || '';
+            document.getElementById('edit-marking-link').value = paper.marking_scheme_link || '';
+            document.getElementById('edit-stream-display').textContent = paper.stream.toUpperCase();
+
+            document.getElementById('edit-paper-modal').classList.remove('hidden');
+        };
+
+        // New: Save Changes Function
+        window.savePaperChanges = async () => {
+            const id = document.getElementById('edit-paper-id').value;
+            const subject_name = document.getElementById('edit-subject-name').value;
+            const year = document.getElementById('edit-year').value;
+            const paper_link = document.getElementById('edit-paper-link').value;
+            const marking_scheme_link = document.getElementById('edit-marking-link').value;
+
+            const { error } = await supabase.from('past_papers').update({ 
+                subject_name, year, paper_link, marking_scheme_link 
+            }).eq('id', id);
+
+            if (!error) {
+                showToast("Resource Updated", "success");
+                document.getElementById('edit-paper-modal').classList.add('hidden');
+                loadPapers();
+            } else {
+                showToast(error.message, "error");
+            }
+        };
+
+        window.deletePaper = async (id) => { 
+            if(confirm("Permanently delete this resource?")) { 
+                await supabase.from('past_papers').delete().eq('id', id); 
+                loadPapers(); 
+                showToast('Resource Deleted', 'success');
+            } 
+        };
+        
+        document.getElementById('paper-search').oninput = loadPapers; 
+        document.getElementById('filter-subject').onchange = loadPapers;
+        document.getElementById('filter-year').onchange = loadPapers;
+
+        // --- USERS ---
+        window.loadUsers = async () => {
+            if(!currentUser || currentUser.email !== SUPER_ADMIN_EMAIL) return;
+            // Fetch all users
+            const { data } = await supabase.from('users').select('*').order('last_login', {ascending: false, nullsFirst: true});
+            const users = data || []; 
+            const tbody = document.getElementById('users-list-body'); tbody.innerHTML = '';
+            
+            users.forEach(u => {
+                // Status check constants
+                const isOnline = u.last_login && moment().diff(moment(u.last_login), 'minutes') < 5;
+                const isSuper = u.email === SUPER_ADMIN_EMAIL;
+                const isEmailConfirmed = !!u.email_confirmed_at;
+                
+                const uStr = JSON.stringify(u).replace(/"/g, '&quot;');
+                const lastAccessText = isOnline ? '<span class="text-green-500 font-bold">Online now</span>' : (u.last_login ? moment(u.last_login).fromNow() : 'Never logged in');
+
+                const tr = document.createElement('tr');
+                tr.className = 'border-b border-slate-50 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors';
+                tr.innerHTML = `
+                    <td class="p-5">
+                        <div class="flex items-center gap-4">
+                            <div class="relative">
+                                <img src="${isSuper ? SUPER_ADMIN_IMG : `https://ui-avatars.com/api/?name=${u.name}&background=random&color=fff`}" class="w-10 h-10 rounded-full object-cover border-2 border-primary-500 shadow-sm" onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name=${u.name}&background=random&color=fff'">
+                                ${isOnline ? '<div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white dark:border-dark-card rounded-full"></div>' : ''}
+                            </div>
+                            <div>
+                                <div class="font-bold dark:text-white text-sm">${u.name}</div>
+                                <div class="text-xs text-slate-400">${u.email}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="p-5 text-sm text-slate-500 font-mono">${u.phone || '-'}</td>
+                    
+                    <!-- NEW: Approval Status -->
+                    <td class="p-5">
+                        <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide ${u.approved ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}">
+                            ${u.approved ? 'Approved' : 'Pending'}
+                        </span>
+                    </td>
+
+                    <!-- NEW: Last Access Time -->
+                    <td class="p-5 text-xs text-slate-500">
+                        ${lastAccessText}
+                    </td>
+
+                    <!-- NEW: Email Confirmed Status -->
+                    <td class="p-5">
+                        <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide ${isEmailConfirmed ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-orange-700'}">
+                            ${isEmailConfirmed ? 'Confirmed' : 'Unconfirmed'}
+                        </span>
+                        <div class="text-xs text-slate-400 mt-1">
+                            ${isEmailConfirmed ? moment(u.email_confirmed_at).format('MMM Do, h:mm a') : 'Awaiting confirmation'}
+                        </div>
+                    </td>
+
+                    <!-- Role -->
+                    <td class="p-5 text-center">
+                        ${isSuper ? '<span class="text-xs font-bold text-purple-500"><i class="fas fa-crown"></i> Super Admin</span>' : '<span class="text-xs text-slate-500">Editor</span>'}
+                    </td>
+                    
+                    <!-- Controls -->
+                    <td class="p-5 text-right">
+                        ${!isSuper ? `
+                        <div class="flex justify-end gap-2">
+                            <!-- Toggle Email Confirmed -->
+                            <button onclick="toggleEmailConfirmed('${u.id}', ${isEmailConfirmed})" class="w-8 h-8 rounded-lg ${isEmailConfirmed ? 'bg-orange-50 text-orange-500 hover:bg-orange-100' : 'bg-blue-50 text-blue-500 hover:bg-blue-100'} flex items-center justify-center transition" title="${isEmailConfirmed ? 'Mark Email Unconfirmed' : 'Mark Email Confirmed'}"><i class="fas ${isEmailConfirmed ? 'fa-envelope-open-text' : 'fa-check-double'}"></i></button>
+
+                            <button onclick='openEditUser(${uStr})' class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 hover:bg-blue-100 flex items-center justify-center transition" title="Edit Profile"><i class="fas fa-pen"></i></button>
+
+                            <button onclick="toggleUserActive('${u.id}', ${u.approved})" class="w-8 h-8 rounded-lg ${u.approved ? 'bg-red-50 text-red-500 hover:bg-red-100' : 'bg-green-50 text-green-500 hover:bg-green-100'} flex items-center justify-center transition" title="${u.approved ? 'Suspend User' : 'Approve User'}"><i class="fas ${u.approved ? 'fa-ban' : 'fa-check'}"></i></button>
+
+                            <button onclick="deleteUser('${u.id}')" class="w-8 h-8 rounded-lg bg-slate-50 text-slate-400 hover:text-red-500 hover:bg-red-50 flex items-center justify-center transition" title="Delete User"><i class="fas fa-trash"></i></button>
+                        </div>` : ''}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // NEW: Function to toggle email confirmation status
+        window.toggleEmailConfirmed = async (id, currentStatus) => { 
+            const confirmationMessage = currentStatus ? "Are you sure you want to unconfirm this user's email?" : "Are you sure you want to confirm this user's email address now?";
+            if(confirm(confirmationMessage)) {
+                // Set to current timestamp if confirming, or null if unconfirming
+                const confirmedAt = currentStatus ? null : new Date().toISOString(); 
+                
+                const { error } = await supabase.from('users').update({ email_confirmed_at: confirmedAt }).eq('id', id); 
+                
+                if (!error) {
+                    loadUsers(); 
+                    showToast('Email Confirmation Status Updated', 'success'); 
+                } else {
+                    showToast(error.message, 'error');
+                }
+            }
+        };
+
+        window.toggleUserActive = async (id, currentStatus) => { 
+            const confirmationMessage = currentStatus ? "Are you sure you want to suspend this user?" : "Are you sure you want to approve this user?";
+            if(confirm(confirmationMessage)) {
+                await supabase.from('users').update({ approved: !currentStatus }).eq('id', id); 
+                loadUsers(); 
+                showToast('Status Updated', 'success'); 
+            }
+        };
+        window.deleteUser = async (id) => { if(confirm("Permanently delete user?")) { await supabase.from('users').delete().eq('id', id); loadUsers(); showToast('User Removed', 'success'); } };
+        
+        window.openEditUser = (user) => {
+            document.getElementById('edit-user-id').value = user.id;
+            document.getElementById('edit-user-name').value = user.name;
+            document.getElementById('edit-user-phone').value = user.phone || '';
+            document.getElementById('edit-user-modal').classList.remove('hidden');
+        };
+
+        window.saveUserChanges = async () => {
+            const id = document.getElementById('edit-user-id').value;
+            const name = document.getElementById('edit-user-name').value;
+            const phone = document.getElementById('edit-user-phone').value;
+            const { error } = await supabase.from('users').update({ name, phone }).eq('id', id);
+            if (!error) {
+                showToast("Profile Updated", "success");
+                document.getElementById('edit-user-modal').classList.add('hidden');
+                loadUsers();
+            }
+        };
+
+        // --- CALENDAR & EVENTS (Upgraded for SL Holidays/UI) ---
+
+        // NEW: Hardcoded SL Poya/Holidays for 2025 (Approximation for demo stability)
+        function getSriLankaHolidays(year) {
+            const fixedHolidays = [
+                // Month is 0-indexed in JS Date/Moment
+                { month: 0, day: 1, title: "New Year's Day", type: 'holiday' },
+                { month: 1, day: 4, title: "Independence Day", type: 'holiday' },
+                { month: 3, day: 13, title: "Sinhala & Tamil New Year (Eve)", type: 'holiday' },
+                { month: 3, day: 14, title: "Sinhala & Tamil New Year", type: 'holiday' },
+                { month: 4, day: 1, title: "May Day", type: 'holiday' },
+                { month: 9, day: 1, title: "Deepavali Festival Day", type: 'holiday' },
+                { month: 11, day: 25, title: "Christmas Day", type: 'holiday' },
+            ];
+
+            // Poya Days (Approximate 2025/2026 data - highly subject to change)
+            // Format: YYYY-MM-DD
+            const poyaDays = [
+                `${year}-01-13`, `${year}-02-12`, `${year}-03-13`, `${year}-04-12`, `${year}-05-12`, 
+                `${year}-06-10`, `${year}-07-09`, `${year}-08-08`, `${year}-09-06`, `${year}-10-06`, 
+                `${year}-11-04`, `${year}-12-04`, 
+            ];
+            // Include next year's January/February for continuity
+            const nextYear = year + 1;
+            poyaDays.push(`${nextYear}-01-03`, `${nextYear}-02-02`);
+
+            const holidays = [];
+            
+            // Add fixed holidays
+            fixedHolidays.forEach(h => {
+                holidays.push({ date: moment({year: year, month: h.month, day: h.day}).format('YYYY-MM-DD'), title: h.title, type: h.type });
+            });
+
+            // Add Poya days
+            poyaDays.forEach(dateStr => {
+                 if(moment(dateStr).year() === year || moment(dateStr).year() === nextYear) {
+                    holidays.push({ date: dateStr, title: moment(dateStr).format('MMMM') + ' Poya Day', type: 'poya' });
+                }
+            });
+
+            // Add other recurring SL Holidays (e.g. Bank holidays on fixed holidays)
+            holidays.forEach(h => {
+                if (h.type === 'holiday' && h.title !== "New Year's Day") { // Exclude Jan 1 which is already added as holiday
+                    holidays.push({ date: h.date, title: h.title.replace('Day', 'Bank Holiday'), type: 'bank' });
+                }
+            });
+            
+            // Filter only unique dates and take the earliest title for a date if multiple exist.
+            const uniqueHolidays = {};
+            holidays.forEach(h => {
+                if (!uniqueHolidays[h.date] || (h.type === 'poya' && uniqueHolidays[h.date].type !== 'poya')) {
+                    uniqueHolidays[h.date] = h;
+                }
+            });
+
+            return Object.values(uniqueHolidays);
+        }
 
         async function loadCalendar() {
-            const start = currentMonth.clone().startOf('month').startOf('week'), end = currentMonth.clone().endOf('month').endOf('week');
+            const start = currentMonth.clone().startOf('month').startOf('week');
+            const end = currentMonth.clone().endOf('month').endOf('week');
+            const currentYear = currentMonth.year();
+            
             document.getElementById('calendar-month-display').textContent = currentMonth.format('MMMM YYYY');
-            const grid = document.getElementById('calendar-grid'); grid.innerHTML = '';
+            
+            // 1. Fetch user-defined events from Supabase
+            const { data } = await supabase.from('calendar_events').select('*');
+            allEvents = data || [];
+            
+            // 2. Generate recurring SL holidays for this year (+ next year for continuity)
+            const slHolidays = getSriLankaHolidays(currentYear).concat(getSriLankaHolidays(currentYear + 1));
+
+            // 3. Merge: Prioritize Supabase events over hardcoded holidays
+            const mergedEvents = {};
+            slHolidays.forEach(e => mergedEvents[e.date] = e); // Add SL holidays first
+            allEvents.forEach(e => mergedEvents[e.date] = e); // Overwrite with user events
+
+            const grid = document.getElementById('calendar-grid');
+            grid.innerHTML = '';
+            
             let day = start.clone();
+            const today = moment().startOf('day');
+
             while(day.isBefore(end)) {
-                grid.innerHTML += `<div class="calendar-day-cell ${day.month()!==currentMonth.month()?'opacity-50':''} bg-white dark:bg-dark-card border-slate-200 dark:border-dark-border"><span class="text-lg font-bold dark:text-white">${day.format('D')}</span></div>`;
+                const dateStr = day.format('YYYY-MM-DD');
+                const isCurrentMonth = day.month() === currentMonth.month();
+                const isToday = day.isSame(today, 'day');
+                const event = mergedEvents[dateStr];
+                
+                let dotClass = 'border-slate-300 dark:border-slate-700';
+                let cellColorClass = 'bg-white dark:bg-dark-card';
+                let textColor = 'dark:text-white';
+
+                if(!isCurrentMonth) {
+                    cellColorClass = 'opacity-50 bg-slate-100 dark:bg-slate-800/50';
+                    dotClass = 'border-slate-400 dark:border-slate-600';
+                }
+
+                if(event) {
+                    switch(event.type) {
+                        case 'holiday': 
+                            dotClass = 'bg-red-500/10 text-red-600 border-red-500'; 
+                            cellColorClass = 'bg-red-50 dark:bg-red-900/10'; 
+                            textColor = 'text-red-500';
+                            break;
+                        case 'poya': 
+                            dotClass = 'bg-yellow-500/10 text-yellow-600 border-yellow-500'; 
+                            cellColorClass = 'bg-yellow-50 dark:bg-yellow-900/10'; 
+                            textColor = 'text-yellow-600';
+                            break;
+                        case 'bank': 
+                            dotClass = 'bg-blue-500/10 text-blue-600 border-blue-500'; 
+                            cellColorClass = 'bg-blue-50 dark:bg-blue-900/10';
+                            textColor = 'text-blue-500';
+                            break;
+                        case 'special': 
+                            dotClass = 'bg-green-500/10 text-green-600 border-green-500'; 
+                            cellColorClass = 'bg-green-50 dark:bg-green-900/10';
+                            textColor = 'text-green-500';
+                            break;
+                    }
+                } else if(day.format('d') === '0' && isCurrentMonth) { // Sunday default styling
+                    textColor = 'text-red-500';
+                }
+                
+                if(isToday) {
+                    dotClass += ' ring-2 ring-primary-500 ring-offset-2 ring-offset-slate-50 dark:ring-offset-dark-bg';
+                    cellColorClass = 'bg-primary-50 dark:bg-primary-900/10';
+                }
+
+
+                const div = document.createElement('div');
+                div.className = `calendar-day-cell ${cellColorClass} ${dotClass} ${isToday ? 'today' : ''} transition-all border-slate-200 dark:border-dark-border`;
+                
+                div.innerHTML = `
+                    <span class="text-lg font-extrabold mb-1 ${textColor} ${isCurrentMonth ? '' : 'text-slate-400 dark:text-slate-600'}">${day.format('D')}</span>
+                    ${event ? `<span class="text-[10px] w-full text-center px-1 py-1 rounded-lg border font-bold ${dotClass.replace('border-slate', 'border-current')} truncate leading-tight">${event.title}</span>` : ''}
+                `;
+                
+                if(currentUser.email === SUPER_ADMIN_EMAIL) div.onclick = () => openEventModal(dateStr, event);
+                grid.appendChild(div);
                 day.add(1, 'day');
             }
         }
-        window.changeMonth = (dir) => { currentMonth.add(dir, 'months'); loadCalendar(); };
+        
+        window.changeMonth = (dir) => { 
+            currentMonth.add(dir, 'months'); 
+            const grid = document.getElementById('calendar-grid');
+            grid.classList.add('animate__animated', dir > 0 ? 'animate__slideInRight' : 'animate__slideInLeft');
+            loadCalendar(); 
+            setTimeout(() => {
+                grid.classList.remove('animate__slideInRight', 'animate__slideInLeft');
+            }, 500);
+        };
+        window.openEventModal = (date, event) => {
+            document.getElementById('event-modal').classList.remove('hidden');
+            document.getElementById('event-date').value = date;
+            if(event) {
+                document.getElementById('event-type').value = event.type;
+                document.getElementById('event-name').value = event.title;
+            } else {
+                document.getElementById('event-type').value = '';
+                document.getElementById('event-name').value = '';
+            }
+        };
+        window.saveEvent = async () => {
+            const date = document.getElementById('event-date').value;
+            const type = document.getElementById('event-type').value;
+            const title = document.getElementById('event-name').value;
+            
+            const existing = allEvents.find(e => e.date === date);
 
+            if(!type) {
+                if(existing) await supabase.from('calendar_events').delete().eq('date', date); 
+            }
+            else { 
+                await supabase.from('calendar_events').upsert({ date, type, title });
+            }
+            document.getElementById('event-modal').classList.add('hidden');
+            loadCalendar();
+            showToast('Calendar Updated', 'success');
+        };
+
+        // --- NOTICES ---
         async function loadNotices() {
             const { data } = await supabase.from('notices').select('*').order('created_at', {ascending: false});
             const list = document.getElementById('notices-list'); list.innerHTML = '';
-            data.forEach(n => list.innerHTML += `<div class="p-5 rounded-2xl bg-white dark:bg-dark-card shadow-sm border-l-4 ${n.type==='important'?'border-red-500':'border-blue-500'} relative"><h4 class="font-bold dark:text-white">${n.title}</h4><p class="text-sm text-slate-600 dark:text-slate-400 mt-2">${n.body}</p><button onclick="deleteNotice('${n.id}')" class="absolute top-4 right-4 text-slate-300 hover:text-red-500"><i class="fas fa-trash"></i></button></div>`);
-        }
-        window.deleteNotice = async (id) => { if(confirm('Remove notice?')) { await supabase.from('notices').delete().eq('id', id); loadNotices(); } };
-        document.getElementById('noticeForm').onsubmit = async (e) => { e.preventDefault(); await supabase.from('notices').insert({ title: document.getElementById('notice-title').value, type: document.getElementById('notice-type').value, body: document.getElementById('notice-body').value }); document.getElementById('noticeForm').reset(); loadNotices(); showToast('Published', 'success'); };
+            (data||[]).forEach(n => {
+                let border = 'border-l-4 border-blue-500';
+                if(n.type==='important') border = 'border-l-4 border-red-500';
+                if(n.type==='opportunity') border = 'border-l-4 border-emerald-500';
 
+                const div = document.createElement('div');
+                div.className = `p-5 rounded-2xl bg-white dark:bg-dark-card shadow-sm ${border} relative group animate__animated animate__fadeInUp`;
+                div.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h4 class="font-bold dark:text-white text-base">${n.title}</h4>
+                            <p class="text-sm text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">${n.body}</p>
+                            <span class="text-[10px] text-slate-400 mt-3 block">${moment(n.created_at).fromNow()}</span>
+                        </div>
+                        <button onclick="deleteNotice('${n.id}')" class="text-slate-300 hover:text-red-500 transition"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+        }
+        window.deleteNotice = async (id) => { if(confirm('Remove this notice?')) { await supabase.from('notices').delete().eq('id', id); loadNotices(); showToast('Notice Removed', 'success'); } };
+        document.getElementById('noticeForm').onsubmit = async (e) => { e.preventDefault(); await supabase.from('notices').insert({ title: document.getElementById('notice-title').value, type: document.getElementById('notice-type').value, body: document.getElementById('notice-body').value }); document.getElementById('noticeForm').reset(); loadNotices(); showToast('Notice Published', 'success'); };
+
+        // --- TIMETABLES ---
         async function loadTimetables() {
-            const { data: setting } = await supabase.from('system_settings').select('value').eq('key', 'timetable_pdf').single();
+             const { data: setting } = await supabase.from('system_settings').select('value').eq('key', 'timetable_pdf').single();
             if(setting) { document.getElementById('tt-year').value = setting.value.year || ''; document.getElementById('tt-pdf-link').value = setting.value.link || ''; }
             const { data: dates } = await supabase.from('exam_dates').select('*').order('date', {ascending: true});
-            document.getElementById('exam-dates-list').innerHTML = dates.map(d => `<div class="flex justify-between items-center p-3 mb-2 rounded-xl bg-slate-50 dark:bg-dark-bg"><span class="text-sm dark:text-white">${moment(d.date).format('MMM DD')} - ${d.details}</span><button onclick="deleteExamDate('${d.id}')" class="text-red-500"><i class="fas fa-trash"></i></button></div>`).join('');
+            const list = document.getElementById('exam-dates-list'); list.innerHTML = '';
+            (dates||[]).forEach(d => {
+                const div = document.createElement('div'); div.className = 'flex justify-between items-center p-3 mb-2 rounded-xl bg-slate-50 dark:bg-dark-bg border border-slate-100 dark:border-slate-700 animate__animated animate__fadeInUp';
+                div.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="flex flex-col items-center justify-center w-10 h-10 rounded-lg ${d.type === 'Exam' ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600'} font-bold text-[10px] leading-tight text-center">
+                            <span>${moment(d.date).format('MMM')}</span>
+                            <span class="text-sm">${moment(d.date).format('DD')}</span>
+                        </div>
+                        <span class="text-sm dark:text-white font-medium">${d.details}</span>
+                    </div>
+                    <button onclick="deleteExamDate('${d.id}')" class="text-slate-300 hover:text-red-500"><i class="fas fa-trash"></i></button>`;
+                list.appendChild(div);
+            });
         }
         window.saveTimetablePDF = async () => { await supabase.from('system_settings').upsert({ key: 'timetable_pdf', value: { year: document.getElementById('tt-year').value, link: document.getElementById('tt-pdf-link').value } }); showToast('PDF Saved', 'success'); };
-        document.getElementById('examDateForm').onsubmit = async (e) => { e.preventDefault(); await supabase.from('exam_dates').insert({ date: document.getElementById('exam-date').value, details: document.getElementById('exam-details').value, type: document.getElementById('exam-type').value }); loadTimetables(); showToast('Date Added', 'success'); };
-        window.deleteExamDate = async (id) => { await supabase.from('exam_dates').delete().eq('id', id); loadTimetables(); };
+        document.getElementById('examDateForm').onsubmit = async (e) => { e.preventDefault(); await supabase.from('exam_dates').insert({ date: document.getElementById('exam-date').value, details: document.getElementById('exam-details').value, type: document.getElementById('exam-type').value }); document.getElementById('exam-details').value = ''; loadTimetables(); showToast('Date Added', 'success'); };
+        window.deleteExamDate = async (id) => { await supabase.from('exam_dates').delete().eq('id', id); loadTimetables(); showToast('Date Deleted', 'success'); };
 
-        // --- APP & SETTINGS ---
+        // --- SETTINGS ---
         async function loadSettings() {
             const { data: maint } = await supabase.from('system_settings').select('value').eq('key', 'maintenance').single();
-            if(maint) { document.getElementById('maint-toggle').checked = maint.value.isActive; document.getElementById('maint-end').value = maint.value.endTime || ''; }
+            if(maint) {
+                document.getElementById('maint-toggle').checked = maint.value.isActive;
+                document.getElementById('maint-end').value = maint.value.endTime || '';
+            }
             const { data: alert } = await supabase.from('system_settings').select('value').eq('key', 'system_update').single();
-            if(alert) { document.getElementById('alert-toggle').checked = alert.value.active; document.getElementById('alert-date').value = alert.value.date || ''; document.getElementById('alert-msg').value = alert.value.message || ''; }
+            if(alert) {
+                document.getElementById('alert-toggle').checked = alert.value.active;
+                document.getElementById('alert-date').value = alert.value.date || '';
+                document.getElementById('alert-msg').value = alert.value.message || '';
+            }
             loadApps(); // Load apps when settings open
         }
 
-        window.saveMaintenance = async () => { await supabase.from('system_settings').upsert({ key: 'maintenance', value: { isActive: document.getElementById('maint-toggle').checked, endTime: document.getElementById('maint-end').value } }); showToast('Maintenance Updated', 'success'); }
-        window.saveAlert = async () => { await supabase.from('system_settings').upsert({ key: 'system_update', value: { active: document.getElementById('alert-toggle').checked, date: document.getElementById('alert-date').value, message: document.getElementById('alert-msg').value } }); showToast('Alert Saved', 'success'); }
-        window.saveLoginSettings = async () => { await supabase.from('system_settings').upsert({ key: 'login_policy', value: { method: document.querySelector('input[name="login_method"]:checked').value } }); showToast('Policy Updated', 'success'); };
-
-        // --- NEW APP FUNCTIONS (App Version Control) ---
-        async function loadApps() {
-            const { data } = await supabase.from('app_downloads').select('*').order('created_at', { ascending: false });
-            const container = document.getElementById('app-downloads-list');
-            if (!container) return;
-            
-            container.innerHTML = '';
-            if (!data || data.length === 0) { 
-                container.innerHTML = '<p class="text-sm text-slate-400 italic text-center py-4">No active download links found.</p>'; 
-                return; 
-            }
-            
-            data.forEach(app => {
-                const icon = app.platform === 'android' ? 'fa-android text-emerald-500' : 'fa-windows text-blue-500';
-                const bg = app.platform === 'android' ? 'bg-emerald-500/10' : 'bg-blue-500/10';
-                
-                container.innerHTML += `
-                    <div class="flex justify-between items-center p-4 bg-white dark:bg-dark-card border border-slate-100 dark:border-slate-700 rounded-xl animate__animated animate__fadeIn">
-                        <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 rounded-lg ${bg} flex items-center justify-center text-xl"><i class="fab ${icon}"></i></div>
-                            <div>
-                                <h5 class="font-bold dark:text-white capitalize text-sm">${app.platform} App</h5>
-                                <div class="flex items-center gap-2">
-                                    <span class="text-xs bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded text-slate-500 dark:text-slate-300 font-mono">${app.version}</span>
-                                    <a href="${app.download_link}" target="_blank" class="text-[10px] text-primary-500 hover:underline truncate max-w-[150px]">${app.download_link}</a>
-                                </div>
-                            </div>
-                        </div>
-                        <button onclick="deleteApp('${app.id}')" class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-500 transition-colors"><i class="fas fa-trash"></i></button>
-                    </div>`;
-            });
+        window.saveMaintenance = async () => {
+            const isActive = document.getElementById('maint-toggle').checked;
+            const endTime = document.getElementById('maint-end').value;
+            await supabase.from('system_settings').upsert({ key: 'maintenance', value: { isActive, endTime } });
+            showToast('Maintenance Updated', isActive ? 'error' : 'success');
         }
 
-        window.deleteApp = async (id) => { 
-            if (confirm('Remove this download link?')) { 
-                const { error } = await supabase.from('app_downloads').delete().eq('id', id); 
-                if (!error) { 
-                    showToast('Version Removed', 'success'); 
-                    loadApps(); 
-                } else {
-                    showToast(error.message, 'error'); 
-                }
-            } 
+        window.saveAlert = async () => {
+            const active = document.getElementById('alert-toggle').checked;
+            const date = document.getElementById('alert-date').value;
+            const message = document.getElementById('alert-msg').value;
+            await supabase.from('system_settings').upsert({ key: 'system_update', value: { active, date, message } });
+            showToast('Alert Saved', 'success');
+        }
+
+        window.saveLoginSettings = async () => {
+            const method = document.querySelector('input[name="login_method"]:checked').value;
+            await supabase.from('system_settings').upsert({ key: 'login_policy', value: { method } });
+            loginMethod = method;
+            showToast('Policy Updated', 'success');
+            updateLoginFormUI();
         };
 
-        const appForm = document.getElementById('appVersionForm');
-        if(appForm) {
-            appForm.onsubmit = async (e) => {
-                e.preventDefault();
-                const { error } = await supabase.from('app_downloads').insert({ 
-                    platform: document.getElementById('app-platform').value, 
-                    version: document.getElementById('app-version').value, 
-                    download_link: document.getElementById('app-link').value 
-                });
-                if (!error) { 
-                    showToast(`App Published`, 'success'); 
-                    document.getElementById('appVersionForm').reset(); 
-                    loadApps(); 
-                } else { 
-                    showToast(error.message, 'error'); 
-                }
-            };
+        // --- NEW APP FUNCTIONS (App Version Control) ---
+async function loadApps() {
+    const { data } = await supabase.from('app_downloads').select('*').order('created_at', { ascending: false });
+    const container = document.getElementById('app-downloads-list');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    if (!data || data.length === 0) { 
+        container.innerHTML = '<p class="text-sm text-slate-400 italic text-center py-4">No active download links found.</p>'; 
+        return; 
+    }
+    
+    data.forEach(app => {
+        const icon = app.platform === 'android' ? 'fa-android text-emerald-500' : 'fa-windows text-blue-500';
+        const bg = app.platform === 'android' ? 'bg-emerald-500/10' : 'bg-blue-500/10';
+        
+        container.innerHTML += `
+            <div class="flex justify-between items-center p-4 bg-white dark:bg-dark-card border border-slate-100 dark:border-slate-700 rounded-xl animate__animated animate__fadeIn">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-lg ${bg} flex items-center justify-center text-xl"><i class="fab ${icon}"></i></div>
+                    <div>
+                        <h5 class="font-bold dark:text-white capitalize text-sm">${app.platform} App</h5>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded text-slate-500 dark:text-slate-300 font-mono">${app.version}</span>
+                            <a href="${app.download_link}" target="_blank" class="text-[10px] text-primary-500 hover:underline truncate max-w-[150px]">${app.download_link}</a>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="deleteApp('${app.id}')" class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-500 transition-colors"><i class="fas fa-trash"></i></button>
+            </div>`;
+    });
+}
+
+window.deleteApp = async (id) => { 
+    if (confirm('Remove this download link?')) { 
+        const { error } = await supabase.from('app_downloads').delete().eq('id', id); 
+        if (!error) { 
+            showToast('Version Removed', 'success'); 
+            loadApps(); 
+        } else {
+            showToast(error.message, 'error'); 
         }
+    } 
+};
+
+// Form Handler Setup
+const appForm = document.getElementById('appVersionForm');
+if(appForm) {
+    appForm.onsubmit = async (e) => {
+        e.preventDefault();
+        const { error } = await supabase.from('app_downloads').insert({ 
+            platform: document.getElementById('app-platform').value, 
+            version: document.getElementById('app-version').value, 
+            download_link: document.getElementById('app-link').value 
+        });
+        if (!error) { 
+            showToast(`App Published`, 'success'); 
+            document.getElementById('appVersionForm').reset(); 
+            loadApps(); 
+        } else { 
+            showToast(error.message, 'error'); 
+        }
+    };
+}
 
     </script>
 </body>
