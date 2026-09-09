@@ -1,0 +1,379 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root, [data-theme="default"] {
+  --bg-color: #000000;
+  --bg-radial: #111111;
+  --card-bg: rgba(18, 18, 18, 0.7);
+  --card-glass: rgba(255, 255, 255, 0.03);
+  --card-hover: rgba(255, 255, 255, 0.07);
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(16, 185, 129, 0.45);
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-sub: #64748b;
+  --header-bg: rgba(0, 0, 0, 0.85);
+  --header-border: rgba(255, 255, 255, 0.08);
+  --modal-bg: rgba(10, 10, 10, 0.95);
+  --input-bg: rgba(0, 0, 0, 0.6);
+  --accent: #10b981;
+  --accent-glow: rgba(16, 185, 129, 0.4);
+}
+
+[data-theme="dark"] {
+  --bg-color: #0b0f19;
+  --bg-radial: #1e293b;
+  --card-bg: rgba(22, 30, 46, 0.85);
+  --card-glass: rgba(30, 41, 59, 0.6);
+  --card-hover: rgba(30, 41, 59, 0.9);
+  --border-color: rgba(255, 255, 255, 0.1);
+  --border-hover: rgba(52, 211, 153, 0.5);
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --text-sub: #64748b;
+  --header-bg: rgba(11, 15, 25, 0.88);
+  --header-border: rgba(255, 255, 255, 0.1);
+  --modal-bg: rgba(15, 23, 42, 0.95);
+  --input-bg: rgba(15, 23, 42, 0.7);
+  --accent: #10b981;
+  --accent-glow: rgba(16, 185, 129, 0.35);
+}
+
+[data-theme="white"] {
+  --bg-color: #f8fafc;
+  --bg-radial: #cbd5e1;
+  --card-bg: rgba(255, 255, 255, 0.92);
+  --card-glass: rgba(255, 255, 255, 0.85);
+  --card-hover: #ffffff;
+  --border-color: #e2e8f0;
+  --border-hover: rgba(16, 185, 129, 0.6);
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --text-sub: #64748b;
+  --header-bg: rgba(255, 255, 255, 0.9);
+  --header-border: rgba(0, 0, 0, 0.06);
+  --modal-bg: rgba(255, 255, 255, 0.98);
+  --input-bg: #f1f5f9;
+  --accent: #059669;
+  --accent-glow: rgba(5, 150, 105, 0.25);
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  overflow-x: hidden;
+  background-image: radial-gradient(circle at 50% 50%, var(--bg-radial) 1px, transparent 1px);
+  background-size: 40px 40px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Modern Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-color);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(150, 150, 150, 0.3);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(150, 150, 150, 0.25);
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* Glassmorphism Styles mapped to Theme Variables */
+.glass {
+  background: var(--card-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+}
+
+.glass-hover {
+  transition: all 0.3s ease;
+}
+.glass-hover:hover {
+  background: var(--card-hover);
+  border-color: var(--border-hover);
+  box-shadow: 0 10px 30px var(--accent-glow);
+  transform: translateY(-3px);
+}
+
+.glass-panel {
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* Neon Text Utilities */
+.text-glow {
+  text-shadow: 0 0 20px var(--accent-glow);
+}
+
+/* Calendar Day Cell in Admin */
+.calendar-day-cell {
+  position: relative;
+  min-height: 80px;
+  padding: 8px;
+  border-radius: 1rem;
+  border: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+.calendar-day-cell:hover {
+  transform: scale(1.03);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+.calendar-day-cell.today {
+  border-color: var(--accent);
+  box-shadow: 0 0 15px var(--accent-glow);
+}
+
+/* Animation utilities */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes scan {
+  0% { top: 0%; opacity: 0.8; }
+  50% { opacity: 1; }
+  100% { top: 100%; opacity: 0.8; }
+}
+
+.section-animate {
+  animation: fadeInUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.modal-animate {
+  animation: fadeInScale 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.card-interactive {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.card-interactive:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px -5px var(--accent-glow);
+  border-color: var(--border-hover);
+}
+
+.card-interactive:active {
+  transform: translateY(0) scale(0.99);
+}
+
+.animate-scan {
+  animation: scan 2s linear infinite alternate;
+}
+
+/* ==========================================================================
+   OFFICIAL SRI LANKA STATEMENT OF RESULTS CERTIFICATE - PRINT SPECIFICATIONS
+   ========================================================================== */
+@media print {
+  /* Standard A4 Portrait Margins */
+  @page {
+    size: A4 portrait;
+    margin: 8mm 10mm;
+  }
+
+  /* Disable animations, transitions, and glow shadows */
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* Force pure white paper canvas */
+  html,
+  body {
+    background-color: #ffffff !important;
+    background-image: none !important;
+    color: #0f172a !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: auto !important;
+    overflow: visible !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans Sinhala", "Noto Sans Tamil", sans-serif !important;
+  }
+
+  /* Completely suppress all website chrome, navigation, headers, footers, buttons */
+  header,
+  footer,
+  nav,
+  aside,
+  button,
+  .no-print,
+  .print\:hidden,
+  .print-hide,
+  .bg-effects {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* Reset layout wrappers to prevent clipping or offset */
+  #root,
+  main,
+  .section-animate,
+  .animate__animated {
+    display: block !important;
+    position: static !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    background: transparent !important;
+    transform: none !important;
+    filter: none !important;
+  }
+
+  /* Hide entire page elements by default */
+  body * {
+    visibility: hidden;
+  }
+
+  /* Reveal ONLY the official statement of results sheet */
+  #official-print-result-sheet,
+  #official-print-result-sheet * {
+    visibility: visible;
+  }
+
+  /* Position and format result sheet as authentic official document */
+  #official-print-result-sheet {
+    display: block !important;
+    position: relative !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    padding: 16px 20px !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border: 3px double #1e293b !important;
+    border-radius: 6px !important;
+    box-sizing: border-box !important;
+    page-break-inside: avoid !important;
+    page-break-after: avoid !important;
+  }
+
+  /* Force high contrast dark typography */
+  #official-print-result-sheet h1,
+  #official-print-result-sheet h2,
+  #official-print-result-sheet h3,
+  #official-print-result-sheet h4,
+  #official-print-result-sheet span,
+  #official-print-result-sheet p,
+  #official-print-result-sheet td,
+  #official-print-result-sheet th {
+    color: #0f172a !important;
+  }
+
+  #official-print-result-sheet .text-gray-400,
+  #official-print-result-sheet .text-gray-500,
+  #official-print-result-sheet .text-muted {
+    color: #475569 !important;
+  }
+
+  #official-print-result-sheet .text-emerald-500,
+  #official-print-result-sheet .text-emerald-400 {
+    color: #047857 !important;
+  }
+
+  /* Table styling for print */
+  #official-print-result-sheet table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+    border: 1px solid #475569 !important;
+  }
+
+  #official-print-result-sheet th,
+  #official-print-result-sheet td {
+    border: 1px solid #94a3b8 !important;
+    padding: 6px 10px !important;
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+  }
+
+  #official-print-result-sheet thead tr th {
+    background-color: #f1f5f9 !important;
+    font-weight: 800 !important;
+    border-bottom: 2px solid #475569 !important;
+  }
+
+  /* Official Grade Badges for print */
+  #official-print-result-sheet .grade-badge {
+    display: inline-block !important;
+    padding: 2px 8px !important;
+    border: 1px solid #0f172a !important;
+    border-radius: 4px !important;
+    background: #f8fafc !important;
+    color: #0f172a !important;
+    font-weight: 800 !important;
+    font-size: 11px !important;
+  }
+
+  /* Official Candidate Info Box */
+  #official-print-result-sheet .info-box {
+    border: 1px solid #94a3b8 !important;
+    background-color: #f8fafc !important;
+    border-radius: 4px !important;
+    padding: 10px 14px !important;
+  }
+
+  /* Metric cards */
+  #official-print-result-sheet .metric-card {
+    border: 1px solid #94a3b8 !important;
+    background-color: #f8fafc !important;
+    border-radius: 4px !important;
+    padding: 8px 12px !important;
+  }
+}
+
+

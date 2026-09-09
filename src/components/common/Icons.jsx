@@ -1,0 +1,62 @@
+import React from 'react';
+
+export const IconWrapper = ({ icon, size = 18, className = "" }) => {
+  const sizeStyle = { fontSize: `${size}px` };
+  return <i className={`${icon} ${className}`} style={sizeStyle} aria-hidden="true" />;
+};
+
+export const Icons = {
+  LayoutDashboard: (p) => <IconWrapper icon="fas fa-th-large" {...p} />,
+  FileText: (p) => <IconWrapper icon="fas fa-file-alt" {...p} />,
+  Calendar: (p) => <IconWrapper icon="fas fa-calendar-alt" {...p} />,
+  Bell: (p) => <IconWrapper icon="fas fa-bell" {...p} />,
+  Settings: (p) => <IconWrapper icon="fas fa-cog" {...p} />,
+  LogOut: (p) => <IconWrapper icon="fas fa-sign-out-alt" {...p} />,
+  Upload: (p) => <IconWrapper icon="fas fa-cloud-upload-alt" {...p} />,
+  Trash2: (p) => <IconWrapper icon="fas fa-trash-alt" {...p} />,
+  Camera: (p) => <IconWrapper icon="fas fa-camera" {...p} />,
+  Shield: (p) => <IconWrapper icon="fas fa-shield-alt" {...p} />,
+  Users: (p) => <IconWrapper icon="fas fa-users" {...p} />,
+  BookOpen: (p) => <IconWrapper icon="fas fa-book-open" {...p} />,
+  Award: (p) => <IconWrapper icon="fas fa-medal" {...p} />,
+  Search: (p) => <IconWrapper icon="fas fa-search" {...p} />,
+  ExternalLink: (p) => <IconWrapper icon="fas fa-external-link-alt" {...p} />,
+  Download: (p) => <IconWrapper icon="fas fa-download" {...p} />,
+  ArrowLeft: (p) => <IconWrapper icon="fas fa-arrow-left" {...p} />,
+  ArrowRight: (p) => <IconWrapper icon="fas fa-arrow-right" {...p} />,
+  Menu: (p) => <IconWrapper icon="fas fa-bars" {...p} />,
+  X: (p) => <IconWrapper icon="fas fa-times" {...p} />,
+  Grid: (p) => <IconWrapper icon="fas fa-th" {...p} />,
+  List: (p) => <IconWrapper icon="fas fa-list" {...p} />,
+  Moon: (p) => <IconWrapper icon="fas fa-moon" {...p} />,
+  Sun: (p) => <IconWrapper icon="fas fa-sun" {...p} />,
+  ChevronLeft: (p) => <IconWrapper icon="fas fa-chevron-left" {...p} />,
+  ChevronRight: (p) => <IconWrapper icon="fas fa-chevron-right" {...p} />,
+  ChevronDown: (p) => <IconWrapper icon="fas fa-chevron-down" {...p} />,
+  ChevronUp: (p) => <IconWrapper icon="fas fa-chevron-up" {...p} />,
+  Share: (p) => <IconWrapper icon="fas fa-share-alt" {...p} />,
+  Share2: (p) => <IconWrapper icon="fas fa-share-alt" {...p} />,
+  Copy: (p) => <IconWrapper icon="fas fa-copy" {...p} />,
+  MapPin: (p) => <IconWrapper icon="fas fa-map-marker-alt" {...p} />,
+  Sparkles: (p) => <IconWrapper icon="fas fa-magic" {...p} />,
+  Send: (p) => <IconWrapper icon="fas fa-paper-plane" {...p} />,
+  Bot: (p) => <IconWrapper icon="fas fa-robot" {...p} />,
+  BrainCircuit: (p) => <IconWrapper icon="fas fa-brain" {...p} />,
+  Globe: (p) => <IconWrapper icon="fas fa-globe-asia" {...p} />,
+  Home: (p) => <IconWrapper icon="fas fa-home" {...p} />,
+  Folder: (p) => <IconWrapper icon="fas fa-folder" {...p} />,
+  FolderOpen: (p) => <IconWrapper icon="fas fa-folder-open" {...p} />,
+  Apps: (p) => <IconWrapper icon="fas fa-mobile-alt" {...p} />,
+  Pen: (p) => <IconWrapper icon="fas fa-pen" {...p} />,
+  Sync: (p) => <IconWrapper icon="fas fa-sync-alt" {...p} />,
+  Check: (p) => <IconWrapper icon="fas fa-check" {...p} />,
+  CheckCircle: (p) => <IconWrapper icon="fas fa-check-circle" {...p} />,
+  AlertTriangle: (p) => <IconWrapper icon="fas fa-exclamation-triangle" {...p} />,
+  Key: (p) => <IconWrapper icon="fas fa-key" {...p} />,
+  Lock: (p) => <IconWrapper icon="fas fa-lock" {...p} />,
+  Mail: (p) => <IconWrapper icon="fas fa-envelope" {...p} />,
+  Printer: (p) => <IconWrapper icon="fas fa-print" {...p} />,
+  RotateCcw: (p) => <IconWrapper icon="fas fa-redo-alt" {...p} />,
+};
+
+export default Icons;
