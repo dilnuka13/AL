@@ -1,0 +1,33 @@
+name: Supabase Keep-Alive Pulse
+
+# Triggers:
+# 1. Runs automatically every 3 days at 04:00 AM UTC (resets Supabase 7-day inactivity timer)
+# 2. Can be manually triggered from the Actions tab anytime
+on:
+  schedule:
+    - cron: '0 4 */3 * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  heartbeat:
+    name: Send Keep-Alive Signal to Supabase
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Transmit Heartbeat Signal
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL || 'https://hppojrbfhzttzvlvovre.supabase.co' }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhwcG9qcmJmaHp0dHp2bHZvdnJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjExODgxNDYsImV4cCI6MjA3Njc2NDE0Nn0.aL2fegb_eRPY0E7P6Mwufhq3TCAeX8-hDCHBo9VeAsA' }}
+        run: |
+          node scripts/keep-alive.js
