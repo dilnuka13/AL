@@ -1,11 +1,28 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   base: './',
-  plugins: [react()],
+  plugins: [
+    react(),
+    {
+      name: 'dev-entry-resolver',
+      transformIndexHtml(html) {
+        if (command === 'serve') {
+          return html.replace(
+            /<script type="module" crossorigin src="(?:\.\/)?assets\/app\.js"><\/script>/,
+            '<script type="module" src="/src/main.jsx"></script>'
+          );
+        }
+        return html;
+      }
+    }
+  ],
   build: {
     rollupOptions: {
+      input: {
+        app: './src/main.jsx'
+      },
       output: {
         entryFileNames: 'assets/app.js',
         chunkFileNames: 'assets/[name].js',
@@ -34,4 +51,4 @@ export default defineConfig({
       }
     }
   }
-});
+}));

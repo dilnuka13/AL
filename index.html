@@ -49,25 +49,10 @@
 
     <!-- hCaptcha for Official Examination Verification -->
     <script src="https://js.hcaptcha.com/1/api.js?render=explicit" async defer></script>
+    <link rel="stylesheet" crossorigin href="./assets/app.css">
 </head>
 <body class="bg-black text-gray-200 antialiased min-h-screen selection:bg-emerald-500 selection:text-white">
     <div id="root"></div>
-    <script type="module">
-      const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-      if (isDev) {
-        import('/src/main.jsx');
-      } else {
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = './assets/app.css';
-        document.head.appendChild(link);
-
-        const script = document.createElement('script');
-        script.type = 'module';
-        script.crossOrigin = 'anonymous';
-        script.src = './assets/app.js';
-        document.body.appendChild(script);
-      }
-    </script>
+    <script type="module" crossorigin src="./assets/app.js"></script>
 </body>
 </html>
